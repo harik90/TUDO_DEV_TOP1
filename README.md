@@ -1,5 +1,13 @@
 # 🚀 Top 1% Android, KMP & Mobile AI Roadmap Tracker (ChatGPT UI)
 
+[![Live Website](https://img.shields.io/badge/Live_Site-Visit_Roadmap-10a37f?style=for-the-badge&logo=openai&logoColor=white)](https://harik90.github.io/TUDO_DEV_TOP1/)
+[![GitHub Pages](https://img.shields.io/badge/Hosted_on-GitHub_Pages-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://harik90.github.io/TUDO_DEV_TOP1/)
+
+### 🌐 Live Hosted URL:
+👉 **[https://harik90.github.io/TUDO_DEV_TOP1/](https://harik90.github.io/TUDO_DEV_TOP1/)**
+
+---
+
 A senior mobile engineering roadmap tracker built in the authentic **ChatGPT App Design**, featuring:
 - **Custom Engineer Profile**: Change your name, goal/role (e.g. "Staff Mobile AI Engineer"), and initials with real-time sync.
 - **Skill Notes & Doubts**: Attach personal doubts, cheat-sheet points, code snippets, or reference links to any skill card.
@@ -15,7 +23,7 @@ A senior mobile engineering roadmap tracker built in the authentic **ChatGPT App
 
 ---
 
-## 🗂 Architecture
+## 🗂 Architecture & Tracks
 
 1. **Languages & Compilers** (17 Parent Skills • 68 Sub-concepts)
 2. **KMP Stack** (24 Parent Skills • 96 Sub-concepts)
@@ -29,7 +37,7 @@ A senior mobile engineering roadmap tracker built in the authentic **ChatGPT App
 
 ## 🔥 Firebase Realtime Database Setup
 
-1. Open `index.html`.
+1. Open **[https://harik90.github.io/TUDO_DEV_TOP1/](https://harik90.github.io/TUDO_DEV_TOP1/)**.
 2. A setup modal will pop up asking for your Firebase configuration.
 3. Paste either:
    - **Firebase Web Config JSON** from Firebase Console (Project Settings > Web App)
@@ -40,9 +48,10 @@ A senior mobile engineering roadmap tracker built in the authentic **ChatGPT App
 
 ---
 
-## 🌐 Deploy to GitHub Pages (When Ready to Push)
+## 💻 Tech Stack
 
-```bash
-git push -u origin main
-```
-Then enable GitHub Pages under **Settings > Pages** (`main` branch, `/ (root)` folder).
+- **UI Framework**: Vanilla JavaScript + ChatGPT authentic UI tokens
+- **Styling**: Responsive CSS with Dark/Light mode theme system
+- **Icons**: Bootstrap Icons
+- **Database**: Firebase Realtime Database (Compat SDK) + `localStorage` fallback
+- **Hosting**: GitHub Pages
