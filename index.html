@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,30 +14,56 @@
   <!-- Bootstrap Icons CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-  <!-- Firebase Compat App & RTDB SDKs (Rock solid, zero-build, CDN) -->
+  <!-- Firebase Compat App & RTDB SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <style>
-    :root {
+    /* ==========================================================================
+       Dark / Light Theme Tokens (Official ChatGPT Styling)
+       ========================================================================== */
+    :root[data-theme="dark"] {
       --bg-sidebar: #171717;
       --bg-main: #212121;
       --bg-surface: #2f2f2f;
       --bg-surface-hover: #383838;
       --bg-card: #1e1e1e;
-      --bg-subcard: rgba(255, 255, 255, 0.02);
+      --bg-subcard: rgba(255, 255, 255, 0.03);
       --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-medium: rgba(255, 255, 255, 0.15);
+      --border-medium: rgba(255, 255, 255, 0.16);
       --text-primary: #ececec;
       --text-secondary: #b4b4b4;
       --text-muted: #737373;
       --openai-green: #10a37f;
       --openai-green-hover: #1a7f64;
-      --openai-green-subtle: rgba(16, 163, 127, 0.15);
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-full: 9999px;
+      --openai-green-subtle: rgba(16, 163, 127, 0.16);
+      --note-amber: #f59e0b;
+      --note-amber-subtle: rgba(245, 158, 11, 0.15);
+      --modal-bg: #262626;
+      --shadow-elevation: 0 12px 30px rgba(0, 0, 0, 0.6);
+      --prompt-gradient: linear-gradient(180deg, rgba(33, 33, 33, 0) 0%, rgba(33, 33, 33, 0.95) 45%, #212121 100%);
+    }
+
+    :root[data-theme="light"] {
+      --bg-sidebar: #f9f9f9;
+      --bg-main: #ffffff;
+      --bg-surface: #f4f4f4;
+      --bg-surface-hover: #ebebeb;
+      --bg-card: #ffffff;
+      --bg-subcard: rgba(0, 0, 0, 0.02);
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-medium: rgba(0, 0, 0, 0.15);
+      --text-primary: #0d0d0d;
+      --text-secondary: #5d5d5d;
+      --text-muted: #8e8e8e;
+      --openai-green: #10a37f;
+      --openai-green-hover: #0d8265;
+      --openai-green-subtle: rgba(16, 163, 127, 0.12);
+      --note-amber: #d97706;
+      --note-amber-subtle: rgba(217, 119, 6, 0.12);
+      --modal-bg: #ffffff;
+      --shadow-elevation: 0 12px 30px rgba(0, 0, 0, 0.12);
+      --prompt-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.95) 45%, #ffffff 100%);
     }
 
     * {
@@ -55,6 +81,7 @@
       height: 100vh;
       overflow: hidden;
       display: flex;
+      transition: background-color 0.2s, color 0.2s;
     }
 
     /* Scrollbars */
@@ -66,14 +93,13 @@
       background: transparent;
     }
     ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.18);
-      border-radius: var(--radius-full);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: var(--border-medium);
+      border-radius: 9999px;
     }
 
-    /* Sidebar */
+    /* ==========================================================================
+       Sidebar Layout
+       ========================================================================== */
     #sidebar {
       width: 270px;
       min-width: 270px;
@@ -82,7 +108,7 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
-      transition: margin-left 0.25s cubic-bezier(0.2, 0, 0, 1);
+      transition: margin-left 0.25s cubic-bezier(0.2, 0, 0, 1), transform 0.25s ease;
       z-index: 50;
       user-select: none;
     }
@@ -102,7 +128,7 @@
     .btn-icon {
       width: 36px;
       height: 36px;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -124,7 +150,7 @@
       justify-content: space-between;
       gap: 10px;
       padding: 8px 12px;
-      border-radius: var(--radius-md);
+      border-radius: 12px;
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       color: var(--text-primary);
@@ -157,7 +183,7 @@
       align-items: center;
       gap: 10px;
       padding: 8px 12px;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       color: var(--text-secondary);
       font-size: 13px;
       font-weight: 400;
@@ -179,16 +205,16 @@
       font-size: 11px;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--border-subtle);
       padding: 1px 7px;
-      border-radius: var(--radius-full);
+      border-radius: 9999px;
     }
     .nav-item.completed-all .badge-count {
       color: var(--openai-green);
       background: var(--openai-green-subtle);
     }
 
-    /* Sidebar Footer */
+    /* Sidebar Footer / User Profile Card */
     .sidebar-footer {
       padding: 12px;
       border-top: 1px solid var(--border-subtle);
@@ -197,20 +223,49 @@
       gap: 8px;
     }
 
+    .user-profile-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      background: transparent;
+      transition: background 0.15s;
+      border: 1px solid transparent;
+    }
+    .user-profile-card:hover {
+      background: var(--bg-surface);
+      border-color: var(--border-subtle);
+    }
+    .user-avatar-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10a37f, #06b6d4);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
     .status-pill {
       display: flex;
       align-items: center;
       gap: 8px;
       padding: 7px 10px;
-      border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       cursor: pointer;
       font-size: 12px;
       transition: background 0.15s;
     }
     .status-pill:hover {
-      background: var(--bg-surface);
+      background: var(--bg-surface-hover);
     }
     .status-dot {
       width: 8px;
@@ -226,7 +281,9 @@
       background: #eab308;
     }
 
-    /* Main Container */
+    /* ==========================================================================
+       Main Viewport Layout
+       ========================================================================== */
     #main-content {
       flex: 1;
       height: 100vh;
@@ -237,7 +294,7 @@
       overflow: hidden;
     }
 
-    /* Header Bar */
+    /* Top Navigation Header */
     .chat-header {
       height: 56px;
       min-height: 56px;
@@ -254,13 +311,12 @@
       align-items: center;
       gap: 6px;
       padding: 6px 12px;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       font-size: 14px;
       font-weight: 600;
       color: var(--text-primary);
       cursor: pointer;
       transition: background 0.15s;
-      position: relative;
     }
     .model-selector:hover {
       background-color: var(--bg-surface);
@@ -271,17 +327,17 @@
       color: var(--openai-green);
       background: var(--openai-green-subtle);
       padding: 2px 7px;
-      border-radius: var(--radius-full);
+      border-radius: 9999px;
       margin-left: 4px;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
-    /* Stream Container */
+    /* Scrollable Container */
     .stream-container {
       flex: 1;
       overflow-y: auto;
@@ -296,7 +352,6 @@
       max-width: 860px;
     }
 
-    /* View Header */
     .view-header {
       display: flex;
       align-items: flex-start;
@@ -319,7 +374,7 @@
       margin-top: 4px;
     }
 
-    /* Category Overview Cards (Grid when "Overview" is active) */
+    /* Overview Grid */
     .overview-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -329,16 +384,17 @@
     .overview-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
+      border-radius: 14px;
       padding: 18px;
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
     .overview-card:hover {
-      background: #252525;
+      background: var(--bg-surface);
       border-color: var(--border-medium);
       transform: translateY(-2px);
     }
@@ -349,25 +405,26 @@
       margin-bottom: 12px;
     }
     .overview-card-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: var(--radius-sm);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       background: var(--bg-surface);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--openai-green);
       font-size: 16px;
+      border: 1px solid var(--border-subtle);
     }
 
     /* Parent Skill Card (Collapsible) */
     .parent-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
+      border-radius: 12px;
       margin-bottom: 10px;
       overflow: hidden;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
     .parent-card:hover {
       border-color: var(--border-medium);
@@ -387,7 +444,7 @@
       transition: background 0.15s;
     }
     .parent-header:hover {
-      background: #252525;
+      background: var(--bg-surface);
     }
 
     .parent-title {
@@ -403,13 +460,38 @@
       align-items: center;
       gap: 8px;
     }
+
+    .note-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .note-btn:hover {
+      background: var(--bg-surface);
+      color: var(--note-amber);
+      border-color: var(--border-subtle);
+    }
+    .note-btn.has-note {
+      color: var(--note-amber);
+      background: var(--note-amber-subtle);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
     .parent-badge {
       font-size: 11px;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-muted);
       background: var(--bg-surface);
       padding: 2px 8px;
-      border-radius: var(--radius-full);
+      border-radius: 9999px;
     }
     .parent-badge.done {
       color: var(--openai-green);
@@ -425,12 +507,12 @@
       transform: rotate(180deg);
     }
 
-    /* Sub-child concepts container */
+    /* Sub-skills Accordion */
     .subskills-container {
       display: none;
       padding: 6px 14px 14px 44px;
-      background: rgba(0, 0, 0, 0.15);
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      background: var(--bg-subcard);
+      border-top: 1px solid var(--border-subtle);
     }
     .parent-card.open .subskills-container {
       display: block;
@@ -441,7 +523,7 @@
       align-items: flex-start;
       gap: 10px;
       padding: 7px 10px;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       cursor: pointer;
       user-select: none;
       transition: background 0.15s;
@@ -451,7 +533,7 @@
       background: var(--bg-surface);
     }
     .subskill-row.checked {
-      background: rgba(16, 163, 127, 0.05);
+      background: var(--openai-green-subtle);
     }
 
     .custom-check {
@@ -500,17 +582,31 @@
       text-decoration: line-through;
     }
 
-    /* Overall Progress Bar */
+    /* Embedded Note Display inside Parent Card */
+    .parent-note-preview {
+      margin: 8px 0 4px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--note-amber-subtle);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      font-size: 12px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    /* Progress Bar */
     .progress-bar-bg {
       height: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-full);
+      background: var(--border-subtle);
+      border-radius: 9999px;
       overflow: hidden;
     }
     .progress-bar-fill {
       height: 100%;
       background: linear-gradient(90deg, #10a37f, #34d399);
-      border-radius: var(--radius-full);
+      border-radius: 9999px;
       transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -521,7 +617,7 @@
       left: 0;
       right: 0;
       padding: 0 24px 16px;
-      background: linear-gradient(180deg, rgba(33, 33, 33, 0) 0%, rgba(33, 33, 33, 0.95) 40%, #212121 100%);
+      background: var(--prompt-gradient);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -539,13 +635,13 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
       pointer-events: auto;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
     .prompt-box:focus-within {
-      border-color: rgba(255, 255, 255, 0.3);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      border-color: var(--openai-green);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
     }
 
     .prompt-input {
@@ -564,7 +660,7 @@
     .prompt-action-btn {
       width: 32px;
       height: 32px;
-      border-radius: var(--radius-full);
+      border-radius: 50%;
       border: none;
       background: var(--text-primary);
       color: var(--bg-main);
@@ -586,16 +682,18 @@
       pointer-events: auto;
     }
 
-    /* Firebase Modal (ChatGPT Style) */
+    /* ==========================================================================
+       Modals (ChatGPT Style)
+       ========================================================================== */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 2000;
       display: none;
       align-items: center;
@@ -609,11 +707,11 @@
     .chatgpt-modal {
       width: 100%;
       max-width: 540px;
-      background: #252525;
+      background: var(--modal-bg);
       border: 1px solid var(--border-medium);
-      border-radius: var(--radius-lg);
+      border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      box-shadow: var(--shadow-elevation);
       animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     @keyframes modalFadeIn {
@@ -636,19 +734,36 @@
       gap: 8px;
     }
 
+    .form-input-gpt {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      padding: 10px 12px;
+      outline: none;
+      margin-bottom: 14px;
+      transition: border-color 0.15s;
+    }
+    .form-input-gpt:focus {
+      border-color: var(--openai-green);
+    }
+
     .firebase-textarea {
       width: 100%;
-      height: 180px;
-      background: #191919;
+      height: 160px;
+      background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-sm);
-      color: #38bdf8;
+      border-radius: 8px;
+      color: var(--text-primary);
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
       padding: 12px;
       resize: vertical;
       outline: none;
-      margin: 12px 0 16px;
+      margin: 10px 0 16px;
     }
     .firebase-textarea:focus {
       border-color: var(--openai-green);
@@ -658,7 +773,7 @@
       background: var(--openai-green);
       color: white;
       border: none;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       padding: 9px 18px;
       font-size: 13px;
       font-weight: 500;
@@ -673,7 +788,7 @@
       background: transparent;
       color: var(--text-secondary);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       padding: 9px 16px;
       font-size: 13px;
       cursor: pointer;
@@ -690,16 +805,16 @@
       bottom: 80px;
       left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: #2f2f2f;
+      background: var(--bg-surface);
       border: 1px solid var(--border-medium);
       color: var(--text-primary);
       padding: 9px 18px;
-      border-radius: var(--radius-full);
+      border-radius: 9999px;
       font-size: 13px;
       display: flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      box-shadow: var(--shadow-elevation);
       opacity: 0;
       visibility: hidden;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -711,16 +826,21 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* Mobile toggle */
+    /* Mobile Responsive */
     @media (max-width: 768px) {
       #sidebar {
-        position: absolute;
+        position: fixed;
         top: 0;
         bottom: 0;
         left: 0;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
       }
       .subskills-container {
-        padding-left: 20px;
+        padding-left: 16px;
+      }
+      .view-header {
+        flex-direction: column;
+        gap: 12px;
       }
     }
   </style>
@@ -733,9 +853,9 @@
   <aside id="sidebar">
     <div class="sidebar-header">
       <button class="btn-new-chat" onclick="selectCategory('overview')">
-        <div style="display:flex; align-items:center; gap:8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
           <i class="bi bi-grid text-emerald-400" style="color: var(--openai-green);"></i>
-          <span>Overview Dashboard</span>
+          <span>Overview Tracks</span>
         </div>
         <i class="bi bi-arrow-right-short" style="color: var(--text-muted); font-size: 16px;"></i>
       </button>
@@ -796,6 +916,14 @@
         <span class="badge-count" id="badge-cat-career">0/7</span>
       </div>
 
+      <div class="sidebar-section-title" style="margin-top: 14px;">Notes & Filters</div>
+
+      <div class="nav-item" id="nav-notes-only" onclick="toggleNotesFilter()">
+        <i class="bi bi-journal-text" style="color: var(--note-amber);"></i>
+        <span>Doubts & Notes Only</span>
+        <span class="badge-count" id="badge-notes-count">0</span>
+      </div>
+
       <div class="sidebar-section-title" style="margin-top: 14px;">Cloud & Tools</div>
 
       <div class="nav-item" onclick="openFirebaseModal()">
@@ -825,8 +953,21 @@
       </div>
     </div>
 
-    <!-- Sidebar Footer -->
+    <!-- Sidebar Footer with User Profile Pill -->
     <div class="sidebar-footer">
+      <div class="user-profile-card" onclick="openProfileModal()" title="Click to edit profile name and title">
+        <div class="user-avatar-circle" id="userAvatarText">HK</div>
+        <div style="flex: 1; overflow: hidden;">
+          <div style="font-weight: 600; font-size: 13px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="userNameDisplay">
+            Hari
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="userRoleDisplay">
+            Top 1% Senior Dev
+          </div>
+        </div>
+        <i class="bi bi-pencil" style="font-size: 12px; color: var(--text-muted);"></i>
+      </div>
+
       <div class="status-pill" onclick="openFirebaseModal()" title="Click to view/change database settings">
         <div class="status-dot" id="footerStatusDot"></div>
         <div style="flex: 1; overflow: hidden;">
@@ -862,14 +1003,18 @@
       </div>
 
       <div class="header-actions">
+        <!-- Theme Toggle Button (Dark / Light) -->
+        <button class="btn-icon" onclick="toggleTheme()" id="themeToggleBtn" title="Switch Theme (Dark / Light)">
+          <i class="bi bi-moon-stars" id="themeIcon"></i>
+        </button>
         <button class="btn-icon" onclick="toggleExpandAll()" title="Expand / Collapse all cards">
           <i class="bi bi-arrows-expand" id="expandToggleIcon"></i>
         </button>
         <button class="btn-icon" onclick="copyRoadmapPrompt()" title="Copy prompt for ChatGPT">
           <i class="bi bi-share"></i>
         </button>
-        <button class="btn-icon" onclick="openFirebaseModal()" title="Firebase Database Settings">
-          <i class="bi bi-gear"></i>
+        <button class="btn-icon" onclick="openProfileModal()" title="Edit Profile">
+          <i class="bi bi-person-circle"></i>
         </button>
       </div>
     </header>
@@ -889,7 +1034,7 @@
           type="text" 
           id="promptSearchInput" 
           class="prompt-input" 
-          placeholder="Search any skill or concept (e.g., K2 FIR, LiteRT, CRDT, Coroutines, Swift 6)..."
+          placeholder="Search any skill, concept, or doubt (e.g., K2 FIR, LiteRT, CRDT, Coroutines, Swift 6)..."
           oninput="handleSearch(this.value)"
         >
         <button class="prompt-action-btn" onclick="clearSearch()" title="Clear / Reset">
@@ -897,14 +1042,84 @@
         </button>
       </div>
       <div class="prompt-disclaimer">
-        Parent & Sub-skill Hierarchy • Realtime Sync with Firebase RTDB • Automatically saved
+        Parent & Sub-skill Hierarchy • Realtime Sync with Firebase RTDB • Notes & Doubts Support
       </div>
     </div>
 
   </main>
 
   <!-- ========================================================================
-       Firebase RTDB Configuration Modal (Auto-pops on first visit)
+       Profile Name & Title Modal
+       ======================================================================== -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="chatgpt-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="bi bi-person-gear text-emerald-400" style="color: var(--openai-green);"></i>
+          <span>Edit Engineer Profile</span>
+        </div>
+        <button class="btn-icon" onclick="closeProfileModal()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <label style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; display: block;">
+        Your Name / Handle
+      </label>
+      <input type="text" id="profileNameInput" class="form-input-gpt" placeholder="e.g. Hari Kumar">
+
+      <label style="font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; display: block;">
+        Target Engineering Level / Goal
+      </label>
+      <input type="text" id="profileRoleInput" class="form-input-gpt" placeholder="e.g. Staff Mobile AI Engineer @ Tier-1">
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+        <button class="btn-secondary-gpt" onclick="closeProfileModal()">Cancel</button>
+        <button class="btn-primary-gpt" onclick="saveProfile()">Save Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Skill Notes & Doubts Modal
+       ======================================================================== -->
+  <div class="modal-overlay" id="noteModal">
+    <div class="chatgpt-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="bi bi-journal-text" style="color: var(--note-amber);"></i>
+          <span id="noteModalSkillTitle">Skill Notes & Doubts</span>
+        </div>
+        <button class="btn-icon" onclick="closeNoteModal()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
+        Add doubts, key mental models, reference links, or revision notes for this topic.
+      </p>
+
+      <textarea 
+        id="skillNoteTextarea" 
+        class="form-input-gpt" 
+        style="height: 140px; resize: vertical; font-family: inherit; line-height: 1.5;"
+        placeholder="e.g. Need to review FIR tree transformation vs K1 descriptors. Look at Kotlin compiler compiler-plugins samples..."
+      ></textarea>
+
+      <div style="display: flex; gap: 8px; justify-content: space-between; align-items: center; margin-top: 6px;">
+        <button class="btn-secondary-gpt" style="color: #f87171;" onclick="deleteCurrentNote()">
+          <i class="bi bi-trash3 me-1"></i> Delete Note
+        </button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-secondary-gpt" onclick="closeNoteModal()">Cancel</button>
+          <button class="btn-primary-gpt" onclick="saveCurrentNote()">Save Note</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Firebase RTDB Configuration Modal
        ======================================================================== -->
   <div class="modal-overlay" id="firebaseModal">
     <div class="chatgpt-modal">
@@ -919,7 +1134,7 @@
       </div>
 
       <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-        Paste your <b>Firebase Web Config JSON</b> or Android <b>google-services.json</b> below. The app automatically detects your <code style="color: #38bdf8;">databaseURL</code> and syncs all checks in real time.
+        Paste your <b>Firebase Web Config JSON</b> or Android <b>google-services.json</b> below. The app automatically detects your <code style="color: var(--openai-green);">databaseURL</code> and syncs all checks and notes in real time.
       </p>
 
       <textarea 
@@ -955,7 +1170,7 @@
   <!-- Application Logic -->
   <script>
     // =========================================================================
-    // COMPLETE HIERARCHICAL KNOWLEDGE BASE (106 Parents, ~400 Sub-skills)
+    // HIERARCHICAL KNOWLEDGE BASE (106 Parents, 424 Sub-skills)
     // =========================================================================
     const HIERARCHY_DATA = [
       {
@@ -2080,34 +2295,180 @@
     // STATE & FIREBASE CONFIGURATION
     // =========================================================================
     const LOCAL_STATE_KEY = "top1_android_dev_skills_v1";
+    const LOCAL_NOTES_KEY = "top1_android_dev_notes_v1";
+    const LOCAL_PROFILE_KEY = "top1_android_dev_profile_v1";
+    const LOCAL_THEME_KEY = "top1_android_dev_theme_v1";
     const FIREBASE_CONFIG_KEY = "top1_firebase_rtdb_config";
 
     let checkedState = {};
-    let activeCategory = "overview"; // "overview" or category ID
+    let notesState = {};
+    let profileState = { name: "Hari", role: "Top 1% Senior Dev" };
+    let currentTheme = "dark";
+
+    let activeCategory = "overview";
     let searchQuery = "";
     let expandAllState = false;
+    let notesOnlyFilter = false;
+    let editingSkillId = null;
 
     // Firebase instances
     let firebaseDb = null;
     let isFirebaseConnected = false;
     let rtdbRef = null;
+    let notesRef = null;
+    let profileRef = null;
 
-    // Load Local Fallback
+    // Theme Switcher
+    function initTheme() {
+      const saved = localStorage.getItem(LOCAL_THEME_KEY);
+      if (saved === "light" || saved === "dark") {
+        currentTheme = saved;
+      } else {
+        currentTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      applyTheme(currentTheme);
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === "dark" ? "light" : "dark";
+      localStorage.setItem(LOCAL_THEME_KEY, currentTheme);
+      applyTheme(currentTheme);
+      showToast(`Switched to ${currentTheme === 'dark' ? 'Dark' : 'Light'} Mode`, currentTheme === 'dark' ? 'bi-moon' : 'bi-sun');
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      const icon = document.getElementById("themeIcon");
+      if (icon) {
+        icon.className = theme === "dark" ? "bi bi-moon-stars" : "bi bi-sun";
+      }
+    }
+
+    // Load Local Fallbacks
     function loadLocalState() {
       try {
-        const stored = localStorage.getItem(LOCAL_STATE_KEY);
-        if (stored) checkedState = JSON.parse(stored);
+        const storedChecks = localStorage.getItem(LOCAL_STATE_KEY);
+        if (storedChecks) checkedState = JSON.parse(storedChecks);
+
+        const storedNotes = localStorage.getItem(LOCAL_NOTES_KEY);
+        if (storedNotes) notesState = JSON.parse(storedNotes);
+
+        const storedProfile = localStorage.getItem(LOCAL_PROFILE_KEY);
+        if (storedProfile) profileState = JSON.parse(storedProfile);
       } catch (e) {
         console.error("Local storage read error", e);
       }
+      updateProfileUI();
     }
 
     function saveLocalState() {
       try {
         localStorage.setItem(LOCAL_STATE_KEY, JSON.stringify(checkedState));
+        localStorage.setItem(LOCAL_NOTES_KEY, JSON.stringify(notesState));
+        localStorage.setItem(LOCAL_PROFILE_KEY, JSON.stringify(profileState));
       } catch (e) {
         console.error("Local storage save error", e);
       }
+    }
+
+    // =========================================================================
+    // PROFILE EDITOR
+    // =========================================================================
+    function updateProfileUI() {
+      document.getElementById("userNameDisplay").textContent = profileState.name || "Developer";
+      document.getElementById("userRoleDisplay").textContent = profileState.role || "Top 1% Senior Dev";
+      
+      // Avatar Initials
+      const words = (profileState.name || "D").trim().split(" ");
+      let initials = "";
+      if (words.length >= 2) {
+        initials = (words[0][0] + words[1][0]).toUpperCase();
+      } else {
+        initials = words[0].slice(0, 2).toUpperCase();
+      }
+      document.getElementById("userAvatarText").textContent = initials || "TOP";
+    }
+
+    function openProfileModal() {
+      document.getElementById("profileNameInput").value = profileState.name || "";
+      document.getElementById("profileRoleInput").value = profileState.role || "";
+      document.getElementById("profileModal").classList.add("show");
+    }
+
+    function closeProfileModal() {
+      document.getElementById("profileModal").classList.remove("show");
+    }
+
+    function saveProfile() {
+      const name = document.getElementById("profileNameInput").value.trim();
+      const role = document.getElementById("profileRoleInput").value.trim();
+
+      profileState.name = name || "Developer";
+      profileState.role = role || "Senior Engineer";
+      saveLocalState();
+      updateProfileUI();
+      closeProfileModal();
+
+      if (profileRef && isFirebaseConnected) {
+        profileRef.set({ ...profileState, updatedAt: Date.now() });
+      }
+      showToast("Profile updated!", "bi-person-check");
+    }
+
+    // =========================================================================
+    // SKILL NOTES & DOUBTS SYSTEM
+    // =========================================================================
+    function openNoteModal(skillId, skillName) {
+      editingSkillId = skillId;
+      document.getElementById("noteModalSkillTitle").textContent = skillName;
+      document.getElementById("skillNoteTextarea").value = notesState[skillId] || "";
+      document.getElementById("noteModal").classList.add("show");
+    }
+
+    function closeNoteModal() {
+      document.getElementById("noteModal").classList.remove("show");
+      editingSkillId = null;
+    }
+
+    function saveCurrentNote() {
+      if (!editingSkillId) return;
+      const text = document.getElementById("skillNoteTextarea").value.trim();
+      if (text) {
+        notesState[editingSkillId] = text;
+      } else {
+        delete notesState[editingSkillId];
+      }
+      saveLocalState();
+      closeNoteModal();
+      updateUI();
+
+      if (notesRef && isFirebaseConnected) {
+        if (text) {
+          notesRef.child(editingSkillId).set({ note: text, updatedAt: Date.now() });
+        } else {
+          notesRef.child(editingSkillId).remove();
+        }
+      }
+      showToast("Note & doubt saved!", "bi-journal-check");
+    }
+
+    function deleteCurrentNote() {
+      if (!editingSkillId) return;
+      delete notesState[editingSkillId];
+      saveLocalState();
+      closeNoteModal();
+      updateUI();
+
+      if (notesRef && isFirebaseConnected) {
+        notesRef.child(editingSkillId).remove();
+      }
+      showToast("Note removed", "bi-trash3");
+    }
+
+    function toggleNotesFilter() {
+      notesOnlyFilter = !notesOnlyFilter;
+      document.getElementById("nav-notes-only").classList.toggle("active", notesOnlyFilter);
+      renderContent();
     }
 
     // =========================================================================
@@ -2117,7 +2478,6 @@
       const configStr = localStorage.getItem(FIREBASE_CONFIG_KEY);
       if (!configStr) {
         updateDbStatus(false, "Local Mode", "Click to connect Firebase");
-        // Check if first-time visit
         if (!localStorage.getItem("has_seen_fb_prompt")) {
           localStorage.setItem("has_seen_fb_prompt", "true");
           openFirebaseModal();
@@ -2132,10 +2492,12 @@
         }
         firebaseDb = firebase.database();
         rtdbRef = firebaseDb.ref("roadmap_progress");
+        notesRef = firebaseDb.ref("roadmap_notes");
+        profileRef = firebaseDb.ref("user_profile");
 
         updateDbStatus(true, "RTDB Live", "Realtime Synced");
 
-        // Realtime Listener
+        // Realtime Checklist Listener
         rtdbRef.on("value", snapshot => {
           const val = snapshot.val();
           if (val && typeof val === "object") {
@@ -2143,9 +2505,31 @@
             saveLocalState();
             updateUI();
           }
-        }, err => {
-          console.warn("RTDB Permission/Connection notice:", err);
-          updateDbStatus(false, "Local Mode", "Database rules/URL notice");
+        });
+
+        // Realtime Notes Listener
+        notesRef.on("value", snapshot => {
+          const val = snapshot.val();
+          if (val && typeof val === "object") {
+            const mapped = {};
+            for (let k in val) {
+              mapped[k] = val[k].note || val[k];
+            }
+            notesState = mapped;
+            saveLocalState();
+            updateUI();
+          }
+        });
+
+        // Realtime Profile Listener
+        profileRef.on("value", snapshot => {
+          const val = snapshot.val();
+          if (val && typeof val === "object") {
+            profileState.name = val.name || profileState.name;
+            profileState.role = val.role || profileState.role;
+            saveLocalState();
+            updateProfileUI();
+          }
         });
 
       } catch (err) {
@@ -2154,7 +2538,6 @@
       }
     }
 
-    // Parse and connect user-submitted Firebase JSON
     function saveFirebaseConfig() {
       const rawText = document.getElementById("firebaseJsonInput").value.trim();
       if (!rawText) {
@@ -2163,13 +2546,12 @@
       }
 
       try {
-        // Strip JS variable assignments if user pasted `const firebaseConfig = { ... };`
         let cleanText = rawText.replace(/^(const|let|var)\s+\w+\s*=\s*/, "").replace(/;$/, "").trim();
         const parsed = JSON.parse(cleanText);
 
         let finalConfig = {};
 
-        // Case 1: Android `google-services.json`
+        // Android `google-services.json`
         if (parsed.project_info && parsed.client) {
           const proj = parsed.project_info;
           const client = parsed.client[0] || {};
@@ -2185,7 +2567,7 @@
             appId: appId
           };
         } 
-        // Case 2: Web SDK Config
+        // Web SDK Config
         else if (parsed.apiKey || parsed.databaseURL || parsed.projectId) {
           finalConfig = {
             apiKey: parsed.apiKey || "",
@@ -2200,15 +2582,13 @@
         }
 
         if (!finalConfig.databaseURL) {
-          throw new Error("databaseURL is missing. Please ensure your Firebase Realtime Database is enabled in Firebase Console.");
+          throw new Error("databaseURL is missing. Please ensure your Firebase Realtime Database is enabled.");
         }
 
-        // Save & reload
         localStorage.setItem(FIREBASE_CONFIG_KEY, JSON.stringify(finalConfig));
         showToast("Firebase Config saved! Connecting...", "bi-cloud-check");
         closeFirebaseModal();
 
-        // Reconnect
         setTimeout(() => {
           location.reload();
         }, 500);
@@ -2248,7 +2628,6 @@
       sub.textContent = subText;
     }
 
-    // Modal controls
     function openFirebaseModal() {
       const existing = localStorage.getItem(FIREBASE_CONFIG_KEY);
       if (existing) {
@@ -2262,7 +2641,7 @@
     }
 
     // =========================================================================
-    // CHECKLIST TOGGLE & REALTIME MUTATION
+    // CHECKLIST TOGGLE & MUTATION
     // =========================================================================
     function toggleSubskill(parentSkillId, subskillId) {
       const isChecked = !!checkedState[subskillId];
@@ -2272,14 +2651,9 @@
         checkedState[subskillId] = { completedAt: Date.now() };
       }
 
-      // Check if all subskills are completed to update parent check
       syncParentStatus(parentSkillId);
-
-      // Save locally immediately
       saveLocalState();
       updateUI();
-
-      // Sync to Firebase RTDB
       syncToFirebase(subskillId, !isChecked);
     }
 
@@ -2314,8 +2688,8 @@
         });
         updates[parent.id] = targetState ? { completedAt: Date.now() } : null;
         rtdbRef.update(updates);
-        showToast(targetState ? "Skills checked" : "Skills cleared", "bi-cloud-upload");
       }
+      showToast(targetState ? "Skill mastered" : "Skill cleared", "bi-check2-circle");
     }
 
     function syncParentStatus(parentSkillId) {
@@ -2337,9 +2711,9 @@
         } else {
           rtdbRef.child(id).remove();
         }
-        showToast("Synced to Firebase RTDB", "bi-cloud-check");
+        showToast("Synced to RTDB", "bi-cloud-check");
       } else {
-        showToast("Saved locally (offline)", "bi-hdd");
+        showToast("Saved locally", "bi-hdd");
       }
     }
 
@@ -2359,7 +2733,7 @@
     }
 
     // =========================================================================
-    // RENDERING & PROGRESS LOGIC
+    // RENDERING & VIEWS
     // =========================================================================
     function selectCategory(catId) {
       activeCategory = catId;
@@ -2367,11 +2741,9 @@
       const navItem = document.getElementById("nav-" + catId);
       if (navItem) navItem.classList.add("active");
 
-      // Auto close sidebar on mobile
       if (window.innerWidth < 768) {
         document.getElementById("sidebar").classList.add("collapsed");
       }
-
       renderContent();
     }
 
@@ -2381,6 +2753,11 @@
 
       if (searchQuery) {
         renderSearchResults(container);
+        return;
+      }
+
+      if (notesOnlyFilter) {
+        renderNotesOnlyView(container);
         return;
       }
 
@@ -2394,7 +2771,7 @@
       }
     }
 
-    // Render 1: Overview Dashboard (Not everything dumped on one screen!)
+    // Render Overview
     function renderOverviewDashboard(container) {
       let grandTotalParents = 0;
       let grandCompletedParents = 0;
@@ -2416,17 +2793,17 @@
               Top 1% Senior Mastery Roadmap
             </h1>
             <p class="view-desc">
-              Structured progressive modules. Select a track below or from the sidebar to drill into parent skills and sub-concepts.
+              Welcome back, <b>${escapeHTML(profileState.name)}</b>! Progressive learning tracks across Android, KMP, Mobile AI, and Architecture.
             </p>
           </div>
         </div>
 
         <!-- Overall Progress Card -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="font-weight: 600; font-size: 15px;">Global Engineering Readiness</span>
-              <span style="font-size: 11px; color: var(--openai-green); background: var(--openai-green-subtle); padding: 2px 8px; border-radius: var(--radius-full);">
+              <span style="font-size: 11px; color: var(--openai-green); background: var(--openai-green-subtle); padding: 2px 8px; border-radius: 9999px;">
                 ${isFirebaseConnected ? 'RTDB Live' : 'Local Storage'}
               </span>
             </div>
@@ -2440,12 +2817,12 @@
           </div>
 
           <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
-            <span>${grandCompletedParents} Parent Capabilities Complete</span>
-            <span>${grandTotalParents - grandCompletedParents} Capabilities In Progress</span>
+            <span>${grandCompletedParents} Capabilities Mastered</span>
+            <span>${grandTotalParents - grandCompletedParents} In Progress</span>
           </div>
         </div>
 
-        <!-- Category Grid Cards -->
+        <!-- Track Cards -->
         <div class="overview-grid">
           ${HIERARCHY_DATA.map(cat => {
             const catDone = cat.skills.filter(s => isParentDone(s)).length;
@@ -2487,7 +2864,7 @@
       `;
     }
 
-    // Render 2: Specific Category View (Drill-down with sub-skills!)
+    // Render Category Detail
     function renderCategoryDetail(container, category) {
       const catDone = category.skills.filter(s => isParentDone(s)).length;
       const catTotal = category.skills.length;
@@ -2512,19 +2889,17 @@
           </div>
         </div>
 
-        <!-- Category Progress Indicator -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
           <div style="font-size: 13px; font-weight: 500;">
-            Module Progress: <span style="color: var(--openai-green); font-family: 'JetBrains Mono', monospace;">${catDone} / ${catTotal}</span>
+            Track Mastery: <span style="color: var(--openai-green); font-family: 'JetBrains Mono', monospace;">${catDone} / ${catTotal}</span>
           </div>
-          <div style="width: 220px;">
+          <div style="width: 200px;">
             <div class="progress-bar-bg">
               <div class="progress-bar-fill" style="width: ${catPct}%;"></div>
             </div>
           </div>
         </div>
 
-        <!-- Parent Skills List -->
         <div id="parentSkillsList">
           ${category.skills.map(parent => renderParentSkillCard(parent)).join("")}
         </div>
@@ -2538,11 +2913,11 @@
       const subDoneCount = subskills.filter(s => !!checkedState[s.id]).length;
       const subTotal = subskills.length;
       const isOpen = autoOpen || expandAllState;
+      const hasNote = !!notesState[parent.id];
 
       return `
         <div class="parent-card ${isOpen ? 'open' : ''} ${isDone ? 'has-completed' : ''}" id="card-${parent.id}">
           <div class="parent-header" onclick="toggleAccordion('card-${parent.id}')">
-            <!-- Parent checkbox (checks all subskills) -->
             <div class="custom-check ${isDone ? 'checked' : ''}" onclick="event.stopPropagation(); toggleParentAll('${parent.id}');" title="Toggle entire skill">
               <i class="bi bi-check-lg"></i>
             </div>
@@ -2550,12 +2925,27 @@
             <div class="parent-title">${escapeHTML(parent.name)}</div>
 
             <div class="parent-meta">
+              <!-- Note / Doubt Button -->
+              <button class="note-btn ${hasNote ? 'has-note' : ''}" onclick="event.stopPropagation(); openNoteModal('${parent.id}', '${escapeJS(parent.name)}');" title="${hasNote ? 'View / Edit Note' : 'Add Note / Doubt'}">
+                <i class="bi ${hasNote ? 'bi-journal-check' : 'bi-journal-plus'}"></i>
+              </button>
+
               <span class="parent-badge ${isDone ? 'done' : ''}">
                 ${subDoneCount}/${subTotal} concepts
               </span>
               <i class="bi bi-chevron-down arrow-icon"></i>
             </div>
           </div>
+
+          <!-- Note Preview if note exists -->
+          ${hasNote ? `
+            <div style="padding: 0 14px 10px 44px; background: var(--bg-card);">
+              <div class="parent-note-preview">
+                <i class="bi bi-sticky-fill text-warning me-1"></i>
+                <div style="flex: 1; word-break: break-word;">${escapeHTML(notesState[parent.id])}</div>
+              </div>
+            </div>
+          ` : ''}
 
           <!-- Sub-skills container -->
           <div class="subskills-container">
@@ -2575,7 +2965,50 @@
       `;
     }
 
-    // Render Search Results Across All Categories
+    // Render Doubts & Notes Only View
+    function renderNotesOnlyView(container) {
+      const noteSkillIds = Object.keys(notesState);
+      container.innerHTML = `
+        <div class="view-header">
+          <div class="view-title-group">
+            <h1>
+              <i class="bi bi-journal-text" style="color: var(--note-amber);"></i>
+              My Skill Notes & Doubts
+            </h1>
+            <p class="view-desc">Review your notes, personal links, and open questions before interviews.</p>
+          </div>
+          <button class="btn-secondary-gpt" onclick="toggleNotesFilter()" style="font-size: 12px; padding: 6px 12px;">
+            Back to Roadmap
+          </button>
+        </div>
+        <div id="notesContainer"></div>
+      `;
+
+      const listContainer = document.getElementById("notesContainer");
+
+      if (noteSkillIds.length === 0) {
+        listContainer.innerHTML = `
+          <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+            <i class="bi bi-journal-plus" style="font-size: 34px; margin-bottom: 12px; display: block; color: var(--note-amber);"></i>
+            <div style="font-size: 15px; color: var(--text-primary); margin-bottom: 4px;">No notes or doubts added yet</div>
+            <div style="font-size: 13px;">Click the notebook icon on any skill card to record questions, cheat-sheet links, or doubts.</div>
+          </div>
+        `;
+        return;
+      }
+
+      HIERARCHY_DATA.forEach(cat => {
+        cat.skills.forEach(parent => {
+          if (notesState[parent.id]) {
+            const div = document.createElement("div");
+            div.innerHTML = renderParentSkillCard(parent, true);
+            listContainer.appendChild(div.firstElementChild);
+          }
+        });
+      });
+    }
+
+    // Render Search
     function renderSearchResults(container) {
       const q = searchQuery.toLowerCase();
       let matchedCount = 0;
@@ -2587,7 +3020,7 @@
               <i class="bi bi-search" style="color: var(--openai-green);"></i>
               Search: "${escapeHTML(searchQuery)}"
             </h1>
-            <p class="view-desc">Searching across all parent skills and granular sub-concepts</p>
+            <p class="view-desc">Matching parent capabilities, sub-concepts, or personal notes</p>
           </div>
           <button class="btn-secondary-gpt" onclick="clearSearch()" style="font-size: 12px; padding: 6px 12px;">
             Clear Search
@@ -2602,11 +3035,12 @@
         cat.skills.forEach(parent => {
           const parentMatch = parent.name.toLowerCase().includes(q);
           const subMatch = parent.subskills.some(s => s.name.toLowerCase().includes(q));
+          const noteMatch = (notesState[parent.id] || "").toLowerCase().includes(q);
 
-          if (parentMatch || subMatch) {
+          if (parentMatch || subMatch || noteMatch) {
             matchedCount++;
             const div = document.createElement("div");
-            div.innerHTML = renderParentSkillCard(parent, true); // Auto expand matching cards
+            div.innerHTML = renderParentSkillCard(parent, true);
             listContainer.appendChild(div.firstElementChild);
           }
         });
@@ -2670,19 +3104,21 @@
     }
 
     function confirmResetAll() {
-      if (confirm("Reset all progress across all modules in your roadmap?")) {
+      if (confirm("Reset all progress and notes in your roadmap?")) {
         checkedState = {};
+        notesState = {};
         saveLocalState();
         updateUI();
 
         if (rtdbRef && isFirebaseConnected) {
           rtdbRef.remove();
-          showToast("Database reset", "bi-trash3");
+          notesRef.remove();
+          showToast("Roadmap database reset", "bi-trash3");
         }
       }
     }
 
-    // Update Global Badge Counts
+    // Update Counts
     function updateUI() {
       let grandTotal = 0;
       let grandCompleted = 0;
@@ -2705,6 +3141,9 @@
 
       const totalBadge = document.getElementById("badge-total");
       if (totalBadge) totalBadge.textContent = `${grandCompleted}/${grandTotal}`;
+
+      const notesCount = Object.keys(notesState).length;
+      document.getElementById("badge-notes-count").textContent = notesCount;
 
       renderContent();
     }
@@ -2731,12 +3170,17 @@
 
     // Copy for ChatGPT Prompt
     function copyRoadmapPrompt() {
-      let md = `# TOP 1% ANDROID & AI ROADMAP STATUS\n\n`;
+      let md = `# TOP 1% ANDROID & AI ROADMAP STATUS\n`;
+      md += `**Engineer**: ${profileState.name} (${profileState.role})\n\n`;
+
       HIERARCHY_DATA.forEach(cat => {
         md += `## ${cat.title}\n`;
         cat.skills.forEach(parent => {
           const parentDone = isParentDone(parent);
           md += `### [${parentDone ? 'x' : ' '}] ${parent.name}\n`;
+          if (notesState[parent.id]) {
+            md += `  > **Note/Doubt**: ${notesState[parent.id]}\n`;
+          }
           parent.subskills.forEach(sub => {
             const subDone = !!checkedState[sub.id];
             md += `  - [${subDone ? 'x' : ' '}] ${sub.name}\n`;
@@ -2746,7 +3190,7 @@
       });
 
       navigator.clipboard.writeText(md).then(() => {
-        showToast("Full roadmap prompt copied to clipboard!", "bi-clipboard-check");
+        showToast("Full roadmap prompt with notes copied!", "bi-clipboard-check");
       }).catch(() => {
         showToast("Error copying to clipboard", "bi-exclamation-triangle");
       });
@@ -2754,14 +3198,20 @@
 
     // Export / Import
     function exportData() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(checkedState, null, 2));
+      const exportObject = {
+        checks: checkedState,
+        notes: notesState,
+        profile: profileState,
+        exportedAt: new Date().toISOString()
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObject, null, 2));
       const a = document.createElement("a");
       a.href = dataStr;
-      a.download = `android_mastery_rtdb_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `android_mastery_complete_backup_${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       a.remove();
-      showToast("Progress exported as JSON", "bi-download");
+      showToast("Progress and notes exported!", "bi-download");
     }
 
     function importData(e) {
@@ -2771,17 +3221,27 @@
       reader.onload = function(evt) {
         try {
           const data = JSON.parse(evt.target.result);
-          if (typeof data === 'object' && data !== null) {
-            checkedState = data;
-            saveLocalState();
-            updateUI();
-            if (rtdbRef && isFirebaseConnected) {
-              rtdbRef.set(data);
+          if (data && typeof data === 'object') {
+            if (data.checks) {
+              checkedState = data.checks;
+              notesState = data.notes || {};
+              profileState = data.profile || profileState;
+            } else {
+              checkedState = data;
             }
-            showToast("Backup imported successfully!", "bi-cloud-check");
+            saveLocalState();
+            updateProfileUI();
+            updateUI();
+
+            if (isFirebaseConnected) {
+              if (rtdbRef) rtdbRef.set(checkedState);
+              if (notesRef) notesRef.set(notesState);
+              if (profileRef) profileRef.set(profileState);
+            }
+            showToast("Backup restored completely!", "bi-cloud-check");
           }
         } catch (err) {
-          alert("Invalid JSON backup file: " + err.message);
+          alert("Invalid backup JSON file: " + err.message);
         }
       };
       reader.readAsText(file);
@@ -2802,7 +3262,7 @@
     }
 
     function escapeHTML(str) {
-      return str.replace(/[&<>'"]/g, 
+      return (str || "").replace(/[&<>'"]/g, 
         tag => ({
           '&': '&amp;',
           '<': '&lt;',
@@ -2813,10 +3273,15 @@
       );
     }
 
+    function escapeJS(str) {
+      return (str || "").replace(/'/g, "\\'");
+    }
+
     // =========================================================================
     // STARTUP
     // =========================================================================
     window.addEventListener("DOMContentLoaded", () => {
+      initTheme();
       loadLocalState();
       initFirebase();
       updateUI();
