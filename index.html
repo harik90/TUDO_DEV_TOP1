@@ -500,14 +500,16 @@
       justify-content: center;
     }
     .overview-card-title-group h2 {
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1.3;
+      line-height: 1.35;
       margin-bottom: 2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
     }
     .overview-card-subtitle {
       font-size: 11px;
@@ -653,10 +655,17 @@
       color: var(--text-primary);
       flex: 1;
       min-width: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+    .parent-card.open .parent-title {
+      display: block;
+      overflow: visible;
+      white-space: normal;
     }
 
     .parent-meta {
@@ -743,8 +752,8 @@
 
     .subskill-row {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      align-items: flex-start;
+      gap: 10px;
       padding: 7px 10px;
       min-height: 34px;
       border-radius: 5px;
@@ -753,6 +762,9 @@
       transition: background 0.15s;
       margin-top: 3px;
       min-width: 0;
+    }
+    .subskill-row .custom-check {
+      margin-top: 2px;
     }
     .subskill-row:hover {
       background: var(--bg-surface);
@@ -800,12 +812,11 @@
     .subskill-name {
       font-size: 12.5px;
       color: var(--text-secondary);
-      line-height: 1.4;
+      line-height: 1.45;
       flex: 1;
       min-width: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      word-break: break-word;
+      white-space: normal;
     }
     .subskill-row.checked .subskill-name {
       color: var(--text-muted);
@@ -1147,6 +1158,31 @@
       .parent-title {
         font-size: 13px;
       }
+      #headerDbLabel {
+        display: none !important;
+      }
+      .action-btn-secondary {
+        display: none !important;
+      }
+      .badge-concept-word {
+        display: none !important;
+      }
+      .btn-label-text {
+        display: none !important;
+      }
+      .btn-compact-mobile {
+        padding: 5px 8px !important;
+        font-size: 12px !important;
+      }
+      .chat-header {
+        padding: 0 10px;
+        height: 50px;
+        min-height: 50px;
+      }
+      .model-selector {
+        padding: 4px 6px;
+        font-size: 12px;
+      }
       .prompt-footer {
         padding: 0 10px 10px;
       }
@@ -1159,6 +1195,70 @@
       }
       .chatgpt-modal {
         padding: 16px 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .chat-header {
+        padding: 0 8px;
+      }
+      .header-actions {
+        gap: 4px;
+      }
+      .btn-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+      }
+      .model-selector {
+        padding: 3px 6px;
+        font-size: 11.5px;
+        max-width: 140px;
+      }
+      .parent-header {
+        padding: 8px 8px;
+        gap: 8px;
+      }
+      .parent-meta {
+        gap: 5px;
+      }
+      .parent-badge {
+        padding: 1px 6px;
+        font-size: 10.5px;
+        height: 20px;
+      }
+      .note-btn {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        min-height: 24px;
+        font-size: 11px;
+      }
+      .subskills-container {
+        padding-left: 14px;
+        padding-right: 6px;
+      }
+      .overview-card-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        max-width: 36px;
+        font-size: 16px;
+      }
+      .overview-card-title-group h2 {
+        font-size: 13.5px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .note-btn:not(.has-note) {
+        display: none !important;
+      }
+      .parent-title {
+        font-size: 12.5px;
+      }
+      .model-selector {
+        max-width: 115px;
       }
     }
   </style>
@@ -1325,13 +1425,13 @@
         <button class="btn-icon" onclick="toggleTheme()" id="themeToggleBtn" title="Switch Theme (Dark / Light)">
           <i class="bi bi-moon-stars" id="themeIcon"></i>
         </button>
-        <button class="btn-icon" onclick="toggleExpandAll()" title="Expand / Collapse all cards">
+        <button class="btn-icon action-btn-secondary" onclick="toggleExpandAll()" id="expandToggleBtn" title="Expand / Collapse all cards">
           <i class="bi bi-arrows-expand" id="expandToggleIcon"></i>
         </button>
-        <button class="btn-icon" onclick="copyRoadmapPrompt()" title="Copy prompt for ChatGPT">
+        <button class="btn-icon action-btn-secondary" onclick="copyRoadmapPrompt()" id="sharePromptBtn" title="Copy prompt for ChatGPT">
           <i class="bi bi-share"></i>
         </button>
-        <button class="btn-icon" onclick="openProfileModal()" title="Edit Profile">
+        <button class="btn-icon" onclick="openProfileModal()" id="profileBtn" title="Edit Profile">
           <i class="bi bi-person-circle"></i>
         </button>
       </div>
@@ -2630,6 +2730,7 @@ const firebaseConfig = {
     let activeCategory = "overview";
     let searchQuery = "";
     let expandAllState = false;
+    const openCardIds = new Set();
     let notesOnlyFilter = false;
     let editingSkillId = null;
 
@@ -2736,7 +2837,9 @@ const firebaseConfig = {
       closeProfileModal();
 
       if (profileRef && isFirebaseConnected) {
-        profileRef.set({ ...profileState, updatedAt: Date.now() });
+        profileRef.set({ ...profileState, updatedAt: Date.now() }).catch(err => {
+          console.warn("RTDB profile update error:", err);
+        });
       }
       showToast("Profile updated!", "bi-person-check");
     }
@@ -2776,9 +2879,13 @@ const firebaseConfig = {
 
       if (notesRef && isFirebaseConnected) {
         if (text) {
-          notesRef.child(editingSkillId).set({ note: text, updatedAt: Date.now() });
+          notesRef.child(editingSkillId).set({ note: text, updatedAt: Date.now() }).catch(err => {
+            console.warn("RTDB save note error:", err);
+          });
         } else {
-          notesRef.child(editingSkillId).remove();
+          notesRef.child(editingSkillId).remove().catch(err => {
+            console.warn("RTDB delete note error:", err);
+          });
         }
       }
       showToast("Note & doubt saved!", "bi-journal-check");
@@ -2792,7 +2899,9 @@ const firebaseConfig = {
       updateUI();
 
       if (notesRef && isFirebaseConnected) {
-        notesRef.child(editingSkillId).remove();
+        notesRef.child(editingSkillId).remove().catch(err => {
+          console.warn("RTDB delete note error:", err);
+        });
       }
       showToast("Note removed", "bi-trash3");
     }
@@ -2925,15 +3034,32 @@ const firebaseConfig = {
         notesRef = firebaseDb.ref("roadmap_notes");
         profileRef = firebaseDb.ref("user_profile");
 
-        updateDbStatus(true, "RTDB Live", "Realtime Synced");
+        // Realtime Connection Presence (.info/connected)
+        const connectedRef = firebaseDb.ref(".info/connected");
+        connectedRef.on("value", snap => {
+          if (snap.val() === true) {
+            updateDbStatus(true, "RTDB Live", "Realtime Synced");
+          } else {
+            updateDbStatus(false, "Connecting...", "Reconnecting to RTDB");
+          }
+        });
 
         // Realtime Checklist Listener
         rtdbRef.on("value", snapshot => {
           const val = snapshot.val();
           if (val && typeof val === "object") {
             checkedState = val;
+            HIERARCHY_DATA.forEach(cat => {
+              cat.skills.forEach(p => syncParentStatus(p.id));
+            });
             saveLocalState();
             updateUI();
+          }
+        }, err => {
+          console.warn("RTDB Checklist error:", err);
+          if (err && err.code === "PERMISSION_DENIED") {
+            updateDbStatus(false, "Rules Locked", "Set RTDB rules to read/write");
+            showToast("RTDB: Permission denied. Check security rules.", "bi-shield-exclamation");
           }
         });
 
@@ -2949,6 +3075,8 @@ const firebaseConfig = {
             saveLocalState();
             updateUI();
           }
+        }, err => {
+          console.warn("RTDB Notes error:", err);
         });
 
         // Realtime Profile Listener
@@ -2960,6 +3088,8 @@ const firebaseConfig = {
             saveLocalState();
             updateProfileUI();
           }
+        }, err => {
+          console.warn("RTDB Profile error:", err);
         });
 
       } catch (err) {
@@ -3081,7 +3211,20 @@ const firebaseConfig = {
       syncParentStatus(parentSkillId);
       saveLocalState();
       updateUI();
-      syncToFirebase(subskillId, !isChecked);
+
+      if (rtdbRef && isFirebaseConnected) {
+        const updates = {};
+        updates[subskillId] = !isChecked ? { completedAt: Date.now() } : null;
+        const parent = findParentSkill(parentSkillId);
+        const parentDone = isParentDone(parent);
+        updates[parentSkillId] = parentDone ? { completedAt: Date.now() } : null;
+        rtdbRef.update(updates).catch(err => {
+          console.warn("RTDB sync error:", err);
+        });
+        showToast("Synced to RTDB", "bi-cloud-check");
+      } else {
+        showToast("Saved locally", "bi-hdd");
+      }
     }
 
     function toggleParentAll(parentSkillId, forceState) {
@@ -3114,7 +3257,9 @@ const firebaseConfig = {
           updates[sub.id] = targetState ? { completedAt: Date.now() } : null;
         });
         updates[parent.id] = targetState ? { completedAt: Date.now() } : null;
-        rtdbRef.update(updates);
+        rtdbRef.update(updates).catch(err => {
+          console.warn("RTDB toggleParentAll error:", err);
+        });
       }
       showToast(targetState ? "Skill mastered" : "Skill cleared", "bi-check2-circle");
     }
@@ -3320,11 +3465,11 @@ const firebaseConfig = {
             <p class="view-desc" title="${escapeHTML(category.description)}">${category.description}</p>
           </div>
           <div style="display: flex; gap: 6px; flex-shrink: 0;">
-            <button class="btn-secondary-gpt" style="font-size: 12px; padding: 6px 10px;" onclick="batchCategory('${category.id}', true)">
-              <i class="bi bi-check2-all me-1"></i> Check All
+            <button class="btn-secondary-gpt btn-compact-mobile" style="font-size: 12px; padding: 6px 10px;" onclick="batchCategory('${category.id}', true)">
+              <i class="bi bi-check2-all me-1"></i> <span class="btn-label-text">Check All</span>
             </button>
-            <button class="btn-secondary-gpt" style="font-size: 12px; padding: 6px 10px;" onclick="batchCategory('${category.id}', false)">
-              <i class="bi bi-x me-1"></i> Clear
+            <button class="btn-secondary-gpt btn-compact-mobile" style="font-size: 12px; padding: 6px 10px;" onclick="batchCategory('${category.id}', false)">
+              <i class="bi bi-x me-1"></i> <span class="btn-label-text">Clear</span>
             </button>
           </div>
         </div>
@@ -3333,7 +3478,7 @@ const firebaseConfig = {
           <div style="font-size: 12.5px; font-weight: 500; white-space: nowrap;">
             Track Mastery: <span style="color: var(--openai-green); font-family: 'JetBrains Mono', monospace;">${catDone} / ${catTotal}</span>
           </div>
-          <div style="width: 180px; flex-shrink: 0;">
+          <div style="flex: 1; max-width: 180px; min-width: 70px;">
             <div class="progress-bar-bg">
               <div class="progress-bar-fill" style="width: ${catPct}%;"></div>
             </div>
@@ -3352,7 +3497,7 @@ const firebaseConfig = {
       const subskills = parent.subskills || [];
       const subDoneCount = subskills.filter(s => !!checkedState[s.id]).length;
       const subTotal = subskills.length;
-      const isOpen = autoOpen || expandAllState;
+      const isOpen = autoOpen || expandAllState || openCardIds.has(`card-${parent.id}`);
       const hasNote = !!notesState[parent.id];
 
       return `
@@ -3371,7 +3516,7 @@ const firebaseConfig = {
               </button>
 
               <span class="parent-badge ${isDone ? 'done' : ''}">
-                ${subDoneCount}/${subTotal} concepts
+                ${subDoneCount}/${subTotal}<span class="badge-concept-word"> concepts</span>
               </span>
               <i class="bi bi-chevron-down arrow-icon"></i>
             </div>
@@ -3499,15 +3644,28 @@ const firebaseConfig = {
 
     function toggleAccordion(cardId) {
       const card = document.getElementById(cardId);
-      if (card) card.classList.toggle("open");
+      if (!card) return;
+      const isOpening = !card.classList.contains("open");
+      card.classList.toggle("open", isOpening);
+      if (isOpening) {
+        openCardIds.add(cardId);
+      } else {
+        openCardIds.delete(cardId);
+      }
     }
 
     function toggleExpandAll() {
       expandAllState = !expandAllState;
+      if (!expandAllState) {
+        openCardIds.clear();
+      } else {
+        document.querySelectorAll(".parent-card").forEach(c => openCardIds.add(c.id));
+      }
       document.querySelectorAll(".parent-card").forEach(c => {
         c.classList.toggle("open", expandAllState);
       });
-      document.getElementById("expandToggleIcon").className = expandAllState ? "bi bi-arrows-collapse" : "bi bi-arrows-expand";
+      const icon = document.getElementById("expandToggleIcon");
+      if (icon) icon.className = expandAllState ? "bi bi-arrows-collapse" : "bi bi-arrows-expand";
     }
 
     function batchCategory(catId, markDone) {
@@ -3538,7 +3696,9 @@ const firebaseConfig = {
       updateUI();
 
       if (rtdbRef && isFirebaseConnected) {
-        rtdbRef.update(updates);
+        rtdbRef.update(updates).catch(err => {
+          console.warn("RTDB batchCategory error:", err);
+        });
         showToast("Category updated in RTDB", "bi-cloud-upload");
       }
     }
@@ -3551,8 +3711,8 @@ const firebaseConfig = {
         updateUI();
 
         if (rtdbRef && isFirebaseConnected) {
-          rtdbRef.remove();
-          notesRef.remove();
+          rtdbRef.remove().catch(err => console.warn("RTDB reset checklist error:", err));
+          notesRef.remove().catch(err => console.warn("RTDB reset notes error:", err));
           showToast("Roadmap database reset", "bi-trash3");
         }
       }
