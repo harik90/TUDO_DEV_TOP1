@@ -2569,6 +2569,10 @@ const firebaseConfig = {
       document.getElementById("profileNameInput").value = profileState.name || "";
       document.getElementById("profileRoleInput").value = profileState.role || "";
       document.getElementById("profileModal").classList.add("show");
+      setTimeout(() => {
+        const input = document.getElementById("profileNameInput");
+        if (input) input.focus();
+      }, 50);
     }
 
     function closeProfileModal() {
@@ -2594,11 +2598,17 @@ const firebaseConfig = {
     // =========================================================================
     // SKILL NOTES & DOUBTS SYSTEM
     // =========================================================================
-    function openNoteModal(skillId, skillName) {
+    function openNoteModal(skillId, optionalTitle) {
       editingSkillId = skillId;
-      document.getElementById("noteModalSkillTitle").textContent = skillName;
+      const parent = findParentSkill(skillId);
+      const title = optionalTitle || (parent ? parent.name : "Skill Notes & Doubts");
+      document.getElementById("noteModalSkillTitle").textContent = title;
       document.getElementById("skillNoteTextarea").value = notesState[skillId] || "";
       document.getElementById("noteModal").classList.add("show");
+      setTimeout(() => {
+        const ta = document.getElementById("skillNoteTextarea");
+        if (ta) ta.focus();
+      }, 50);
     }
 
     function closeNoteModal() {
@@ -2643,7 +2653,20 @@ const firebaseConfig = {
 
     function toggleNotesFilter() {
       notesOnlyFilter = !notesOnlyFilter;
-      document.getElementById("nav-notes-only").classList.toggle("active", notesOnlyFilter);
+      const notesNav = document.getElementById("nav-notes-only");
+      if (notesNav) notesNav.classList.toggle("active", notesOnlyFilter);
+
+      if (notesOnlyFilter) {
+        searchQuery = "";
+        const searchInput = document.getElementById("promptSearchInput");
+        if (searchInput) searchInput.value = "";
+        document.querySelectorAll(".nav-item").forEach(el => {
+          if (el.id !== "nav-notes-only") el.classList.remove("active");
+        });
+      } else {
+        const navItem = document.getElementById("nav-" + activeCategory);
+        if (navItem) navItem.classList.add("active");
+      }
       renderContent();
     }
 
@@ -2888,6 +2911,10 @@ const firebaseConfig = {
         discBtn.style.display = isFirebaseConnected ? "block" : "none";
       }
       document.getElementById("firebaseModal").classList.add("show");
+      setTimeout(() => {
+        const input = document.getElementById("firebaseJsonInput");
+        if (input) input.focus();
+      }, 50);
     }
 
     function closeFirebaseModal() {
@@ -2991,12 +3018,25 @@ const firebaseConfig = {
     // =========================================================================
     function selectCategory(catId) {
       activeCategory = catId;
+      notesOnlyFilter = false;
+      const notesNavItem = document.getElementById("nav-notes-only");
+      if (notesNavItem) notesNavItem.classList.remove("active");
+
+      if (searchQuery) {
+        searchQuery = "";
+        const searchInput = document.getElementById("promptSearchInput");
+        if (searchInput) searchInput.value = "";
+      }
+
       document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
       const navItem = document.getElementById("nav-" + catId);
       if (navItem) navItem.classList.add("active");
 
       if (window.innerWidth < 768) {
-        document.getElementById("sidebar").classList.add("collapsed");
+        const sidebar = document.getElementById("sidebar");
+        const btn = document.getElementById("openSidebarBtn");
+        if (sidebar) sidebar.classList.add("collapsed");
+        if (btn) btn.style.display = "flex";
       }
       renderContent();
     }
@@ -3180,7 +3220,7 @@ const firebaseConfig = {
 
             <div class="parent-meta">
               <!-- Note / Doubt Button -->
-              <button class="note-btn ${hasNote ? 'has-note' : ''}" onclick="event.stopPropagation(); openNoteModal('${parent.id}', '${escapeJS(parent.name)}');" title="${hasNote ? 'View / Edit Note' : 'Add Note / Doubt'}">
+              <button class="note-btn ${hasNote ? 'has-note' : ''}" onclick="event.stopPropagation(); openNoteModal('${parent.id}');" title="${hasNote ? 'View / Edit Note' : 'Add Note / Doubt'}">
                 <i class="bi ${hasNote ? 'bi-journal-check' : 'bi-journal-plus'}"></i>
               </button>
 
@@ -3425,7 +3465,7 @@ const firebaseConfig = {
     // Copy for ChatGPT Prompt
     function copyRoadmapPrompt() {
       let md = `# TOP 1% ANDROID & AI ROADMAP STATUS\n`;
-      md += `**Engineer**: ${profileState.name} (${profileState.role})\n\n`;
+      md += `**Engineer**: ${profileState.name || 'Developer'} (${profileState.role || 'Top 1% Senior Dev'})\n\n`;
 
       HIERARCHY_DATA.forEach(cat => {
         md += `## ${cat.title}\n`;
@@ -3443,11 +3483,31 @@ const firebaseConfig = {
         md += `\n`;
       });
 
-      navigator.clipboard.writeText(md).then(() => {
-        showToast("Full roadmap prompt with notes copied!", "bi-clipboard-check");
-      }).catch(() => {
-        showToast("Error copying to clipboard", "bi-exclamation-triangle");
-      });
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(md).then(() => {
+          showToast("Roadmap prompt copied for ChatGPT!", "bi-clipboard-check");
+        }).catch(() => {
+          fallbackCopyText(md);
+        });
+      } else {
+        fallbackCopyText(md);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        showToast("Roadmap prompt copied for ChatGPT!", "bi-clipboard-check");
+      } catch (e) {
+        showToast("Error copying prompt", "bi-exclamation-triangle");
+      }
+      document.body.removeChild(ta);
     }
 
     // Export / Import
@@ -3531,6 +3591,12 @@ const firebaseConfig = {
       return (str || "").replace(/'/g, "\\'");
     }
 
+    function closeAllModals() {
+      closeProfileModal();
+      closeNoteModal();
+      closeFirebaseModal();
+    }
+
     // =========================================================================
     // STARTUP
     // =========================================================================
@@ -3539,6 +3605,40 @@ const firebaseConfig = {
       loadLocalState();
       initFirebase();
       updateUI();
+
+      // Mobile initial state check
+      if (window.innerWidth < 768) {
+        const sidebar = document.getElementById("sidebar");
+        const btn = document.getElementById("openSidebarBtn");
+        if (sidebar) sidebar.classList.add("collapsed");
+        if (btn) btn.style.display = "flex";
+      }
+
+      // Close modal on Escape key press
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeAllModals();
+        }
+      });
+
+      // Close modal when clicking on dark backdrop overlay
+      document.querySelectorAll(".modal-overlay").forEach(overlay => {
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) {
+            closeAllModals();
+          }
+        });
+      });
+
+      // Submit search on Enter key
+      const searchInput = document.getElementById("promptSearchInput");
+      if (searchInput) {
+        searchInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            searchInput.blur();
+          }
+        });
+      }
     });
   </script>
 </body>

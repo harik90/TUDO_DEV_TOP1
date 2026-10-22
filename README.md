@@ -40,7 +40,8 @@ A senior mobile engineering roadmap tracker built in the authentic **ChatGPT App
 1. Open **[https://harik90.github.io/TUDO_DEV_TOP1/](https://harik90.github.io/TUDO_DEV_TOP1/)**.
 2. A setup modal will pop up asking for your Firebase configuration.
 3. Paste either:
-   - **Firebase Web Config JSON** from Firebase Console (Project Settings > Web App)
+   - **Raw Firebase Console Code Snippet** (directly copied from web app setup with imports and `const firebaseConfig = { ... }`)
+   - **Firebase Web Config JSON**
    - Or **google-services.json** from your Android project.
 4. Click **Connect & Sync Database**.
 5. The site automatically parses the `databaseURL`, `apiKey`, and `projectId`, initializes Firebase, and syncs your checked state, personal notes, and profile in real time!
