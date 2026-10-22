@@ -6,24 +6,26 @@
   <title>ChatGPT - Top 1% Android & AI Roadmap</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%2232%22 height=%2232%22><circle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22%2310a37f%22/><path d=%22M16 8a4 4 0 0 1 4 4v8a4 4 0 0 1-8 0v-8a4 4 0 0 1 4-4z%22 fill=%22white%22/></svg>">
 
-  <!-- Inter Font -->
+  <!-- Inter & JetBrains Mono Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
   <!-- Bootstrap Icons CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
+  <!-- Firebase Compat App & RTDB SDKs (Rock solid, zero-build, CDN) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
   <style>
-    /* ==========================================================================
-       ChatGPT Official Design Tokens & Aesthetics
-       ========================================================================== */
     :root {
       --bg-sidebar: #171717;
       --bg-main: #212121;
       --bg-surface: #2f2f2f;
       --bg-surface-hover: #383838;
-      --bg-input: #2f2f2f;
+      --bg-card: #1e1e1e;
+      --bg-subcard: rgba(255, 255, 255, 0.02);
       --border-subtle: rgba(255, 255, 255, 0.08);
       --border-medium: rgba(255, 255, 255, 0.15);
       --text-primary: #ececec;
@@ -47,7 +49,7 @@
     body {
       background-color: var(--bg-main);
       color: var(--text-primary);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 14px;
       line-height: 1.5;
       height: 100vh;
@@ -71,24 +73,22 @@
       background: rgba(255, 255, 255, 0.3);
     }
 
-    /* ==========================================================================
-       Sidebar Layout (ChatGPT Style)
-       ========================================================================== */
+    /* Sidebar */
     #sidebar {
-      width: 260px;
-      min-width: 260px;
+      width: 270px;
+      min-width: 270px;
       background-color: var(--bg-sidebar);
       border-right: 1px solid var(--border-subtle);
       display: flex;
       flex-direction: column;
       height: 100vh;
-      transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+      transition: margin-left 0.25s cubic-bezier(0.2, 0, 0, 1);
       z-index: 50;
       user-select: none;
     }
 
     #sidebar.collapsed {
-      margin-left: -260px;
+      margin-left: -270px;
     }
 
     .sidebar-header {
@@ -96,6 +96,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .btn-icon {
@@ -124,8 +125,8 @@
       gap: 10px;
       padding: 8px 12px;
       border-radius: var(--radius-md);
-      background: transparent;
-      border: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
       color: var(--text-primary);
       font-size: 13px;
       font-weight: 500;
@@ -133,7 +134,7 @@
       transition: background 0.15s;
     }
     .btn-new-chat:hover {
-      background-color: var(--bg-surface);
+      background-color: var(--bg-surface-hover);
     }
 
     .sidebar-nav {
@@ -146,7 +147,7 @@
       font-size: 11px;
       font-weight: 600;
       color: var(--text-muted);
-      padding: 10px 12px 6px;
+      padding: 12px 12px 6px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -155,14 +156,13 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 9px 12px;
+      padding: 8px 12px;
       border-radius: var(--radius-sm);
       color: var(--text-secondary);
       font-size: 13px;
       font-weight: 400;
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      position: relative;
+      transition: all 0.15s ease;
       margin-bottom: 2px;
     }
     .nav-item:hover {
@@ -180,7 +180,7 @@
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-muted);
       background: rgba(255, 255, 255, 0.05);
-      padding: 1px 6px;
+      padding: 1px 7px;
       border-radius: var(--radius-full);
     }
     .nav-item.completed-all .badge-count {
@@ -188,7 +188,7 @@
       background: var(--openai-green-subtle);
     }
 
-    /* Sidebar Footer / User Profile */
+    /* Sidebar Footer */
     .sidebar-footer {
       padding: 12px;
       border-top: 1px solid var(--border-subtle);
@@ -197,34 +197,36 @@
       gap: 8px;
     }
 
-    .profile-pill {
+    .status-pill {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px;
+      gap: 8px;
+      padding: 7px 10px;
       border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
       cursor: pointer;
+      font-size: 12px;
       transition: background 0.15s;
     }
-    .profile-pill:hover {
+    .status-pill:hover {
       background: var(--bg-surface);
     }
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-full);
-      background: linear-gradient(135deg, #10a37f, #06b6d4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 13px;
-      color: white;
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #737373;
+    }
+    .status-dot.connected {
+      background: var(--openai-green);
+      box-shadow: 0 0 8px var(--openai-green);
+    }
+    .status-dot.local {
+      background: #eab308;
     }
 
-    /* ==========================================================================
-       Main Container Layout
-       ========================================================================== */
+    /* Main Container */
     #main-content {
       flex: 1;
       height: 100vh;
@@ -243,7 +245,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid transparent;
+      border-bottom: 1px solid var(--border-subtle);
       z-index: 20;
     }
 
@@ -253,7 +255,7 @@
       gap: 6px;
       padding: 6px 12px;
       border-radius: var(--radius-sm);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-primary);
       cursor: pointer;
@@ -279,11 +281,11 @@
       gap: 8px;
     }
 
-    /* Messages / Stream Container */
+    /* Stream Container */
     .stream-container {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 24px 140px;
+      padding: 20px 24px 130px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -294,138 +296,114 @@
       max-width: 860px;
     }
 
-    /* Hero Welcome Header */
-    .welcome-hero {
-      text-align: center;
-      margin: 28px 0 36px;
-    }
-    .openai-logo-bubble {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-full);
-      background: var(--bg-surface);
-      border: 1px solid var(--border-medium);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--openai-green);
-      font-size: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    }
-    .welcome-title {
-      font-size: 26px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-      letter-spacing: -0.4px;
-    }
-    .welcome-subtitle {
-      font-size: 14px;
-      color: var(--text-secondary);
-      max-width: 540px;
-      margin: 0 auto 20px;
-    }
-
-    /* Filter Chips (ChatGPT Prompt Suggestion style) */
-    .quick-chips {
+    /* View Header */
+    .view-header {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
-    .chip-btn {
-      padding: 7px 14px;
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-sidebar);
-      color: var(--text-secondary);
-      font-size: 13px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s;
-    }
-    .chip-btn:hover {
-      background: var(--bg-surface);
-      color: var(--text-primary);
-      border-color: var(--border-medium);
-    }
-    .chip-btn.active {
-      background: var(--openai-green-subtle);
-      border-color: var(--openai-green);
-      color: #34d399;
-      font-weight: 500;
-    }
-
-    /* Overall Progress Bar */
-    .overall-progress-card {
-      background: var(--bg-sidebar);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 16px 20px;
-      margin-bottom: 28px;
-    }
-    .progress-bar-bg {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-full);
-      overflow: hidden;
-      margin: 10px 0 6px;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #10a37f, #34d399);
-      border-radius: var(--radius-full);
-      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Category Cards (Assistant message bubble style) */
-    .category-turn {
-      background: var(--bg-sidebar);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 20px 22px;
-      margin-bottom: 20px;
-      transition: border-color 0.2s;
-    }
-    .category-turn:hover {
-      border-color: var(--border-medium);
-    }
-
-    .category-turn-header {
-      display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      margin-bottom: 14px;
-      padding-bottom: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
       border-bottom: 1px solid var(--border-subtle);
     }
-
-    .category-title-group {
+    .view-title-group h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .cat-avatar {
-      width: 28px;
-      height: 28px;
+    .view-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Category Overview Cards (Grid when "Overview" is active) */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .overview-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .overview-card:hover {
+      background: #252525;
+      border-color: var(--border-medium);
+      transform: translateY(-2px);
+    }
+    .overview-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .overview-card-icon {
+      width: 34px;
+      height: 34px;
       border-radius: var(--radius-sm);
       background: var(--bg-surface);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--openai-green);
-      font-size: 14px;
+      font-size: 16px;
     }
-    .cat-name {
-      font-size: 15px;
+
+    /* Parent Skill Card (Collapsible) */
+    .parent-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+    .parent-card:hover {
+      border-color: var(--border-medium);
+    }
+    .parent-card.has-completed {
+      border-left: 3px solid var(--openai-green);
+    }
+
+    .parent-header {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+      background: var(--bg-card);
+      transition: background 0.15s;
+    }
+    .parent-header:hover {
+      background: #252525;
+    }
+
+    .parent-title {
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-primary);
+      flex: 1;
+      line-height: 1.4;
     }
-    .cat-badge {
+
+    .parent-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .parent-badge {
       font-size: 11px;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-muted);
@@ -433,59 +411,53 @@
       padding: 2px 8px;
       border-radius: var(--radius-full);
     }
-
-    .cat-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .parent-badge.done {
+      color: var(--openai-green);
+      background: var(--openai-green-subtle);
     }
-    .btn-text {
-      background: transparent;
-      border: none;
+
+    .arrow-icon {
       color: var(--text-muted);
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.15s;
+      font-size: 13px;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .btn-text:hover {
-      background: var(--bg-surface);
-      color: var(--text-secondary);
+    .parent-card.open .arrow-icon {
+      transform: rotate(180deg);
     }
 
-    /* Checklist Grid */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 8px;
+    /* Sub-child concepts container */
+    .subskills-container {
+      display: none;
+      padding: 6px 14px 14px 44px;
+      background: rgba(0, 0, 0, 0.15);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .parent-card.open .subskills-container {
+      display: block;
     }
 
-    .skill-row {
+    .subskill-row {
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      padding: 8px 10px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid transparent;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       user-select: none;
-      transition: all 0.15s ease;
+      transition: background 0.15s;
+      margin-top: 2px;
     }
-    .skill-row:hover {
+    .subskill-row:hover {
       background: var(--bg-surface);
-      border-color: var(--border-subtle);
     }
-    .skill-row.checked {
-      background: rgba(16, 163, 127, 0.06);
-      border-color: rgba(16, 163, 127, 0.25);
+    .subskill-row.checked {
+      background: rgba(16, 163, 127, 0.05);
     }
 
-    .custom-checkbox {
-      width: 18px;
-      height: 18px;
-      min-width: 18px;
+    .custom-check {
+      width: 17px;
+      height: 17px;
+      min-width: 17px;
       margin-top: 2px;
       border-radius: 4px;
       border: 1.5px solid var(--border-medium);
@@ -495,46 +467,60 @@
       background: transparent;
       transition: all 0.15s;
     }
-    .skill-row:hover .custom-checkbox {
+    .subskill-row:hover .custom-check,
+    .parent-header:hover .custom-check {
       border-color: var(--openai-green);
     }
-    .skill-row.checked .custom-checkbox {
+    .subskill-row.checked .custom-check,
+    .custom-check.checked {
       background: var(--openai-green);
       border-color: var(--openai-green);
     }
-    .custom-checkbox i {
-      font-size: 11px;
+    .custom-check i {
+      font-size: 10px;
       color: white;
       opacity: 0;
       transform: scale(0.6);
       transition: all 0.15s;
     }
-    .skill-row.checked .custom-checkbox i {
+    .subskill-row.checked .custom-check i,
+    .custom-check.checked i {
       opacity: 1;
       transform: scale(1);
     }
 
-    .skill-title {
+    .subskill-name {
       font-size: 13px;
-      color: var(--text-primary);
+      color: var(--text-secondary);
       line-height: 1.4;
       flex: 1;
-      transition: color 0.15s;
     }
-    .skill-row.checked .skill-title {
+    .subskill-row.checked .subskill-name {
       color: var(--text-muted);
       text-decoration: line-through;
     }
 
-    /* ==========================================================================
-       ChatGPT Bottom Prompt Composer / Search Bar (Sticky)
-       ========================================================================== */
+    /* Overall Progress Bar */
+    .progress-bar-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10a37f, #34d399);
+      border-radius: var(--radius-full);
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Sticky Prompt Composer at Bottom */
     .prompt-footer {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 0 24px 20px;
+      padding: 0 24px 16px;
       background: linear-gradient(180deg, rgba(33, 33, 33, 0) 0%, rgba(33, 33, 33, 0.95) 40%, #212121 100%);
       display: flex;
       flex-direction: column;
@@ -546,7 +532,7 @@
     .prompt-box {
       width: 100%;
       max-width: 860px;
-      background-color: var(--bg-input);
+      background-color: var(--bg-surface);
       border: 1px solid var(--border-medium);
       border-radius: 26px;
       padding: 10px 16px;
@@ -586,56 +572,119 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
+      transition: opacity 0.15s;
     }
     .prompt-action-btn:hover {
       opacity: 0.9;
-    }
-    .prompt-action-btn:active {
-      transform: scale(0.95);
     }
 
     .prompt-disclaimer {
       font-size: 11px;
       color: var(--text-muted);
-      margin-top: 8px;
+      margin-top: 6px;
       text-align: center;
       pointer-events: auto;
     }
 
-    /* Modal / Popups */
-    .dropdown-menu-chatgpt {
-      position: absolute;
-      top: 48px;
-      left: 18px;
-      background: #2b2b2b;
-      border: 1px solid var(--border-medium);
-      border-radius: var(--radius-md);
-      padding: 6px;
-      min-width: 220px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      z-index: 100;
+    /* Firebase Modal (ChatGPT Style) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 2000;
       display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
     }
-    .dropdown-menu-chatgpt.show {
-      display: block;
+    .modal-overlay.show {
+      display: flex;
     }
-    .dropdown-item-chatgpt {
+
+    .chatgpt-modal {
+      width: 100%;
+      max-width: 540px;
+      background: #252525;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .modal-title {
+      font-size: 17px;
+      font-weight: 600;
       color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .firebase-textarea {
+      width: 100%;
+      height: 180px;
+      background: #191919;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      padding: 12px;
+      resize: vertical;
+      outline: none;
+      margin: 12px 0 16px;
+    }
+    .firebase-textarea:focus {
+      border-color: var(--openai-green);
+    }
+
+    .btn-primary-gpt {
+      background: var(--openai-green);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
       transition: background 0.15s;
     }
-    .dropdown-item-chatgpt:hover {
-      background: var(--bg-surface-hover);
+    .btn-primary-gpt:hover {
+      background: var(--openai-green-hover);
     }
 
-    /* Toast Notification */
+    .btn-secondary-gpt {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 9px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-secondary-gpt:hover {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+    }
+
+    /* Toast */
     #chatgpt-toast {
       position: fixed;
       bottom: 80px;
@@ -644,7 +693,7 @@
       background: #2f2f2f;
       border: 1px solid var(--border-medium);
       color: var(--text-primary);
-      padding: 10px 18px;
+      padding: 9px 18px;
       border-radius: var(--radius-full);
       font-size: 13px;
       display: flex;
@@ -653,246 +702,182 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.4);
       opacity: 0;
       visibility: hidden;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 1000;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 3000;
     }
     #chatgpt-toast.show {
       opacity: 1;
       visibility: visible;
       transform: translateX(-50%) translateY(0);
     }
+
+    /* Mobile toggle */
+    @media (max-width: 768px) {
+      #sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+      }
+      .subskills-container {
+        padding-left: 20px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- ========================================================================
-       Left Sidebar (ChatGPT Navigation)
+       Left Sidebar
        ======================================================================== -->
   <aside id="sidebar">
     <div class="sidebar-header">
-      <button class="btn-new-chat" onclick="filterByNav('all')">
+      <button class="btn-new-chat" onclick="selectCategory('overview')">
         <div style="display:flex; align-items:center; gap:8px;">
-          <i class="bi bi-compass" style="color: var(--openai-green); font-size: 15px;"></i>
-          <span>Full Roadmap</span>
+          <i class="bi bi-grid text-emerald-400" style="color: var(--openai-green);"></i>
+          <span>Overview Dashboard</span>
         </div>
-        <i class="bi bi-arrow-clockwise" style="color: var(--text-muted); font-size: 13px;" title="Reset Filters"></i>
+        <i class="bi bi-arrow-right-short" style="color: var(--text-muted); font-size: 16px;"></i>
       </button>
-      <button class="btn-icon" onclick="toggleSidebar()" title="Close sidebar">
-        <i class="bi bi-layout-sidebar" style="font-size: 16px;"></i>
+      <button class="btn-icon" onclick="toggleSidebar()" title="Toggle Sidebar">
+        <i class="bi bi-layout-sidebar"></i>
       </button>
     </div>
 
-    <!-- Pinned / Categories Navigation List -->
+    <!-- Category Nav Items -->
     <div class="sidebar-nav">
-      <div class="sidebar-section-title">Track Modules</div>
-      
-      <div class="nav-item active" id="nav-all" onclick="filterByNav('all')">
-        <i class="bi bi-grid-1x2"></i>
-        <span>All Capabilities</span>
-        <span class="badge-count" id="badge-all">106</span>
+      <div class="sidebar-section-title">Knowledge Tracks</div>
+
+      <div class="nav-item active" id="nav-overview" onclick="selectCategory('overview')">
+        <i class="bi bi-compass"></i>
+        <span>All Tracks Overview</span>
+        <span class="badge-count" id="badge-total">0/106</span>
       </div>
 
-      <div class="nav-item" id="nav-cat-languages" onclick="filterByNav('cat-languages')">
+      <div class="nav-item" id="nav-cat-languages" onclick="selectCategory('cat-languages')">
         <i class="bi bi-terminal"></i>
         <span>Languages & Compilers</span>
         <span class="badge-count" id="badge-cat-languages">0/17</span>
       </div>
 
-      <div class="nav-item" id="nav-cat-kmp" onclick="filterByNav('cat-kmp')">
+      <div class="nav-item" id="nav-cat-kmp" onclick="selectCategory('cat-kmp')">
         <i class="bi bi-phone"></i>
         <span>KMP Stack</span>
         <span class="badge-count" id="badge-cat-kmp">0/24</span>
       </div>
 
-      <div class="nav-item" id="nav-cat-ai" onclick="filterByNav('cat-ai')">
+      <div class="nav-item" id="nav-cat-ai" onclick="selectCategory('cat-ai')">
         <i class="bi bi-cpu"></i>
         <span>Mobile AI & Edge</span>
         <span class="badge-count" id="badge-cat-ai">0/26</span>
       </div>
 
-      <div class="nav-item" id="nav-cat-backend" onclick="filterByNav('cat-backend')">
+      <div class="nav-item" id="nav-cat-backend" onclick="selectCategory('cat-backend')">
         <i class="bi bi-server"></i>
         <span>Backend & Infra</span>
         <span class="badge-count" id="badge-cat-backend">0/16</span>
       </div>
 
-      <div class="nav-item" id="nav-cat-apis" onclick="filterByNav('cat-apis')">
+      <div class="nav-item" id="nav-cat-apis" onclick="selectCategory('cat-apis')">
         <i class="bi bi-diagram-3"></i>
         <span>APIs & Protocols</span>
         <span class="badge-count" id="badge-cat-apis">0/6</span>
       </div>
 
-      <div class="nav-item" id="nav-cat-sysdesign" onclick="filterByNav('cat-sysdesign')">
+      <div class="nav-item" id="nav-cat-sysdesign" onclick="selectCategory('cat-sysdesign')">
         <i class="bi bi-boxes"></i>
         <span>Mobile System Design</span>
         <span class="badge-count" id="badge-cat-sysdesign">0/10</span>
       </div>
 
-      <div class="nav-item" id="nav-cat-career" onclick="filterByNav('cat-career')">
+      <div class="nav-item" id="nav-cat-career" onclick="selectCategory('cat-career')">
         <i class="bi bi-award"></i>
         <span>Career Leverage</span>
         <span class="badge-count" id="badge-cat-career">0/7</span>
       </div>
 
-      <div class="sidebar-section-title" style="margin-top: 14px;">Actions</div>
-      
-      <div class="nav-item" onclick="exportData()">
-        <i class="bi bi-download"></i>
-        <span>Export Progress</span>
-      </div>
+      <div class="sidebar-section-title" style="margin-top: 14px;">Cloud & Tools</div>
 
-      <div class="nav-item" onclick="document.getElementById('importFile').click()">
-        <i class="bi bi-upload"></i>
-        <span>Import Backup</span>
+      <div class="nav-item" onclick="openFirebaseModal()">
+        <i class="bi bi-database"></i>
+        <span>Firebase RTDB Config</span>
       </div>
-      <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
 
       <div class="nav-item" onclick="copyRoadmapPrompt()">
         <i class="bi bi-copy"></i>
         <span>Copy for ChatGPT</span>
       </div>
 
+      <div class="nav-item" onclick="exportData()">
+        <i class="bi bi-download"></i>
+        <span>Export Backup</span>
+      </div>
+
+      <div class="nav-item" onclick="document.getElementById('importFile').click()">
+        <i class="bi bi-upload"></i>
+        <span>Import Backup</span>
+      </div>
+      <input type="file" id="importFile" style="display:none;" accept=".json" onchange="importData(event)">
+
       <div class="nav-item" onclick="confirmResetAll()" style="color: #f87171;">
         <i class="bi bi-trash3"></i>
-        <span>Reset Checklist</span>
+        <span>Reset All Progress</span>
       </div>
     </div>
 
-    <!-- User Profile Footer -->
+    <!-- Sidebar Footer -->
     <div class="sidebar-footer">
-      <div class="profile-pill">
-        <div class="avatar">
-          <i class="bi bi-person-fill"></i>
-        </div>
-        <div style="flex:1; overflow:hidden;">
-          <div style="font-size:13px; font-weight:600; color:var(--text-primary); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">
-            Top 1% Senior Dev
+      <div class="status-pill" onclick="openFirebaseModal()" title="Click to view/change database settings">
+        <div class="status-dot" id="footerStatusDot"></div>
+        <div style="flex: 1; overflow: hidden;">
+          <div style="font-weight: 500; font-size: 12px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="footerStatusText">
+            Connecting...
           </div>
-          <div style="font-size:11px; color:var(--openai-green); font-family:'JetBrains Mono', monospace;" id="sidebarProgressText">
-            0% Complete
+          <div style="font-size: 10px; color: var(--text-muted);" id="footerSubText">
+            Click to configure
           </div>
         </div>
+        <i class="bi bi-gear" style="color: var(--text-muted); font-size: 12px;"></i>
       </div>
     </div>
   </aside>
 
   <!-- ========================================================================
-       Main Content Container
+       Main Content Area
        ======================================================================== -->
   <main id="main-content">
 
-    <!-- Top Header -->
+    <!-- Header Bar -->
     <header class="chat-header">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <button class="btn-icon" id="openSidebarBtn" onclick="toggleSidebar()" title="Toggle sidebar" style="display:none;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn-icon" id="openSidebarBtn" onclick="toggleSidebar()" title="Toggle sidebar" style="display: none;">
           <i class="bi bi-layout-sidebar"></i>
         </button>
 
-        <div class="model-selector" onclick="toggleModelDropdown()">
-          <span>Top 1% Mobile AI Master</span>
-          <span class="model-badge">v4.0</span>
-          <i class="bi bi-chevron-down" style="font-size: 11px; color: var(--text-muted);"></i>
-        </div>
-
-        <!-- Model dropdown -->
-        <div class="dropdown-menu-chatgpt" id="modelDropdown">
-          <div class="dropdown-item-chatgpt" onclick="setViewMode('all')">
-            <i class="bi bi-check2 text-emerald-400" id="dd-check-all"></i>
-            <div>
-              <div style="font-weight: 500;">Show All Skills</div>
-              <div style="font-size: 11px; color: var(--text-muted);">View all 106 checklist items</div>
-            </div>
-          </div>
-          <div class="dropdown-item-chatgpt" onclick="setViewMode('pending')">
-            <i class="bi bi-clock" style="opacity: 0.6;" id="dd-check-pending"></i>
-            <div>
-              <div style="font-weight: 500;">Pending Skills Only</div>
-              <div style="font-size: 11px; color: var(--text-muted);">Focus on unfinished items</div>
-            </div>
-          </div>
-          <div class="dropdown-item-chatgpt" onclick="setViewMode('completed')">
-            <i class="bi bi-check-circle" style="opacity: 0.6;" id="dd-check-completed"></i>
-            <div>
-              <div style="font-weight: 500;">Completed Skills Only</div>
-              <div style="font-size: 11px; color: var(--text-muted);">Review what you mastered</div>
-            </div>
-          </div>
+        <div class="model-selector" onclick="openFirebaseModal()" title="Firebase Connection Status">
+          <i class="bi bi-cloud-check text-emerald-400"></i>
+          <span id="headerDbLabel">Firebase RTDB</span>
+          <span class="model-badge" id="headerStatusBadge">Local Mode</span>
         </div>
       </div>
 
       <div class="header-actions">
+        <button class="btn-icon" onclick="toggleExpandAll()" title="Expand / Collapse all cards">
+          <i class="bi bi-arrows-expand" id="expandToggleIcon"></i>
+        </button>
         <button class="btn-icon" onclick="copyRoadmapPrompt()" title="Copy prompt for ChatGPT">
           <i class="bi bi-share"></i>
         </button>
-        <button class="btn-icon" onclick="exportData()" title="Backup JSON">
-          <i class="bi bi-download"></i>
+        <button class="btn-icon" onclick="openFirebaseModal()" title="Firebase Database Settings">
+          <i class="bi bi-gear"></i>
         </button>
       </div>
     </header>
 
-    <!-- Chat Stream / Roadmap Items -->
+    <!-- Scrollable Stream Container -->
     <div class="stream-container" id="streamContainer">
-      <div class="content-wrapper">
-
-        <!-- Welcome Banner -->
-        <div class="welcome-hero">
-          <div class="openai-logo-bubble">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1683a.071.071 0 0 1 .038.052v5.5826a4.5045 4.5045 0 0 1-4.4945 4.4947zm-9.66-4.7654a4.47 4.47 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1401-2.2864zM2.345 8.9416a4.475 4.475 0 0 1 2.3655-1.9728V12.6a.7665.7665 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1683a.0757.0757 0 0 1-.071 0l-4.8303-2.7866A4.504 4.504 0 0 1 2.345 8.9416zm16.597 3.8558L13.1038 9.429l2.0199-1.1683a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.4066-.6816zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 10.276V7.9434a.08.08 0 0 1 .0332-.0615l4.9304-2.8435a4.4987 4.4987 0 0 1 6.6001 4.7438zm-10.518-4.2155a4.4755 4.4755 0 0 1 2.8764 1.0408l-.1419.0805-4.7783 2.7582a.7948.7948 0 0 0-.3927.6813v6.7369l-2.02-1.1683a.071.071 0 0 1-.038-.052V8.0583a4.504 4.504 0 0 1 4.4945-4.4947zm1.1058 7.0283l2.6282-1.5147 2.6282 1.5147v3.0294l-2.6282 1.5147-2.6282-1.5147z" />
-            </svg>
-          </div>
-          <h1 class="welcome-title">Top 1% Android & AI Engineering</h1>
-          <p class="welcome-subtitle">
-            What skill are you mastering today? Check off capabilities as you complete them — your progress is permanently auto-saved.
-          </p>
-
-          <!-- Quick Filter Chips -->
-          <div class="quick-chips">
-            <button class="chip-btn active" id="chip-all" onclick="filterByNav('all')">
-              <i class="bi bi-layers-half text-emerald-400"></i> All 106 Skills
-            </button>
-            <button class="chip-btn" id="chip-cat-languages" onclick="filterByNav('cat-languages')">
-              <i class="bi bi-terminal text-sky-400"></i> Languages & Compilers
-            </button>
-            <button class="chip-btn" id="chip-cat-kmp" onclick="filterByNav('cat-kmp')">
-              <i class="bi bi-phone text-indigo-400"></i> KMP Stack
-            </button>
-            <button class="chip-btn" id="chip-cat-ai" onclick="filterByNav('cat-ai')">
-              <i class="bi bi-cpu text-purple-400"></i> Mobile AI & Edge
-            </button>
-            <button class="chip-btn" id="chip-cat-backend" onclick="filterByNav('cat-backend')">
-              <i class="bi bi-server text-emerald-400"></i> Backend & Infra
-            </button>
-          </div>
-        </div>
-
-        <!-- Overall Progress Dashboard Card -->
-        <div class="overall-progress-card">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-weight: 600; font-size: 14px; color: var(--text-primary);">Roadmap Completion</span>
-              <span style="font-size: 11px; color: var(--openai-green); background: var(--openai-green-subtle); padding: 2px 8px; border-radius: var(--radius-full);">
-                Auto-saved
-              </span>
-            </div>
-            <span style="font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--openai-green);" id="globalPctText">
-              0% (0 / 106)
-            </span>
-          </div>
-
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="globalProgressBar" style="width: 0%;"></div>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 6px;">
-            <span id="statCompletedText">0 completed</span>
-            <span id="statRemainingText">106 remaining</span>
-          </div>
-        </div>
-
-        <!-- Dynamic Category Cards Container -->
-        <div id="categoriesContainer"></div>
-
+      <div class="content-wrapper" id="contentWrapper">
+        <!-- Rendered dynamically via JS -->
       </div>
     </div>
 
@@ -904,454 +889,1879 @@
           type="text" 
           id="promptSearchInput" 
           class="prompt-input" 
-          placeholder="Search skills (e.g., LiteRT, K2, Swift 6, CRDT, Ktor)..."
+          placeholder="Search any skill or concept (e.g., K2 FIR, LiteRT, CRDT, Coroutines, Swift 6)..."
           oninput="handleSearch(this.value)"
         >
-        <button class="prompt-action-btn" onclick="clearSearch()" title="Clear search">
+        <button class="prompt-action-btn" onclick="clearSearch()" title="Clear / Reset">
           <i class="bi bi-arrow-up" style="font-size: 16px;"></i>
         </button>
       </div>
       <div class="prompt-disclaimer">
-        ChatGPT Roadmap UI • 106 Senior Capabilities • Automatically saved to your browser's LocalStorage
+        Parent & Sub-skill Hierarchy • Realtime Sync with Firebase RTDB • Automatically saved
       </div>
     </div>
 
   </main>
 
-  <!-- Notification Toast -->
-  <div id="chatgpt-toast">
-    <i class="bi bi-check-circle-fill" style="color: var(--openai-green);"></i>
-    <span id="toastMessage">Progress saved</span>
+  <!-- ========================================================================
+       Firebase RTDB Configuration Modal (Auto-pops on first visit)
+       ======================================================================== -->
+  <div class="modal-overlay" id="firebaseModal">
+    <div class="chatgpt-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="bi bi-fire" style="color: #f97316;"></i>
+          <span>Firebase Realtime Database Setup</span>
+        </div>
+        <button class="btn-icon" onclick="closeFirebaseModal()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+        Paste your <b>Firebase Web Config JSON</b> or Android <b>google-services.json</b> below. The app automatically detects your <code style="color: #38bdf8;">databaseURL</code> and syncs all checks in real time.
+      </p>
+
+      <textarea 
+        id="firebaseJsonInput" 
+        class="firebase-textarea" 
+        placeholder='Paste here, for example:
+{
+  "apiKey": "AIzaSy...",
+  "authDomain": "my-app.firebaseapp.com",
+  "databaseURL": "https://my-app-default-rtdb.firebaseio.com",
+  "projectId": "my-app",
+  "storageBucket": "my-app.appspot.com"
+}'
+      ></textarea>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end; align-items: center;">
+        <button class="btn-secondary-gpt" onclick="useLocalMode()">
+          Use Offline / Local Mode
+        </button>
+        <button class="btn-primary-gpt" onclick="saveFirebaseConfig()">
+          Connect & Sync Database
+        </button>
+      </div>
+    </div>
   </div>
 
+  <!-- Toast Notification -->
+  <div id="chatgpt-toast">
+    <i class="bi bi-check-circle-fill" style="color: var(--openai-green);"></i>
+    <span id="toastMessage">Synced to Firebase</span>
+  </div>
+
+  <!-- Application Logic -->
   <script>
     // =========================================================================
-    // 106 Top 1% Android, KMP, AI & System Design Skills
+    // COMPLETE HIERARCHICAL KNOWLEDGE BASE (106 Parents, ~400 Sub-skills)
     // =========================================================================
-    const SKILLS_DATA = [
+    const HIERARCHY_DATA = [
       {
         id: "cat-languages",
         title: "Languages & Compilers",
         icon: "bi-terminal",
+        description: "Kotlin compiler internals, Native runtime, C/C++ FFI, and build engineering",
         skills: [
-          { id: "lang-k2", name: "Kotlin K2 internals (FIR/IR)" },
-          { id: "lang-ksp2", name: "KSP2 processor authoring" },
-          { id: "lang-compiler-plugin", name: "Kotlin compiler plugin (FIR checker / IR transform)" },
-          { id: "lang-kn-memory", name: "Kotlin/Native memory model, GC, cinterop" },
-          { id: "lang-explicit-api", name: "Explicit API mode + binary-compatibility-validator" },
-          { id: "lang-coroutines-flow", name: "Coroutines/Flow internals (cancellation, dispatchers, backpressure)" },
-          { id: "lang-gradle-convention", name: "Gradle convention plugins (build-logic)" },
-          { id: "lang-gradle-cache", name: "Gradle configuration cache + remote build cache" },
-          { id: "lang-multimodule-graph", name: "Multi-module graph design (100+ modules)" },
-          { id: "lang-swift6-concurrency", name: "Swift 6 strict concurrency" },
-          { id: "lang-swiftui-spm", name: "SwiftUI + SPM + Instruments" },
-          { id: "lang-swift-export", name: "Kotlin→ObjC export, Swift Export, SKIE" },
-          { id: "lang-xcframework", name: "XCFramework/SPM distribution" },
-          { id: "lang-cpp-cmake", name: "C++17/20 + CMake" },
-          { id: "lang-jni", name: "JNI lifetime/threading" },
-          { id: "lang-16kb-pagesize", name: "16 KB page-size native lib compliance" },
-          { id: "lang-cinterop-shim", name: "cinterop via C shim" }
+          {
+            id: "lang-k2",
+            name: "Kotlin K2 internals (FIR/IR)",
+            subskills: [
+              { id: "lang-k2-fir", name: "Frontend IR (FIR) phase & tree structure" },
+              { id: "lang-k2-ir-backend", name: "Backend IR lowering & code generation" },
+              { id: "lang-k2-checkers", name: "Diagnostic checkers & resolution pipeline" },
+              { id: "lang-k2-analysis", name: "Analysis API for IDE & compiler tooling" }
+            ]
+          },
+          {
+            id: "lang-ksp2",
+            name: "KSP2 processor authoring",
+            subskills: [
+              { id: "lang-ksp2-provider", name: "SymbolProcessor & SymbolProcessorProvider authoring" },
+              { id: "lang-ksp2-incremental", name: "Incremental processing & originating files tracking" },
+              { id: "lang-ksp2-poet", name: "KotlinPoet code generation & validation" },
+              { id: "lang-ksp2-multisets", name: "Multiplatform source sets resolution" }
+            ]
+          },
+          {
+            id: "lang-compiler-plugin",
+            name: "Kotlin compiler plugin (FIR checker / IR transform)",
+            subskills: [
+              { id: "lang-plugin-fir-ext", name: "FirExtensionRegistrar & FirDeclarationGenerationExtension" },
+              { id: "lang-plugin-ir-transform", name: "IrElementTransformerVoid & bytecode transformation" },
+              { id: "lang-plugin-cli", name: "CLI compiler plugin argument parsing" },
+              { id: "lang-plugin-gradle", name: "Gradle plugin integration for compiler options" }
+            ]
+          },
+          {
+            id: "lang-kn-memory",
+            name: "Kotlin/Native memory model, GC, cinterop",
+            subskills: [
+              { id: "lang-kn-gc", name: "Concurrent mark-and-sweep GC internals" },
+              { id: "lang-kn-threads", name: "Thread isolation, atomic references, freeze-free model" },
+              { id: "lang-kn-instruments", name: "Memory leak tracing with Xcode Instruments" },
+              { id: "lang-kn-weakref", name: "Finalizers & native weak references" }
+            ]
+          },
+          {
+            id: "lang-explicit-api",
+            name: "Explicit API mode + binary-compatibility-validator",
+            subskills: [
+              { id: "lang-api-strict", name: "explicitApi() strict mode compiler flags" },
+              { id: "lang-bcv-dump", name: "Public API dump generation via BCV" },
+              { id: "lang-bcv-semver", name: "Semantic versioning & breaking change guards" },
+              { id: "lang-bcv-abi", name: "ABI stability across library releases" }
+            ]
+          },
+          {
+            id: "lang-coroutines-flow",
+            name: "Coroutines/Flow internals (cancellation, dispatchers, backpressure)",
+            subskills: [
+              { id: "lang-coro-context", name: "CoroutineContext, Job hierarchy, & CancellationException" },
+              { id: "lang-coro-dispatcher", name: "Custom CoroutineDispatcher implementation" },
+              { id: "lang-coro-channels", name: "Channel backpressure buffers & conflation" },
+              { id: "lang-coro-sharedflow", name: "SharedFlow vs StateFlow subscription replay mechanics" }
+            ]
+          },
+          {
+            id: "lang-gradle-convention",
+            name: "Gradle convention plugins (build-logic)",
+            subskills: [
+              { id: "lang-gradle-plugins", name: "Precompiled script plugins in build-logic" },
+              { id: "lang-gradle-catalogs", name: "Type-safe project accessors & version catalogs" },
+              { id: "lang-gradle-tasks", name: "Custom Gradle Task authoring with @Input/@Output caching" },
+              { id: "lang-gradle-composite", name: "Dependency substitution & composite builds" }
+            ]
+          },
+          {
+            id: "lang-gradle-cache",
+            name: "Gradle configuration cache + remote build cache",
+            subskills: [
+              { id: "lang-cache-undeclared", name: "Configuration cache undeclared inputs resolution" },
+              { id: "lang-cache-remote", name: "Remote HTTP build cache node setup" },
+              { id: "lang-cache-workers", name: "Task execution optimizations & worker API" },
+              { id: "lang-cache-scans", name: "Build scan analysis & critical path profiling" }
+            ]
+          },
+          {
+            id: "lang-multimodule-graph",
+            name: "Multi-module graph design (100+ modules)",
+            subskills: [
+              { id: "lang-mod-api-impl", name: "API vs Implementation module splitting" },
+              { id: "lang-mod-decoupling", name: "Feature-to-feature decoupling via DI & interfaces" },
+              { id: "lang-mod-hygiene", name: "Module graph acyclicity & dependency hygiene" },
+              { id: "lang-mod-dynamic", name: "Dynamic feature & on-demand delivery architecture" }
+            ]
+          },
+          {
+            id: "lang-swift6-concurrency",
+            name: "Swift 6 strict concurrency",
+            subskills: [
+              { id: "lang-swift-actors", name: "Actor isolation & reentrancy handling" },
+              { id: "lang-swift-sendable", name: "Sendable protocol conformances & data transfers" },
+              { id: "lang-swift-taskgroups", name: "TaskGroup & structured concurrency" },
+              { id: "lang-swift-kmp-bridge", name: "Swift-Kotlin bridging under strict concurrency" }
+            ]
+          },
+          {
+            id: "lang-swiftui-spm",
+            name: "SwiftUI + SPM + Instruments",
+            subskills: [
+              { id: "lang-swiftui-state", name: "View hierarchy optimization & StateObject/Observable" },
+              { id: "lang-spm-manifests", name: "SPM package manifests & binary target linking" },
+              { id: "lang-instruments-prof", name: "Time Profiler, Allocations & Leaks profiling" },
+              { id: "lang-hitches", name: "Core Animation frame hitch analysis" }
+            ]
+          },
+          {
+            id: "lang-swift-export",
+            name: "Kotlin→ObjC export, Swift Export, SKIE",
+            subskills: [
+              { id: "lang-swiftexport-direct", name: "Swift Export toolchain & direct Swift interop" },
+              { id: "lang-skie-sealed", name: "SKIE exhaustive sealed class & coroutines bridging" },
+              { id: "lang-objcexport-annotations", name: "@ObjCExport naming & generic type erasure" },
+              { id: "lang-objc-headers", name: "Obj-C header inspection & name mangling" }
+            ]
+          },
+          {
+            id: "lang-xcframework",
+            name: "XCFramework/SPM distribution",
+            subskills: [
+              { id: "lang-xc-slices", name: "Multi-architecture slicing (arm64, x86_64, iOS Sim)" },
+              { id: "lang-xc-signing", name: "Code signing & Apple Notarization" },
+              { id: "lang-xc-checksums", name: "SPM checksum validation & automated artifact releases" },
+              { id: "lang-xc-privacy", name: "Privacy manifest (PrivacyInfo.xcprivacy) compliance" }
+            ]
+          },
+          {
+            id: "lang-cpp-cmake",
+            name: "C++17/20 + CMake",
+            subskills: [
+              { id: "lang-cpp-cmakelists", name: "CMakeLists.txt configuration for Android NDK" },
+              { id: "lang-cpp-smartptrs", name: "Modern C++ smart pointers, move semantics, & templates" },
+              { id: "lang-cpp-simd", name: "SIMD / NEON vector intrinsics for mobile" },
+              { id: "lang-cpp-sanitizers", name: "ASan & UBSan sanitizers on Android" }
+            ]
+          },
+          {
+            id: "lang-jni",
+            name: "JNI lifetime/threading",
+            subskills: [
+              { id: "lang-jni-refs", name: "Local vs Global JNI reference management" },
+              { id: "lang-jni-threads", name: "Thread attachment via AttachCurrentThread / JNIEnv" },
+              { id: "lang-jni-exceptions", name: "Exception handling & pending exception checks" },
+              { id: "lang-jni-bytebuffer", name: "Zero-copy DirectByteBuffer interop" }
+            ]
+          },
+          {
+            id: "lang-16kb-pagesize",
+            name: "16 KB page-size native lib compliance",
+            subskills: [
+              { id: "lang-16kb-verify", name: "Android 15+ 16 KB alignment verification" },
+              { id: "lang-16kb-flags", name: "ELF segment alignment (-Wl,-z,max-page-size=16384)" },
+              { id: "lang-16kb-emulator", name: "Native compatibility testing on 16 KB emulator" },
+              { id: "lang-16kb-prebuilt", name: "Third-party prebuilt .so verification" }
+            ]
+          },
+          {
+            id: "lang-cinterop-shim",
+            name: "cinterop via C shim",
+            subskills: [
+              { id: "lang-cinterop-def", name: "def file configuration & compiler flags" },
+              { id: "lang-cinterop-structs", name: "C struct wrapping & opaque pointer casting" },
+              { id: "lang-cinterop-lambdas", name: "Bridging C function pointers to Kotlin lambdas" },
+              { id: "lang-cinterop-posix", name: "Posix & platform native headers" }
+            ]
+          }
         ]
       },
       {
         id: "cat-kmp",
         title: "KMP Stack",
         icon: "bi-phone",
+        description: "Compose Multiplatform, reactive architectures, storage, and cross-platform testing",
         skills: [
-          { id: "kmp-compose-multiplatform", name: "Compose Multiplatform (iOS)" },
-          { id: "kmp-compose-compiler-stability", name: "Compose compiler stability/recomposition debugging" },
-          { id: "kmp-androidx-lifecycle", name: "androidx Lifecycle/ViewModel KMP" },
-          { id: "kmp-nav3", name: "Navigation (multiplatform/Nav3)" },
-          { id: "kmp-decompose-circuit", name: "Decompose or Circuit" },
-          { id: "kmp-mvi-molecule", name: "MVI via Molecule" },
-          { id: "kmp-ktor-client", name: "Ktor client" },
-          { id: "kmp-kotlinx-serialization", name: "kotlinx.serialization" },
-          { id: "kmp-apollo-graphql", name: "Apollo Kotlin (GraphQL)" },
-          { id: "kmp-wire-connect", name: "Wire/Connect (gRPC/protobuf)" },
-          { id: "kmp-room-kmp", name: "Room KMP" },
-          { id: "kmp-sqldelight", name: "SQLDelight" },
-          { id: "kmp-datastore-kmp", name: "DataStore KMP" },
-          { id: "kmp-koin", name: "Koin" },
-          { id: "kmp-kotlin-inject", name: "kotlin-inject / Metro" },
-          { id: "kmp-coil-okio", name: "Coil 3, Okio, kotlinx-datetime" },
-          { id: "kmp-testing-kotest", name: "Turbine, Kotest, kotlin.test" },
-          { id: "kmp-maestro", name: "Maestro E2E" },
-          { id: "kmp-screenshot-testing", name: "Screenshot testing" },
-          { id: "kmp-baseline-profiles", name: "Baseline Profiles + Macrobenchmark" },
-          { id: "kmp-ci-macos", name: "GitHub Actions/Bitrise macOS CI" },
-          { id: "kmp-fastlane", name: "Fastlane + staged rollouts" },
-          { id: "kmp-offline-first", name: "Offline-first architecture" },
-          { id: "kmp-token-refresh", name: "Token refresh/auth in Ktor" }
+          {
+            id: "kmp-compose-multiplatform",
+            name: "Compose Multiplatform (iOS)",
+            subskills: [
+              { id: "kmp-cmp-uiview", name: "ComposeViewController integration in SwiftUI" },
+              { id: "kmp-cmp-skiko", name: "Skiko graphics engine & Metal rendering on iOS" },
+              { id: "kmp-cmp-resources", name: "Platform-specific resources & localized strings" },
+              { id: "kmp-cmp-gestures", name: "Native touch/gesture interop & soft keyboard handling" }
+            ]
+          },
+          {
+            id: "kmp-compose-compiler-stability",
+            name: "Compose compiler stability/recomposition debugging",
+            subskills: [
+              { id: "kmp-comp-metrics", name: "Compose compiler metrics report generation" },
+              { id: "kmp-comp-stable", name: "@Stable vs @Immutable vs Unstable types" },
+              { id: "kmp-comp-lambdas", name: "DerivedStateOf & remember lambda stabilization" },
+              { id: "kmp-comp-tracing", name: "Layout Inspector & Composition tracing" }
+            ]
+          },
+          {
+            id: "kmp-androidx-lifecycle",
+            name: "androidx Lifecycle/ViewModel KMP",
+            subskills: [
+              { id: "kmp-vm-scope", name: "ViewModel lifecycle scoping on Android & iOS" },
+              { id: "kmp-vm-savedstate", name: "SavedStateHandle restoration across process death" },
+              { id: "kmp-vm-flow", name: "Lifecycle-aware Flow collection in KMP" },
+              { id: "kmp-vm-nav", name: "Retained instances in Navigation" }
+            ]
+          },
+          {
+            id: "kmp-nav3",
+            name: "Navigation (multiplatform/Nav3)",
+            subskills: [
+              { id: "kmp-nav-typesafe", name: "Type-safe routing & serialization in Nav3" },
+              { id: "kmp-nav-deeplinks", name: "Deep-linking & universal URL routing" },
+              { id: "kmp-nav-backstack", name: "Multi-stack backstack navigation" },
+              { id: "kmp-nav-transitions", name: "Animated transition specifications" }
+            ]
+          },
+          {
+            id: "kmp-decompose-circuit",
+            name: "Decompose or Circuit",
+            subskills: [
+              { id: "kmp-decomp-childstack", name: "ChildStack / ChildSlot component hierarchy" },
+              { id: "kmp-decomp-context", name: "ComponentContext & back-button handling" },
+              { id: "kmp-decomp-state", name: "State-driven navigation architecture" },
+              { id: "kmp-decomp-presenter", name: "Presenter & UI decoupling with Molecule/Circuit" }
+            ]
+          },
+          {
+            id: "kmp-mvi-molecule",
+            name: "MVI via Molecule",
+            subskills: [
+              { id: "kmp-molecule-loop", name: "MoleculePresenter composition loop" },
+              { id: "kmp-molecule-clock", name: "Recomposition clock & StateFlow emission" },
+              { id: "kmp-molecule-intent", name: "Action / Intent dispatcher design" },
+              { id: "kmp-molecule-effects", name: "Side effect management (Channels vs Flow)" }
+            ]
+          },
+          {
+            id: "kmp-ktor-client",
+            name: "Ktor client",
+            subskills: [
+              { id: "kmp-ktor-engines", name: "CIO, Darwin & OkHttp engine configuration" },
+              { id: "kmp-ktor-plugins", name: "ContentNegotiation & Logging plugins" },
+              { id: "kmp-ktor-intercept", name: "Custom interceptors & error handlers" },
+              { id: "kmp-ktor-streaming", name: "Streaming HTTP responses & WebSockets" }
+            ]
+          },
+          {
+            id: "kmp-kotlinx-serialization",
+            name: "kotlinx.serialization",
+            subskills: [
+              { id: "kmp-ser-poly", name: "Polymorphic & sealed class serialization" },
+              { id: "kmp-ser-custom", name: "Custom KSerializer for dates & arbitrary types" },
+              { id: "kmp-ser-binary", name: "Protobuf & CBOR binary formats" },
+              { id: "kmp-ser-jsoncfg", name: "Json configuration (ignoreUnknownKeys, coerceInputValues)" }
+            ]
+          },
+          {
+            id: "kmp-apollo-graphql",
+            name: "Apollo Kotlin (GraphQL)",
+            subskills: [
+              { id: "kmp-apollo-cache", name: "Normalized in-memory & SQL cache" },
+              { id: "kmp-apollo-apq", name: "Query batching & APQ (Automated Persisted Queries)" },
+              { id: "kmp-apollo-scalars", name: "Custom scalar adapters" },
+              { id: "kmp-apollo-subs", name: "GraphQL subscriptions over WebSockets" }
+            ]
+          },
+          {
+            id: "kmp-wire-connect",
+            name: "Wire/Connect (gRPC/protobuf)",
+            subskills: [
+              { id: "kmp-wire-codegen", name: "Wire Gradle plugin code generation" },
+              { id: "kmp-connect-client", name: "Connect-Kotlin client over HTTP/2" },
+              { id: "kmp-grpc-streaming", name: "Client/Server streaming RPCs" },
+              { id: "kmp-proto-compat", name: "Protobuf schema compatibility rules" }
+            ]
+          },
+          {
+            id: "kmp-room-kmp",
+            name: "Room KMP",
+            subskills: [
+              { id: "kmp-room-driver", name: "SQLiteDriver configuration (BundledSQLiteDriver)" },
+              { id: "kmp-room-dao", name: "@Dao, @Entity & TypeConverters in KMP" },
+              { id: "kmp-room-mig", name: "Database migrations & schema export" },
+              { id: "kmp-room-flow", name: "Reactive queries with Coroutine Flow" }
+            ]
+          },
+          {
+            id: "kmp-sqldelight",
+            name: "SQLDelight",
+            subskills: [
+              { id: "kmp-sql-sqfiles", name: ".sq file schema definitions & queries" },
+              { id: "kmp-sql-drivers", name: "NativeSqliteDriver & AndroidSqliteDriver" },
+              { id: "kmp-sql-async", name: "Synchronous vs Asynchronous driver setup" },
+              { id: "kmp-sql-dialect", name: "Dialect configuration (SQLite 3.38+)" }
+            ]
+          },
+          {
+            id: "kmp-datastore-kmp",
+            name: "DataStore KMP",
+            subskills: [
+              { id: "kmp-ds-prefs", name: "Preferences DataStore on multiplatform" },
+              { id: "kmp-ds-proto", name: "Proto DataStore with Okio filesystem" },
+              { id: "kmp-ds-atomic", name: "Atomic writes & coroutines thread-safety" },
+              { id: "kmp-ds-mig", name: "Migration from SharedPreferences / NSUserDefaults" }
+            ]
+          },
+          {
+            id: "kmp-koin",
+            name: "Koin",
+            subskills: [
+              { id: "kmp-koin-dsl", name: "Module definitions & DSL (single, factory, viewModel)" },
+              { id: "kmp-koin-annot", name: "Koin annotations & compile-time verification" },
+              { id: "kmp-koin-scopes", name: "Scope management & lifecycle binding" },
+              { id: "kmp-koin-init", name: "Koin KMP multiplatform initialization" }
+            ]
+          },
+          {
+            id: "kmp-kotlin-inject",
+            name: "kotlin-inject / Metro",
+            subskills: [
+              { id: "kmp-inject-annots", name: "@Inject, @Provides & @Component annotations" },
+              { id: "kmp-inject-graph", name: "Compile-time dependency graph verification" },
+              { id: "kmp-inject-scopes", name: "Scoped singletons & assisted injection" },
+              { id: "kmp-inject-metro", name: "Metro KMP code generation" }
+            ]
+          },
+          {
+            id: "kmp-coil-okio",
+            name: "Coil 3, Okio, kotlinx-datetime",
+            subskills: [
+              { id: "kmp-coil-async", name: "Coil 3 AsyncImage on iOS & Android" },
+              { id: "kmp-okio-fs", name: "Okio FileSystem, Path & ByteString manipulation" },
+              { id: "kmp-datetime-math", name: "Instant, LocalDate & TimeZone math in kotlinx-datetime" },
+              { id: "kmp-cache-policies", name: "Custom disk & memory cache policies" }
+            ]
+          },
+          {
+            id: "kmp-testing-kotest",
+            name: "Turbine, Kotest, kotlin.test",
+            subskills: [
+              { id: "kmp-test-turbine", name: "Flow testing with Turbine test { ... }" },
+              { id: "kmp-test-kotest", name: "Property-based testing in Kotest" },
+              { id: "kmp-test-matchers", name: "Multiplatform assertion matchers" },
+              { id: "kmp-test-time", name: "Test coroutine dispatchers & virtual time" }
+            ]
+          },
+          {
+            id: "kmp-maestro",
+            name: "Maestro E2E",
+            subskills: [
+              { id: "kmp-maestro-yaml", name: "YAML test flow authoring" },
+              { id: "kmp-maestro-asserts", name: "Cross-platform UI hierarchy assertions" },
+              { id: "kmp-maestro-network", name: "Mocking API network conditions in Maestro Cloud" },
+              { id: "kmp-maestro-ci", name: "CI/CD automated pipeline integration" }
+            ]
+          },
+          {
+            id: "kmp-screenshot-testing",
+            name: "Screenshot testing",
+            subskills: [
+              { id: "kmp-shot-roborazzi", name: "Roborazzi & Paparazzi configuration" },
+              { id: "kmp-shot-ios", name: "iOS snapshot comparison setup" },
+              { id: "kmp-shot-diffing", name: "Tolerant pixel diffing & dark/light matrix" },
+              { id: "kmp-shot-bots", name: "CI baseline updates & PR visual diff bots" }
+            ]
+          },
+          {
+            id: "kmp-baseline-profiles",
+            name: "Baseline Profiles + Macrobenchmark",
+            subskills: [
+              { id: "kmp-base-rule", name: "BaselineProfileRule generator setup" },
+              { id: "kmp-base-startup", name: "Macrobenchmark startup metrics (TTID / TTFD)" },
+              { id: "kmp-base-cloud", name: "DEX layout optimization & Cloud Profiles" },
+              { id: "kmp-base-jank", name: "Frame timing (Jank / 95th percentile) tracking" }
+            ]
+          },
+          {
+            id: "kmp-ci-macos",
+            name: "GitHub Actions/Bitrise macOS CI",
+            subskills: [
+              { id: "kmp-ci-runners", name: "macOS runner configuration for Xcode & CocoaPods" },
+              { id: "kmp-ci-gradle", name: "Gradle cache optimization on GitHub Actions" },
+              { id: "kmp-ci-keychain", name: "Apple certs & provisioning profiles keychain setup" },
+              { id: "kmp-ci-matrix", name: "Fast build matrix (Android APK + iOS XCFramework)" }
+            ]
+          },
+          {
+            id: "kmp-fastlane",
+            name: "Fastlane + staged rollouts",
+            subskills: [
+              { id: "kmp-fast-signing", name: "Match code signing & App Store Connect API" },
+              { id: "kmp-fast-play", name: "Google Play Console automated release lanes" },
+              { id: "kmp-fast-staged", name: "Phased release & staged rollout automation" },
+              { id: "kmp-fast-sync", name: "Changelog & metadata synchronization" }
+            ]
+          },
+          {
+            id: "kmp-offline-first",
+            name: "Offline-first architecture",
+            subskills: [
+              { id: "kmp-off-singlesource", name: "Local-first cache as single source of truth" },
+              { id: "kmp-off-syncqueue", name: "Sync queue & retry backoff strategy" },
+              { id: "kmp-off-optimistic", name: "Optimistic UI state updates" },
+              { id: "kmp-off-reconnect", name: "Network connectivity monitor & auto-reconnect" }
+            ]
+          },
+          {
+            id: "kmp-token-refresh",
+            name: "Token refresh/auth in Ktor",
+            subskills: [
+              { id: "kmp-tok-plugin", name: "Auth plugin with BearerAuthProvider" },
+              { id: "kmp-tok-mutex", name: "Mutex-locked concurrent token refresh" },
+              { id: "kmp-tok-keystore", name: "Storing refresh tokens in KeyStore / Keychain" },
+              { id: "kmp-tok-replay", name: "401 handling & automatic request replay" }
+            ]
+          }
         ]
       },
       {
         id: "cat-ai",
         title: "Mobile AI & Edge",
         icon: "bi-cpu",
+        description: "On-device LLMs, LiteRT, ExecuTorch, quantization, NPU acceleration, and Edge RAG",
         skills: [
-          { id: "ai-litert", name: "LiteRT" },
-          { id: "ai-litert-lm", name: "LiteRT-LM / AI Edge" },
-          { id: "ai-mediapipe", name: "MediaPipe tasks" },
-          { id: "ai-gemini-nano", name: "Gemini Nano (ML Kit GenAI/AICore)" },
-          { id: "ai-executorch", name: "ExecuTorch" },
-          { id: "ai-coreml-foundation", name: "Core ML + Foundation Models + MLX Swift" },
-          { id: "ai-onnx-mobile", name: "ONNX Runtime Mobile" },
-          { id: "ai-llamacpp", name: "llama.cpp integration" },
-          { id: "ai-qualcomm-qnn", name: "Qualcomm QNN / NPU stacks" },
-          { id: "ai-torch-export", name: "torch.export → ExecuTorch" },
-          { id: "ai-edge-torch", name: "ai-edge-torch → LiteRT" },
-          { id: "ai-quantization", name: "INT8/INT4 quantization (PTQ/QAT)" },
-          { id: "ai-accuracy-regression", name: "Accuracy regression testing" },
-          { id: "ai-hardware-delegation", name: "Hardware delegation (XNNPACK/GPU/NPU/ANE)" },
-          { id: "ai-op-fallback", name: "Op fallback profiling" },
-          { id: "ai-mmap-weights", name: "Memory-mapped weights" },
-          { id: "ai-kvcache", name: "KV-cache sizing" },
-          { id: "ai-thermal-battery", name: "Thermal/battery profiling" },
-          { id: "ai-model-delivery", name: "Model delivery (asset packs, on-demand, versioning, integrity)" },
-          { id: "ai-hybrid-routing", name: "Hybrid on-device/cloud routing" },
-          { id: "ai-ondevice-rag", name: "On-device RAG (embeddings, chunking, sqlite-vec + FTS5, reranking)" },
-          { id: "ai-context-window", name: "Context-window budgeting" },
-          { id: "ai-structured-output", name: "Structured output + tool calling" },
-          { id: "ai-koog-agents", name: "Koog / Kotlin agent frameworks" },
-          { id: "ai-offline-eval", name: "Offline eval harness" },
-          { id: "ai-privacy-telemetry", name: "Privacy-safe on-device telemetry" }
+          {
+            id: "ai-litert",
+            name: "LiteRT",
+            subskills: [
+              { id: "ai-litert-mig", name: "TensorFlow Lite to LiteRT runtime migration" },
+              { id: "ai-litert-flatbuf", name: "FlatBuffers model format & zero-copy loading" },
+              { id: "ai-litert-delegates", name: "CPU / GPU / NPU hardware delegate bindings" },
+              { id: "ai-litert-bench", name: "Model benchmark & latency profiling" }
+            ]
+          },
+          {
+            id: "ai-litert-lm",
+            name: "LiteRT-LM / AI Edge",
+            subskills: [
+              { id: "ai-lm-models", name: "On-device LLM inference (Gemma, Llama, Phi)" },
+              { id: "ai-lm-stream", name: "Prompt formatting & token generation streaming" },
+              { id: "ai-lm-weights", name: "Memory-efficient weight streaming" },
+              { id: "ai-lm-context", name: "Context length optimization" }
+            ]
+          },
+          {
+            id: "ai-mediapipe",
+            name: "MediaPipe tasks",
+            subskills: [
+              { id: "ai-mp-vision", name: "Face detector & holistic pose estimation" },
+              { id: "ai-mp-textaudio", name: "Text classification & audio classifier tasks" },
+              { id: "ai-mp-camera", name: "Live camera stream frame processing" },
+              { id: "ai-mp-gpu", name: "GPU accelerated pipeline delegates" }
+            ]
+          },
+          {
+            id: "ai-gemini-nano",
+            name: "Gemini Nano (ML Kit GenAI/AICore)",
+            subskills: [
+              { id: "ai-nano-aicore", name: "Android AICore system service integration" },
+              { id: "ai-nano-apis", name: "Summarization, smart reply, & proofreading APIs" },
+              { id: "ai-nano-downloads", name: "Model availability checks & download listeners" },
+              { id: "ai-nano-privacy", name: "On-device privacy constraints" }
+            ]
+          },
+          {
+            id: "ai-executorch",
+            name: "ExecuTorch",
+            subskills: [
+              { id: "ai-exec-arch", name: "PyTorch mobile runtime architecture" },
+              { id: "ai-exec-pte", name: "Core runtime & PTE model loading" },
+              { id: "ai-exec-delegates", name: "MPS (Apple), XNNPACK, & QNN delegates" },
+              { id: "ai-exec-kernels", name: "Custom C++ kernel registration" }
+            ]
+          },
+          {
+            id: "ai-coreml-foundation",
+            name: "Core ML + Foundation Models + MLX Swift",
+            subskills: [
+              { id: "ai-cml-quant", name: "Core ML model compilation & quantization" },
+              { id: "ai-cml-found", name: "Apple Foundation Models / System Intelligence" },
+              { id: "ai-cml-mlx", name: "MLX Swift on-device fine-tuning & inference" },
+              { id: "ai-cml-ane", name: "Neural Engine (ANE) memory optimization" }
+            ]
+          },
+          {
+            id: "ai-onnx-mobile",
+            name: "ONNX Runtime Mobile",
+            subskills: [
+              { id: "ai-onnx-init", name: "ONNX Mobile runtime initialization" },
+              { id: "ai-onnx-providers", name: "Execution providers (NNAPI, CoreML, XNNPACK)" },
+              { id: "ai-onnx-opt", name: "Graph optimizations & ORT format conversion" },
+              { id: "ai-onnx-threads", name: "Multi-threading execution tuning" }
+            ]
+          },
+          {
+            id: "ai-llamacpp",
+            name: "llama.cpp integration",
+            subskills: [
+              { id: "ai-llama-gguf", name: "GGUF format loading & mmap" },
+              { id: "ai-llama-bindings", name: "JNI & Cinterop bindings for mobile" },
+              { id: "ai-llama-metal", name: "Metal & Vulkan backend compilation" },
+              { id: "ai-llama-threads", name: "Context window & thread pool tuning" }
+            ]
+          },
+          {
+            id: "ai-qualcomm-qnn",
+            name: "Qualcomm QNN / NPU stacks",
+            subskills: [
+              { id: "ai-qnn-arch", name: "Snapdragon NPU architecture & HTP delegate" },
+              { id: "ai-qnn-tools", name: "QNN SDK & model conversion toolchain" },
+              { id: "ai-qnn-int8", name: "Per-channel INT8 quantization for HTP" },
+              { id: "ai-qnn-mem", name: "NPU memory allocation & profiling" }
+            ]
+          },
+          {
+            id: "ai-torch-export",
+            name: "torch.export → ExecuTorch",
+            subskills: [
+              { id: "ai-torch-workflow", name: "PyTorch 2.x torch.export workflow" },
+              { id: "ai-torch-shapes", name: "Graph capture & dynamic shapes handling" },
+              { id: "ai-torch-edge", name: "Lowering to Edge dialect" },
+              { id: "ai-torch-checks", name: "Model export validation & numerical checks" }
+            ]
+          },
+          {
+            id: "ai-edge-torch",
+            name: "ai-edge-torch → LiteRT",
+            subskills: [
+              { id: "ai-aiedge-converter", name: "PyTorch to TFLite/LiteRT converter toolchain" },
+              { id: "ai-aiedge-ops", name: "Supported PyTorch ops & fallback layers" },
+              { id: "ai-aiedge-tensors", name: "Signature defs & tensor shape bindings" },
+              { id: "ai-aiedge-parity", name: "End-to-end numerical parity verification" }
+            ]
+          },
+          {
+            id: "ai-quantization",
+            name: "INT8/INT4 quantization (PTQ/QAT)",
+            subskills: [
+              { id: "ai-quant-ptq", name: "Post-Training Quantization (PTQ) calibration" },
+              { id: "ai-quant-qat", name: "Quantization-Aware Training (QAT) fine-tuning" },
+              { id: "ai-quant-weightonly", name: "Weight-only INT4 vs Weight+Activation INT8" },
+              { id: "ai-quant-scales", name: "Per-tensor vs Per-channel quantization scales" }
+            ]
+          },
+          {
+            id: "ai-accuracy-regression",
+            name: "Accuracy regression testing",
+            subskills: [
+              { id: "ai-acc-eval", name: "Perplexity & BLEU score evaluation harnesses" },
+              { id: "ai-acc-deltas", name: "Numerical delta testing (FP32 vs INT8/INT4)" },
+              { id: "ai-acc-outliers", name: "Outlier detection in weight tensors" },
+              { id: "ai-acc-farm", name: "Automated CI evaluation on real device test farms" }
+            ]
+          },
+          {
+            id: "ai-hardware-delegation",
+            name: "Hardware delegation (XNNPACK/GPU/NPU/ANE)",
+            subskills: [
+              { id: "ai-hw-xnnpack", name: "XNNPACK SIMD multi-thread CPU optimization" },
+              { id: "ai-hw-gpu", name: "OpenCL / Metal / Vulkan GPU delegate setup" },
+              { id: "ai-hw-fallback", name: "Fallback strategies when delegate fails" },
+              { id: "ai-hw-power", name: "Power consumption & thermal benchmarks" }
+            ]
+          },
+          {
+            id: "ai-op-fallback",
+            name: "Op fallback profiling",
+            subskills: [
+              { id: "ai-op-rejection", name: "Delegate op rejection analysis" },
+              { id: "ai-op-bottlenecks", name: "Graph partitioning & CPU-GPU copy bottlenecks" },
+              { id: "ai-op-custom", name: "Custom op fallback kernel implementation" },
+              { id: "ai-op-latency", name: "Subgraph execution latency inspection" }
+            ]
+          },
+          {
+            id: "ai-mmap-weights",
+            name: "Memory-mapped weights",
+            subskills: [
+              { id: "ai-mmap-pagecache", name: "OS page-cache zero-copy weight loading" },
+              { id: "ai-mmap-footprint", name: "Virtual memory footprint optimization" },
+              { id: "ai-mmap-lmk", name: "Preventing low-memory killer (LMK) eviction" },
+              { id: "ai-mmap-dirty", name: "Dirty page avoidance during inference" }
+            ]
+          },
+          {
+            id: "ai-kvcache",
+            name: "KV-cache sizing",
+            subskills: [
+              { id: "ai-kv-formula", name: "Key-Value cache memory allocation formula" },
+              { id: "ai-kv-paged", name: "PagedAttention & sliding window KV-cache" },
+              { id: "ai-kv-evict", name: "Cache eviction strategies for long contexts" },
+              { id: "ai-kv-quant", name: "Quantized KV-cache (INT8/FP8)" }
+            ]
+          },
+          {
+            id: "ai-thermal-battery",
+            name: "Thermal/battery profiling",
+            subskills: [
+              { id: "ai-therm-android", name: "Android Battery Historian & ThermalStatusListener" },
+              { id: "ai-therm-ios", name: "iOS Energy Log & Thermal State notifications" },
+              { id: "ai-therm-batching", name: "Adaptive throttled batching on hot devices" },
+              { id: "ai-therm-fps", name: "Wattage and frame-rate drop correlations" }
+            ]
+          },
+          {
+            id: "ai-model-delivery",
+            name: "Model delivery (asset packs, on-demand, versioning, integrity)",
+            subskills: [
+              { id: "ai-mod-assetpacks", name: "Play Asset Delivery (fast-follow / on-demand)" },
+              { id: "ai-mod-checksum", name: "Model sha256 checksum & integrity validation" },
+              { id: "ai-mod-patches", name: "Incremental differential model patching" },
+              { id: "ai-mod-cdn", name: "Remote storage & CDN cache headers" }
+            ]
+          },
+          {
+            id: "ai-hybrid-routing",
+            name: "Hybrid on-device/cloud routing",
+            subskills: [
+              { id: "ai-hyb-classifier", name: "Latency vs Complexity classification model" },
+              { id: "ai-hyb-cloudfallback", name: "Fallback to cloud API on complex prompts" },
+              { id: "ai-hyb-offline", name: "Zero-connectivity offline mode routing" },
+              { id: "ai-hyb-budget", name: "Cost & token budget governor" }
+            ]
+          },
+          {
+            id: "ai-ondevice-rag",
+            name: "On-device RAG (embeddings, chunking, sqlite-vec + FTS5, reranking)",
+            subskills: [
+              { id: "ai-rag-embed", name: "On-device embedding generation (MiniLM, BGE)" },
+              { id: "ai-rag-sqlitevec", name: "sqlite-vec extension integration with SQLite" },
+              { id: "ai-rag-hybrid", name: "Hybrid search (BM25 FTS5 + Vector Cosine)" },
+              { id: "ai-rag-rerank", name: "Cross-encoder / bi-encoder reranking" }
+            ]
+          },
+          {
+            id: "ai-context-window",
+            name: "Context-window budgeting",
+            subskills: [
+              { id: "ai-ctx-counting", name: "Token counting algorithms on mobile" },
+              { id: "ai-ctx-sliding", name: "Sliding window message truncation" },
+              { id: "ai-ctx-summarize", name: "Summary generation & memory consolidation" },
+              { id: "ai-ctx-compress", name: "System prompt token compression" }
+            ]
+          },
+          {
+            id: "ai-structured-output",
+            name: "Structured output + tool calling",
+            subskills: [
+              { id: "ai-struct-json", name: "JSON Schema enforcement & constrained decoding" },
+              { id: "ai-struct-gbnf", name: "Grammar-based sampling (GBNF)" },
+              { id: "ai-struct-tools", name: "Tool / Function declaration parsing" },
+              { id: "ai-struct-params", name: "Parameter extraction & type validation" }
+            ]
+          },
+          {
+            id: "ai-koog-agents",
+            name: "Koog / Kotlin agent frameworks",
+            subskills: [
+              { id: "ai-agent-coord", name: "Multi-agent coordination in Kotlin" },
+              { id: "ai-agent-react", name: "ReAct (Reasoning + Acting) loop implementation" },
+              { id: "ai-agent-sandbox", name: "Tool execution sandbox & timeout handling" },
+              { id: "ai-agent-session", name: "State machine persistence for agent sessions" }
+            ]
+          },
+          {
+            id: "ai-offline-eval",
+            name: "Offline eval harness",
+            subskills: [
+              { id: "ai-eval-golden", name: "Golden dataset test suite on device" },
+              { id: "ai-eval-percentiles", name: "Latency percentiles (P50, P90, P99)" },
+              { id: "ai-eval-memory", name: "Memory peak & RSS measurement" },
+              { id: "ai-eval-logging", name: "Metric logging without network transmission" }
+            ]
+          },
+          {
+            id: "ai-privacy-telemetry",
+            name: "Privacy-safe on-device telemetry",
+            subskills: [
+              { id: "ai-priv-noise", name: "Differential privacy noise injection" },
+              { id: "ai-priv-sanitize", name: "Client-side log aggregation & sanitization" },
+              { id: "ai-priv-pii", name: "PII redaction before metric persistence" },
+              { id: "ai-priv-gdpr", name: "User consent & GDPR/CCPA enforcement" }
+            ]
+          }
         ]
       },
       {
         id: "cat-backend",
         title: "Backend & Infra",
         icon: "bi-server",
+        description: "Spring Boot, Ktor, Postgres, Redis, Kafka, Docker, Kubernetes, and Cloud",
         skills: [
-          { id: "infra-spring-boot", name: "Spring Boot (Kotlin)" },
-          { id: "infra-ktor-server", name: "Ktor server" },
-          { id: "infra-virtual-threads", name: "Virtual threads + coroutines" },
-          { id: "infra-postgres", name: "Postgres (indexing, EXPLAIN, isolation, migrations)" },
-          { id: "infra-transactional-outbox", name: "Transactional outbox" },
-          { id: "infra-redis", name: "Redis" },
-          { id: "infra-kafka", name: "Kafka" },
-          { id: "infra-docker", name: "Docker" },
-          { id: "infra-kubernetes", name: "Kubernetes" },
-          { id: "infra-terraform", name: "Terraform" },
-          { id: "infra-aws-gcp", name: "AWS or GCP (one, deep)" },
-          { id: "infra-opentelemetry", name: "OpenTelemetry" },
-          { id: "infra-oauth2-pkce", name: "OAuth2/OIDC + PKCE" },
-          { id: "infra-passkeys", name: "Passkeys" },
-          { id: "infra-refresh-rotation", name: "Refresh-token rotation" },
-          { id: "infra-play-integrity", name: "Play Integrity / App Attest" }
+          {
+            id: "infra-spring-boot",
+            name: "Spring Boot (Kotlin)",
+            subskills: [
+              { id: "infra-spring-reactive", name: "Spring WebFlux / Coroutines integration" },
+              { id: "infra-spring-di", name: "Dependency injection & Bean configuration" },
+              { id: "infra-spring-security", name: "Spring Security & JWT validation" },
+              { id: "infra-spring-actuator", name: "Production readiness with Spring Boot Actuator" }
+            ]
+          },
+          {
+            id: "infra-ktor-server",
+            name: "Ktor server",
+            subskills: [
+              { id: "infra-ktor-dsl", name: "Routing DSL, StatusPages & ContentNegotiation" },
+              { id: "infra-ktor-netty", name: "Netty / CIO server engine tuning" },
+              { id: "infra-ktor-ws", name: "WebSockets & SSE endpoints" },
+              { id: "infra-ktor-auth", name: "Ktor authentication & CallLogging plugins" }
+            ]
+          },
+          {
+            id: "infra-virtual-threads",
+            name: "Virtual threads + coroutines",
+            subskills: [
+              { id: "infra-vt-loom", name: "Java 21 Project Loom virtual threads" },
+              { id: "infra-vt-pinning", name: "Pinning detection & synchronized block avoidance" },
+              { id: "infra-vt-dispatchers", name: "Dispatchers.IO with Loom carrier threads" },
+              { id: "infra-vt-benchmark", name: "High concurrency throughput benchmarking" }
+            ]
+          },
+          {
+            id: "infra-postgres",
+            name: "Postgres (indexing, EXPLAIN, isolation, migrations)",
+            subskills: [
+              { id: "infra-pg-indexes", name: "B-tree, GIN & GiST indexes for performance" },
+              { id: "infra-pg-explain", name: "EXPLAIN ANALYZE query plan inspection" },
+              { id: "infra-pg-isolation", name: "Transaction isolation levels (Read Committed to Serializable)" },
+              { id: "infra-pg-migrations", name: "Flyway / Liquibase database migration scripts" }
+            ]
+          },
+          {
+            id: "infra-transactional-outbox",
+            name: "Transactional outbox",
+            subskills: [
+              { id: "infra-outbox-atomic", name: "Atomic database write with event outbox table" },
+              { id: "infra-outbox-debezium", name: "Change Data Capture (CDC) with Debezium" },
+              { id: "infra-outbox-idempotent", name: "Idempotent consumer design" },
+              { id: "infra-outbox-delivery", name: "Exactly-once vs at-least-once delivery" }
+            ]
+          },
+          {
+            id: "infra-redis",
+            name: "Redis",
+            subskills: [
+              { id: "infra-redis-caching", name: "In-memory caching & TTL expiration strategies" },
+              { id: "infra-redis-streams", name: "Redis Streams & Pub/Sub" },
+              { id: "infra-redis-lock", name: "Distributed locking with Redlock" },
+              { id: "infra-redis-sortedsets", name: "Sorted sets for leaderboard & rate limiting" }
+            ]
+          },
+          {
+            id: "infra-kafka",
+            name: "Kafka",
+            subskills: [
+              { id: "infra-kafka-producer", name: "Producer partitioning & idempotent producers" },
+              { id: "infra-kafka-consumer", name: "Consumer groups, rebalance & offset commit" },
+              { id: "infra-kafka-schema", name: "Kafka schema registry & Avro / Protobuf" },
+              { id: "infra-kafka-dlq", name: "Dead letter queues (DLQ) & retry topics" }
+            ]
+          },
+          {
+            id: "infra-docker",
+            name: "Docker",
+            subskills: [
+              { id: "infra-docker-multistage", name: "Multi-stage Dockerfile optimization for JVM" },
+              { id: "infra-docker-distroless", name: "Distroless & Alpine base images" },
+              { id: "infra-docker-limits", name: "Container resource limits (CPU/Memory)" },
+              { id: "infra-docker-compose", name: "Docker Compose for local microservices" }
+            ]
+          },
+          {
+            id: "infra-kubernetes",
+            name: "Kubernetes",
+            subskills: [
+              { id: "infra-k8s-deploy", name: "Deployments, Services & Ingress configuration" },
+              { id: "infra-k8s-secrets", name: "ConfigMaps & Secrets management" },
+              { id: "infra-k8s-hpa", name: "Horizontal Pod Autoscaler (HPA)" },
+              { id: "infra-k8s-probes", name: "Liveness & Readiness probes" }
+            ]
+          },
+          {
+            id: "infra-terraform",
+            name: "Terraform",
+            subskills: [
+              { id: "infra-tf-hcl", name: "Infrastructure as Code (IaC) HCL syntax" },
+              { id: "infra-tf-state", name: "State locking with S3/GCS backend" },
+              { id: "infra-tf-modules", name: "Reusable Terraform modules" },
+              { id: "infra-tf-cicd", name: "Plan & Apply automation in CI/CD" }
+            ]
+          },
+          {
+            id: "infra-aws-gcp",
+            name: "AWS or GCP (one, deep)",
+            subskills: [
+              { id: "infra-cloud-iam", name: "IAM roles, service accounts & least privilege" },
+              { id: "infra-cloud-containers", name: "Cloud Run / ECS Fargate serverless containers" },
+              { id: "infra-cloud-storage", name: "Cloud Storage / S3 lifecycle policies" },
+              { id: "infra-cloud-vpc", name: "VPC networking, subnets & security groups" }
+            ]
+          },
+          {
+            id: "infra-opentelemetry",
+            name: "OpenTelemetry",
+            subskills: [
+              { id: "infra-otel-traces", name: "Traces, Metrics & Logs instrumentation" },
+              { id: "infra-otel-w3c", name: "W3C Trace Context propagation over HTTP/gRPC" },
+              { id: "infra-otel-exporters", name: "Jaeger & Prometheus exporter integration" },
+              { id: "infra-otel-spans", name: "Distributed transaction span tracking" }
+            ]
+          },
+          {
+            id: "infra-oauth2-pkce",
+            name: "OAuth2/OIDC + PKCE",
+            subskills: [
+              { id: "infra-oauth-pkce", name: "Authorization Code Flow with PKCE for mobile" },
+              { id: "infra-oauth-verifier", name: "Code verifier & code challenge generation" },
+              { id: "infra-oauth-applinks", name: "Custom URL schemes & App Links redirect handling" },
+              { id: "infra-oauth-jwks", name: "ID token signature verification (JWKS)" }
+            ]
+          },
+          {
+            id: "infra-passkeys",
+            name: "Passkeys",
+            subskills: [
+              { id: "infra-pass-fido", name: "FIDO2 / WebAuthn public key cryptography" },
+              { id: "infra-pass-android", name: "Android Credential Manager API" },
+              { id: "infra-pass-apple", name: "Apple AuthenticationServices credentials" },
+              { id: "infra-pass-server", name: "Server-side assertion verification" }
+            ]
+          },
+          {
+            id: "infra-refresh-rotation",
+            name: "Refresh-token rotation",
+            subskills: [
+              { id: "infra-rot-singleuse", name: "Single-use refresh token generation & invalidation" },
+              { id: "infra-rot-reuse", name: "Automatic token reuse detection & session revocation" },
+              { id: "infra-rot-hardware", name: "Secure storage in hardware-backed KeyStore" },
+              { id: "infra-rot-sessions", name: "Multi-device session management" }
+            ]
+          },
+          {
+            id: "infra-play-integrity",
+            name: "Play Integrity / App Attest",
+            subskills: [
+              { id: "infra-attest-play", name: "Google Play Integrity API token generation" },
+              { id: "infra-attest-apple", name: "Apple App Attest & DeviceCheck validation" },
+              { id: "infra-attest-decrypt", name: "Server-side payload decryption & nonce verification" },
+              { id: "infra-attest-root", name: "Detecting rooted, emulated, or tampered environments" }
+            ]
+          }
         ]
       },
       {
         id: "cat-apis",
         title: "APIs & Protocols",
         icon: "bi-diagram-3",
+        description: "OpenAPI, gRPC/Protobuf, GraphQL federation, streaming, and LLM gateways",
         skills: [
-          { id: "api-rest-openapi", name: "REST + OpenAPI" },
-          { id: "api-grpc-protobuf", name: "gRPC/Protobuf + buf" },
-          { id: "api-graphql-federation", name: "GraphQL + federation" },
-          { id: "api-sse-websockets", name: "SSE/WebSockets" },
-          { id: "api-resumable-streaming", name: "Resumable streaming" },
-          { id: "api-llm-gateway", name: "LLM gateway (eval, cost controls)" }
+          {
+            id: "api-rest-openapi",
+            name: "REST + OpenAPI",
+            subskills: [
+              { id: "api-rest-specs", name: "OpenAPI 3.1 schema specification" },
+              { id: "api-rest-codegen", name: "Automated contract code generation" },
+              { id: "api-rest-hateoas", name: "RESTful resource design & HATEOAS" },
+              { id: "api-rest-errors", name: "RFC 7807 Problem Details error formats" }
+            ]
+          },
+          {
+            id: "api-grpc-protobuf",
+            name: "gRPC/Protobuf + buf",
+            subskills: [
+              { id: "api-grpc-proto3", name: "Protocol Buffers proto3 syntax" },
+              { id: "api-grpc-buf", name: "buf CLI for linting & breaking change detection" },
+              { id: "api-grpc-bidir", name: "Bidirectional streaming RPCs" },
+              { id: "api-grpc-deadlines", name: "Deadlines & gRPC interceptors" }
+            ]
+          },
+          {
+            id: "api-graphql-federation",
+            name: "GraphQL + federation",
+            subskills: [
+              { id: "api-gql-gateway", name: "Subgraphs & Apollo Federation gateway" },
+              { id: "api-gql-dataloader", name: "N+1 query problem & DataLoader" },
+              { id: "api-gql-entities", name: "Schema stitching vs federation entities" },
+              { id: "api-gql-cache", name: "Client-side cache normalization" }
+            ]
+          },
+          {
+            id: "api-sse-websockets",
+            name: "SSE/WebSockets",
+            subskills: [
+              { id: "api-sse-protocol", name: "Server-Sent Events (SSE) streaming protocol" },
+              { id: "api-ws-frames", name: "WebSocket full-duplex protocol & heartbeat" },
+              { id: "api-ws-reconnect", name: "Connection recovery & backoff reconnection" },
+              { id: "api-ws-compression", name: "Message frame compression" }
+            ]
+          },
+          {
+            id: "api-resumable-streaming",
+            name: "Resumable streaming",
+            subskills: [
+              { id: "api-stream-range", name: "HTTP Range headers & 206 Partial Content" },
+              { id: "api-stream-chunked", name: "Chunked transfer encoding" },
+              { id: "api-stream-tus", name: "Resumable upload protocol (Tus / GCS)" },
+              { id: "api-stream-offsets", name: "Client byte-offset checkpointing" }
+            ]
+          },
+          {
+            id: "api-llm-gateway",
+            name: "LLM gateway (eval, cost controls)",
+            subskills: [
+              { id: "api-llm-proxy", name: "Centralized proxy for OpenAI/Claude/Gemini" },
+              { id: "api-llm-limits", name: "Token rate limiting & user quotas" },
+              { id: "api-llm-cache", name: "Semantic caching for repetitive prompts" },
+              { id: "api-llm-fallback", name: "Cost tracking & model fallback routing" }
+            ]
+          }
         ]
       },
       {
         id: "cat-sysdesign",
         title: "Mobile System Design",
         icon: "bi-boxes",
+        description: "Offline synchronization, caching, push channels, feature flags, and modular architecture",
         skills: [
-          { id: "sys-offline-sync", name: "Offline sync + conflict resolution (LWW/CRDT/server-authoritative)" },
-          { id: "sys-pagination-caching", name: "Pagination + multi-layer caching" },
-          { id: "sys-fcm-apns", name: "FCM/APNs + real-time channels" },
-          { id: "sys-feature-flags", name: "Feature flags + experimentation + kill switches" },
-          { id: "sys-staged-rollout", name: "Staged rollout strategy" },
-          { id: "sys-startup-perf", name: "Startup/performance engineering" },
-          { id: "sys-modularization", name: "Large-scale modularization" },
-          { id: "sys-threat-modeling", name: "Security threat modeling" },
-          { id: "sys-analytics-observability", name: "Analytics/observability pipelines" },
-          { id: "sys-design-docs", name: "Design docs + peer review" }
+          {
+            id: "sys-offline-sync",
+            name: "Offline sync + conflict resolution (LWW/CRDT/server-authoritative)",
+            subskills: [
+              { id: "sys-sync-lww", name: "Last-Write-Wins (LWW) timestamp registers" },
+              { id: "sys-sync-crdt", name: "Conflict-Free Replicated Data Types (CRDTs - PN-Counter, OR-Set)" },
+              { id: "sys-sync-reconcile", name: "Operational Transformation & Server reconciliation" },
+              { id: "sys-sync-queues", name: "Sync queues & retry deadlocks" }
+            ]
+          },
+          {
+            id: "sys-pagination-caching",
+            name: "Pagination + multi-layer caching",
+            subskills: [
+              { id: "sys-page-cursor", name: "Cursor-based vs Offset-based pagination" },
+              { id: "sys-cache-layers", name: "L1 (Memory), L2 (Disk DB), L3 (Network) cache architecture" },
+              { id: "sys-cache-invalid", name: "Cache invalidation (TTL, Write-through, Write-behind)" },
+              { id: "sys-cache-swr", name: "Stale-While-Revalidate caching pattern" }
+            ]
+          },
+          {
+            id: "sys-fcm-apns",
+            name: "FCM/APNs + real-time channels",
+            subskills: [
+              { id: "sys-push-payload", name: "Push notification payload structure & silent pushes" },
+              { id: "sys-push-apns", name: "APNs HTTP/2 certificate & token authentication" },
+              { id: "sys-push-wakeup", name: "High-priority wakeup & background execution limits" },
+              { id: "sys-push-channels", name: "Notification channel grouping & badge counts" }
+            ]
+          },
+          {
+            id: "sys-feature-flags",
+            name: "Feature flags + experimentation + kill switches",
+            subskills: [
+              { id: "sys-flags-eval", name: "Client-side evaluation vs Server evaluation" },
+              { id: "sys-flags-rollout", name: "Percentage rollout & targeted audience hashing" },
+              { id: "sys-flags-kill", name: "Instant kill switch architecture for faulty releases" },
+              { id: "sys-flags-ab", name: "Experimentation metrics & A/B significance testing" }
+            ]
+          },
+          {
+            id: "sys-staged-rollout",
+            name: "Staged rollout strategy",
+            subskills: [
+              { id: "sys-roll-cadence", name: "1% -> 5% -> 20% -> 100% rollout cadence" },
+              { id: "sys-roll-anomalies", name: "Anomaly detection & crash rate monitoring" },
+              { id: "sys-roll-halting", name: "Automated rollout halting on spike thresholds" },
+              { id: "sys-roll-osdeprecate", name: "Target version minimum OS deprecation" }
+            ]
+          },
+          {
+            id: "sys-startup-perf",
+            name: "Startup/performance engineering",
+            subskills: [
+              { id: "sys-perf-times", name: "Cold, warm, and hot start timing measurement" },
+              { id: "sys-perf-lazy", name: "App Startup library & lazy initialization" },
+              { id: "sys-perf-mainthread", name: "Main thread blocking analysis with Android Studio Profiler" },
+              { id: "sys-perf-dex", name: "Class preloading & DEX layout optimization" }
+            ]
+          },
+          {
+            id: "sys-modularization",
+            name: "Large-scale modularization",
+            subskills: [
+              { id: "sys-mod-layers", name: "Layered architecture (Core, Feature, App)" },
+              { id: "sys-mod-boundaries", name: "Strict compile-time API boundaries" },
+              { id: "sys-mod-fanout", name: "Minimizing build-graph fan-out" },
+              { id: "sys-mod-dynamicfeatures", name: "Dynamic feature modules & asset packs" }
+            ]
+          },
+          {
+            id: "sys-threat-modeling",
+            name: "Security threat modeling",
+            subskills: [
+              { id: "sys-threat-stride", name: "STRIDE threat modeling framework" },
+              { id: "sys-threat-pinning", name: "Certificate pinning & network security config" },
+              { id: "sys-threat-reverse", name: "Memory dumping & reverse-engineering mitigation" },
+              { id: "sys-threat-keys", name: "Secure KeyStore / Keychain encryption keys" }
+            ]
+          },
+          {
+            id: "sys-analytics-observability",
+            name: "Analytics/observability pipelines",
+            subskills: [
+              { id: "sys-obs-schemas", name: "Event schema validation & batching" },
+              { id: "sys-obs-buffers", name: "Network transmission compression & retry buffers" },
+              { id: "sys-obs-symbols", name: "Crashlytics / Sentry symbolication & breadcrumbs" },
+              { id: "sys-obs-correlation", name: "Distributed tracing correlation IDs" }
+            ]
+          },
+          {
+            id: "sys-design-docs",
+            name: "Design docs + peer review",
+            subskills: [
+              { id: "sys-doc-adrs", name: "Architecture Decision Records (ADRs)" },
+              { id: "sys-doc-rfcs", name: "RFC (Request for Comments) workflow" },
+              { id: "sys-doc-nfrs", name: "Non-functional requirements (NFRs) specification" },
+              { id: "sys-doc-alignment", name: "Cross-functional stakeholder alignment" }
+            ]
+          }
         ]
       },
       {
         id: "cat-career",
         title: "Career Leverage",
         icon: "bi-award",
+        description: "Open source leadership, technical writeups, cross-team impact, and Tier-1 interviews",
         skills: [
-          { id: "career-oss", name: "OSS contributions" },
-          { id: "career-talks", name: "Technical writeups/talks" },
-          { id: "career-cross-team", name: "Cross-team initiative ownership" },
-          { id: "career-platform-impact", name: "Measurable platform impact" },
-          { id: "career-mentoring", name: "Mentoring" },
-          { id: "career-tier1-prep", name: "Tier-1 interview loop prep" },
-          { id: "career-tier-targeting", name: "Level/company-tier targeting" }
+          {
+            id: "career-oss",
+            name: "OSS contributions",
+            subskills: [
+              { id: "career-oss-upstream", name: "Finding high-impact issues in upstream KMP/Android libraries" },
+              { id: "career-oss-prs", name: "Writing clean PRs with test coverage & documentation" },
+              { id: "career-oss-repro", name: "Reproducible bug reports with minimal sample repo" },
+              { id: "career-oss-maintain", name: "Maintaining your own open-source library" }
+            ]
+          },
+          {
+            id: "career-talks",
+            name: "Technical writeups/talks",
+            subskills: [
+              { id: "career-talk-posts", name: "Deep-dive technical blog posts on Kotlin internals" },
+              { id: "career-talk-conf", name: "Conference talks (Droidcon, KotlinConf, GDG)" },
+              { id: "career-talk-diagrams", name: "Visual architectural diagrams that explain complex systems" },
+              { id: "career-talk-internal", name: "Internal tech talks & brown-bag sessions" }
+            ]
+          },
+          {
+            id: "career-cross-team",
+            name: "Cross-team initiative ownership",
+            subskills: [
+              { id: "career-lead-k2", name: "Leading platform-wide migrations (e.g. K2 or Compose)" },
+              { id: "career-lead-align", name: "Driving cross-functional alignment (Mobile + Backend + Product)" },
+              { id: "career-lead-lint", name: "Defining engineering standards & linting rules" },
+              { id: "career-lead-delivery", name: "Delivering on-time across multiple squad dependencies" }
+            ]
+          },
+          {
+            id: "career-platform-impact",
+            name: "Measurable platform impact",
+            subskills: [
+              { id: "career-imp-build", name: "Quantifying CI build time reduction (e.g. 40% faster)" },
+              { id: "career-imp-crashfree", name: "Crash-free user rate improvement (99.9%+)" },
+              { id: "career-imp-size", name: "App size reduction (APK/IPA optimization)" },
+              { id: "career-imp-ai-p90", name: "AI on-device latency optimization (P90 < 50ms)" }
+            ]
+          },
+          {
+            id: "career-mentoring",
+            name: "Mentoring",
+            subskills: [
+              { id: "career-mentor-pairing", name: "Pairing with junior & mid-level engineers" },
+              { id: "career-mentor-reviews", name: "High-quality, empathetic code reviews" },
+              { id: "career-mentor-onboarding", name: "Structured onboarding paths for new mobile engineers" },
+              { id: "career-mentor-growth", name: "Promoting growth & sponsorship for teammates" }
+            ]
+          },
+          {
+            id: "career-tier1-prep",
+            name: "Tier-1 interview loop prep",
+            subskills: [
+              { id: "career-prep-sysdesign", name: "Mobile System Design mock loops" },
+              { id: "career-prep-concurrency", name: "Deep concurrency & memory model questioning" },
+              { id: "career-prep-star", name: "Behavioral STAR method leadership stories" },
+              { id: "career-prep-coding", name: "Live mobile coding & architecture refactoring" }
+            ]
+          },
+          {
+            id: "career-tier-targeting",
+            name: "Level/company-tier targeting",
+            subskills: [
+              { id: "career-tier-staff", name: "Staff / Principal engineering competencies" },
+              { id: "career-tier-rubric", name: "FAANG / Big Tech mobile rubric alignment" },
+              { id: "career-tier-comp", name: "Equity vs base compensation negotiation" },
+              { id: "career-tier-narrative", name: "Strategic portfolio & career narrative presentation" }
+            ]
+          }
         ]
       }
     ];
 
-    const STORAGE_KEY = "top1_android_dev_skills_v1";
-    let checkedSkills = {};
-    let selectedCategory = "all";
-    let viewMode = "all"; // all | pending | completed
+    // =========================================================================
+    // STATE & FIREBASE CONFIGURATION
+    // =========================================================================
+    const LOCAL_STATE_KEY = "top1_android_dev_skills_v1";
+    const FIREBASE_CONFIG_KEY = "top1_firebase_rtdb_config";
+
+    let checkedState = {};
+    let activeCategory = "overview"; // "overview" or category ID
     let searchQuery = "";
+    let expandAllState = false;
 
-    // Load LocalStorage
-    function loadSavedState() {
+    // Firebase instances
+    let firebaseDb = null;
+    let isFirebaseConnected = false;
+    let rtdbRef = null;
+
+    // Load Local Fallback
+    function loadLocalState() {
       try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) checkedSkills = JSON.parse(stored);
+        const stored = localStorage.getItem(LOCAL_STATE_KEY);
+        if (stored) checkedState = JSON.parse(stored);
       } catch (e) {
-        console.error(e);
+        console.error("Local storage read error", e);
       }
     }
 
-    function saveState() {
+    function saveLocalState() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(checkedSkills));
-        showToast("Auto-saved to LocalStorage");
+        localStorage.setItem(LOCAL_STATE_KEY, JSON.stringify(checkedState));
       } catch (e) {
-        console.error(e);
+        console.error("Local storage save error", e);
       }
     }
 
-    // Toggle Item
-    function toggleSkill(skillId) {
-      if (checkedSkills[skillId]) {
-        delete checkedSkills[skillId];
+    // =========================================================================
+    // FIREBASE INITIALIZATION & REALTIME SYNC
+    // =========================================================================
+    function initFirebase() {
+      const configStr = localStorage.getItem(FIREBASE_CONFIG_KEY);
+      if (!configStr) {
+        updateDbStatus(false, "Local Mode", "Click to connect Firebase");
+        // Check if first-time visit
+        if (!localStorage.getItem("has_seen_fb_prompt")) {
+          localStorage.setItem("has_seen_fb_prompt", "true");
+          openFirebaseModal();
+        }
+        return;
+      }
+
+      try {
+        const config = JSON.parse(configStr);
+        if (!firebase.apps.length) {
+          firebase.initializeApp(config);
+        }
+        firebaseDb = firebase.database();
+        rtdbRef = firebaseDb.ref("roadmap_progress");
+
+        updateDbStatus(true, "RTDB Live", "Realtime Synced");
+
+        // Realtime Listener
+        rtdbRef.on("value", snapshot => {
+          const val = snapshot.val();
+          if (val && typeof val === "object") {
+            checkedState = val;
+            saveLocalState();
+            updateUI();
+          }
+        }, err => {
+          console.warn("RTDB Permission/Connection notice:", err);
+          updateDbStatus(false, "Local Mode", "Database rules/URL notice");
+        });
+
+      } catch (err) {
+        console.error("Failed to init Firebase with saved config:", err);
+        updateDbStatus(false, "Config Error", "Click to fix JSON");
+      }
+    }
+
+    // Parse and connect user-submitted Firebase JSON
+    function saveFirebaseConfig() {
+      const rawText = document.getElementById("firebaseJsonInput").value.trim();
+      if (!rawText) {
+        alert("Please paste your Firebase JSON configuration.");
+        return;
+      }
+
+      try {
+        // Strip JS variable assignments if user pasted `const firebaseConfig = { ... };`
+        let cleanText = rawText.replace(/^(const|let|var)\s+\w+\s*=\s*/, "").replace(/;$/, "").trim();
+        const parsed = JSON.parse(cleanText);
+
+        let finalConfig = {};
+
+        // Case 1: Android `google-services.json`
+        if (parsed.project_info && parsed.client) {
+          const proj = parsed.project_info;
+          const client = parsed.client[0] || {};
+          const apiKey = client.api_key && client.api_key[0] ? client.api_key[0].current_key : "";
+          const appId = client.client_info ? client.client_info.mobilesdk_app_id : "";
+
+          finalConfig = {
+            apiKey: apiKey,
+            authDomain: `${proj.project_id}.firebaseapp.com`,
+            databaseURL: proj.firebase_url || `https://${proj.project_id}-default-rtdb.firebaseio.com`,
+            projectId: proj.project_id,
+            storageBucket: proj.storage_bucket || `${proj.project_id}.appspot.com`,
+            appId: appId
+          };
+        } 
+        // Case 2: Web SDK Config
+        else if (parsed.apiKey || parsed.databaseURL || parsed.projectId) {
+          finalConfig = {
+            apiKey: parsed.apiKey || "",
+            authDomain: parsed.authDomain || (parsed.projectId ? `${parsed.projectId}.firebaseapp.com` : ""),
+            databaseURL: parsed.databaseURL || (parsed.projectId ? `https://${parsed.projectId}-default-rtdb.firebaseio.com` : ""),
+            projectId: parsed.projectId || "",
+            storageBucket: parsed.storageBucket || "",
+            appId: parsed.appId || ""
+          };
+        } else {
+          throw new Error("Could not detect databaseURL or apiKey in the pasted JSON.");
+        }
+
+        if (!finalConfig.databaseURL) {
+          throw new Error("databaseURL is missing. Please ensure your Firebase Realtime Database is enabled in Firebase Console.");
+        }
+
+        // Save & reload
+        localStorage.setItem(FIREBASE_CONFIG_KEY, JSON.stringify(finalConfig));
+        showToast("Firebase Config saved! Connecting...", "bi-cloud-check");
+        closeFirebaseModal();
+
+        // Reconnect
+        setTimeout(() => {
+          location.reload();
+        }, 500);
+
+      } catch (err) {
+        alert("Failed to parse JSON: " + err.message);
+      }
+    }
+
+    function useLocalMode() {
+      closeFirebaseModal();
+      showToast("Using Local Mode (stored in browser)", "bi-hdd");
+    }
+
+    function updateDbStatus(connected, badgeText, subText) {
+      isFirebaseConnected = connected;
+      const dot = document.getElementById("footerStatusDot");
+      const text = document.getElementById("footerStatusText");
+      const sub = document.getElementById("footerSubText");
+      const badge = document.getElementById("headerStatusBadge");
+
+      if (connected) {
+        dot.className = "status-dot connected";
+        text.textContent = "Firebase RTDB Live";
+        badge.className = "model-badge";
+        badge.textContent = "RTDB Live";
+        badge.style.color = "var(--openai-green)";
+        badge.style.background = "var(--openai-green-subtle)";
       } else {
-        checkedSkills[skillId] = { completedAt: new Date().toISOString() };
+        dot.className = "status-dot local";
+        text.textContent = badgeText;
+        badge.className = "model-badge";
+        badge.textContent = badgeText;
+        badge.style.color = "#eab308";
+        badge.style.background = "rgba(234, 179, 8, 0.15)";
       }
-      saveState();
-      updateUI();
+      sub.textContent = subText;
     }
 
-    // Category Batch Toggle
-    function toggleCategoryAll(catId, markDone) {
-      const cat = SKILLS_DATA.find(c => c.id === catId);
-      if (!cat) return;
-      cat.skills.forEach(s => {
-        if (markDone) checkedSkills[s.id] = { completedAt: new Date().toISOString() };
-        else delete checkedSkills[s.id];
-      });
-      saveState();
+    // Modal controls
+    function openFirebaseModal() {
+      const existing = localStorage.getItem(FIREBASE_CONFIG_KEY);
+      if (existing) {
+        document.getElementById("firebaseJsonInput").value = JSON.stringify(JSON.parse(existing), null, 2);
+      }
+      document.getElementById("firebaseModal").classList.add("show");
+    }
+
+    function closeFirebaseModal() {
+      document.getElementById("firebaseModal").classList.remove("show");
+    }
+
+    // =========================================================================
+    // CHECKLIST TOGGLE & REALTIME MUTATION
+    // =========================================================================
+    function toggleSubskill(parentSkillId, subskillId) {
+      const isChecked = !!checkedState[subskillId];
+      if (isChecked) {
+        delete checkedState[subskillId];
+      } else {
+        checkedState[subskillId] = { completedAt: Date.now() };
+      }
+
+      // Check if all subskills are completed to update parent check
+      syncParentStatus(parentSkillId);
+
+      // Save locally immediately
+      saveLocalState();
       updateUI();
+
+      // Sync to Firebase RTDB
+      syncToFirebase(subskillId, !isChecked);
+    }
+
+    function toggleParentAll(parentSkillId, forceState) {
+      const parent = findParentSkill(parentSkillId);
+      if (!parent) return;
+
+      const currentDone = isParentDone(parent);
+      const targetState = typeof forceState === "boolean" ? forceState : !currentDone;
+
+      parent.subskills.forEach(sub => {
+        if (targetState) {
+          checkedState[sub.id] = { completedAt: Date.now() };
+        } else {
+          delete checkedState[sub.id];
+        }
+      });
+
+      if (targetState) {
+        checkedState[parent.id] = { completedAt: Date.now() };
+      } else {
+        delete checkedState[parent.id];
+      }
+
+      saveLocalState();
+      updateUI();
+
+      if (rtdbRef && isFirebaseConnected) {
+        const updates = {};
+        parent.subskills.forEach(sub => {
+          updates[sub.id] = targetState ? { completedAt: Date.now() } : null;
+        });
+        updates[parent.id] = targetState ? { completedAt: Date.now() } : null;
+        rtdbRef.update(updates);
+        showToast(targetState ? "Skills checked" : "Skills cleared", "bi-cloud-upload");
+      }
+    }
+
+    function syncParentStatus(parentSkillId) {
+      const parent = findParentSkill(parentSkillId);
+      if (!parent) return;
+
+      const allSubDone = parent.subskills.length > 0 && parent.subskills.every(s => !!checkedState[s.id]);
+      if (allSubDone) {
+        checkedState[parent.id] = { completedAt: Date.now() };
+      } else {
+        delete checkedState[parent.id];
+      }
+    }
+
+    function syncToFirebase(id, isChecked) {
+      if (rtdbRef && isFirebaseConnected) {
+        if (isChecked) {
+          rtdbRef.child(id).set({ completedAt: Date.now() });
+        } else {
+          rtdbRef.child(id).remove();
+        }
+        showToast("Synced to Firebase RTDB", "bi-cloud-check");
+      } else {
+        showToast("Saved locally (offline)", "bi-hdd");
+      }
+    }
+
+    function findParentSkill(parentSkillId) {
+      for (const cat of HIERARCHY_DATA) {
+        const found = cat.skills.find(s => s.id === parentSkillId);
+        if (found) return found;
+      }
+      return null;
+    }
+
+    function isParentDone(parent) {
+      if (!parent.subskills || parent.subskills.length === 0) {
+        return !!checkedState[parent.id];
+      }
+      return parent.subskills.every(s => !!checkedState[s.id]);
+    }
+
+    // =========================================================================
+    // RENDERING & PROGRESS LOGIC
+    // =========================================================================
+    function selectCategory(catId) {
+      activeCategory = catId;
+      document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+      const navItem = document.getElementById("nav-" + catId);
+      if (navItem) navItem.classList.add("active");
+
+      // Auto close sidebar on mobile
+      if (window.innerWidth < 768) {
+        document.getElementById("sidebar").classList.add("collapsed");
+      }
+
+      renderContent();
+    }
+
+    function renderContent() {
+      const container = document.getElementById("contentWrapper");
+      container.innerHTML = "";
+
+      if (searchQuery) {
+        renderSearchResults(container);
+        return;
+      }
+
+      if (activeCategory === "overview") {
+        renderOverviewDashboard(container);
+      } else {
+        const category = HIERARCHY_DATA.find(c => c.id === activeCategory);
+        if (category) {
+          renderCategoryDetail(container, category);
+        }
+      }
+    }
+
+    // Render 1: Overview Dashboard (Not everything dumped on one screen!)
+    function renderOverviewDashboard(container) {
+      let grandTotalParents = 0;
+      let grandCompletedParents = 0;
+
+      HIERARCHY_DATA.forEach(c => {
+        c.skills.forEach(s => {
+          grandTotalParents++;
+          if (isParentDone(s)) grandCompletedParents++;
+        });
+      });
+
+      const grandPct = grandTotalParents > 0 ? Math.round((grandCompletedParents / grandTotalParents) * 100) : 0;
+
+      container.innerHTML = `
+        <div class="view-header">
+          <div class="view-title-group">
+            <h1>
+              <i class="bi bi-rocket-takeoff text-emerald-400" style="color: var(--openai-green);"></i>
+              Top 1% Senior Mastery Roadmap
+            </h1>
+            <p class="view-desc">
+              Structured progressive modules. Select a track below or from the sidebar to drill into parent skills and sub-concepts.
+            </p>
+          </div>
+        </div>
+
+        <!-- Overall Progress Card -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: 600; font-size: 15px;">Global Engineering Readiness</span>
+              <span style="font-size: 11px; color: var(--openai-green); background: var(--openai-green-subtle); padding: 2px 8px; border-radius: var(--radius-full);">
+                ${isFirebaseConnected ? 'RTDB Live' : 'Local Storage'}
+              </span>
+            </div>
+            <span style="font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--openai-green);">
+              ${grandPct}% (${grandCompletedParents} / ${grandTotalParents} Mastered)
+            </span>
+          </div>
+
+          <div class="progress-bar-bg" style="height: 8px; margin: 12px 0 8px;">
+            <div class="progress-bar-fill" style="width: ${grandPct}%;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
+            <span>${grandCompletedParents} Parent Capabilities Complete</span>
+            <span>${grandTotalParents - grandCompletedParents} Capabilities In Progress</span>
+          </div>
+        </div>
+
+        <!-- Category Grid Cards -->
+        <div class="overview-grid">
+          ${HIERARCHY_DATA.map(cat => {
+            const catDone = cat.skills.filter(s => isParentDone(s)).length;
+            const catTotal = cat.skills.length;
+            const catPct = Math.round((catDone / catTotal) * 100);
+
+            return `
+              <div class="overview-card" onclick="selectCategory('${cat.id}')">
+                <div>
+                  <div class="overview-card-header">
+                    <div class="overview-card-icon">
+                      <i class="bi ${cat.icon}"></i>
+                    </div>
+                    <div>
+                      <h2 style="font-size: 14px; font-weight: 600; color: var(--text-primary);">${cat.title}</h2>
+                      <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">
+                        ${catDone} / ${catTotal} capabilities
+                      </span>
+                    </div>
+                  </div>
+                  <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 16px;">
+                    ${cat.description}
+                  </p>
+                </div>
+
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">
+                    <span>Progress</span>
+                    <span style="color: var(--openai-green); font-weight: 600;">${catPct}%</span>
+                  </div>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: ${catPct}%;"></div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    // Render 2: Specific Category View (Drill-down with sub-skills!)
+    function renderCategoryDetail(container, category) {
+      const catDone = category.skills.filter(s => isParentDone(s)).length;
+      const catTotal = category.skills.length;
+      const catPct = Math.round((catDone / catTotal) * 100);
+
+      container.innerHTML = `
+        <div class="view-header">
+          <div class="view-title-group">
+            <h1>
+              <i class="bi ${category.icon}" style="color: var(--openai-green);"></i>
+              ${category.title}
+            </h1>
+            <p class="view-desc">${category.description}</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-secondary-gpt" style="font-size: 12px; padding: 6px 12px;" onclick="batchCategory('${category.id}', true)">
+              <i class="bi bi-check2-all me-1"></i> Check All
+            </button>
+            <button class="btn-secondary-gpt" style="font-size: 12px; padding: 6px 12px;" onclick="batchCategory('${category.id}', false)">
+              <i class="bi bi-x me-1"></i> Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Category Progress Indicator -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 13px; font-weight: 500;">
+            Module Progress: <span style="color: var(--openai-green); font-family: 'JetBrains Mono', monospace;">${catDone} / ${catTotal}</span>
+          </div>
+          <div style="width: 220px;">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: ${catPct}%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Parent Skills List -->
+        <div id="parentSkillsList">
+          ${category.skills.map(parent => renderParentSkillCard(parent)).join("")}
+        </div>
+      `;
+    }
+
+    // Render Single Parent Skill Card
+    function renderParentSkillCard(parent, autoOpen = false) {
+      const isDone = isParentDone(parent);
+      const subskills = parent.subskills || [];
+      const subDoneCount = subskills.filter(s => !!checkedState[s.id]).length;
+      const subTotal = subskills.length;
+      const isOpen = autoOpen || expandAllState;
+
+      return `
+        <div class="parent-card ${isOpen ? 'open' : ''} ${isDone ? 'has-completed' : ''}" id="card-${parent.id}">
+          <div class="parent-header" onclick="toggleAccordion('card-${parent.id}')">
+            <!-- Parent checkbox (checks all subskills) -->
+            <div class="custom-check ${isDone ? 'checked' : ''}" onclick="event.stopPropagation(); toggleParentAll('${parent.id}');" title="Toggle entire skill">
+              <i class="bi bi-check-lg"></i>
+            </div>
+
+            <div class="parent-title">${escapeHTML(parent.name)}</div>
+
+            <div class="parent-meta">
+              <span class="parent-badge ${isDone ? 'done' : ''}">
+                ${subDoneCount}/${subTotal} concepts
+              </span>
+              <i class="bi bi-chevron-down arrow-icon"></i>
+            </div>
+          </div>
+
+          <!-- Sub-skills container -->
+          <div class="subskills-container">
+            ${subskills.map(sub => {
+              const subChecked = !!checkedState[sub.id];
+              return `
+                <div class="subskill-row ${subChecked ? 'checked' : ''}" onclick="toggleSubskill('${parent.id}', '${sub.id}')">
+                  <div class="custom-check">
+                    <i class="bi bi-check-lg"></i>
+                  </div>
+                  <span class="subskill-name">${escapeHTML(sub.name)}</span>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    // Render Search Results Across All Categories
+    function renderSearchResults(container) {
+      const q = searchQuery.toLowerCase();
+      let matchedCount = 0;
+
+      container.innerHTML = `
+        <div class="view-header">
+          <div class="view-title-group">
+            <h1>
+              <i class="bi bi-search" style="color: var(--openai-green);"></i>
+              Search: "${escapeHTML(searchQuery)}"
+            </h1>
+            <p class="view-desc">Searching across all parent skills and granular sub-concepts</p>
+          </div>
+          <button class="btn-secondary-gpt" onclick="clearSearch()" style="font-size: 12px; padding: 6px 12px;">
+            Clear Search
+          </button>
+        </div>
+        <div id="searchResultsList"></div>
+      `;
+
+      const listContainer = document.getElementById("searchResultsList");
+
+      HIERARCHY_DATA.forEach(cat => {
+        cat.skills.forEach(parent => {
+          const parentMatch = parent.name.toLowerCase().includes(q);
+          const subMatch = parent.subskills.some(s => s.name.toLowerCase().includes(q));
+
+          if (parentMatch || subMatch) {
+            matchedCount++;
+            const div = document.createElement("div");
+            div.innerHTML = renderParentSkillCard(parent, true); // Auto expand matching cards
+            listContainer.appendChild(div.firstElementChild);
+          }
+        });
+      });
+
+      if (matchedCount === 0) {
+        listContainer.innerHTML = `
+          <div style="text-align: center; padding: 50px 20px; color: var(--text-muted);">
+            <i class="bi bi-search" style="font-size: 32px; display: block; margin-bottom: 12px;"></i>
+            <div style="font-size: 15px; color: var(--text-secondary);">No capabilities found matching "${escapeHTML(searchQuery)}"</div>
+            <div style="font-size: 13px; margin-top: 4px;">Try searching for K2, LiteRT, Ktor, Swift 6, CRDT, or Docker.</div>
+          </div>
+        `;
+      }
+    }
+
+    function toggleAccordion(cardId) {
+      const card = document.getElementById(cardId);
+      if (card) card.classList.toggle("open");
+    }
+
+    function toggleExpandAll() {
+      expandAllState = !expandAllState;
+      document.querySelectorAll(".parent-card").forEach(c => {
+        c.classList.toggle("open", expandAllState);
+      });
+      document.getElementById("expandToggleIcon").className = expandAllState ? "bi bi-arrows-collapse" : "bi bi-arrows-expand";
+    }
+
+    function batchCategory(catId, markDone) {
+      const cat = HIERARCHY_DATA.find(c => c.id === catId);
+      if (!cat) return;
+
+      const updates = {};
+      cat.skills.forEach(parent => {
+        parent.subskills.forEach(sub => {
+          if (markDone) {
+            checkedState[sub.id] = { completedAt: Date.now() };
+            updates[sub.id] = { completedAt: Date.now() };
+          } else {
+            delete checkedState[sub.id];
+            updates[sub.id] = null;
+          }
+        });
+        if (markDone) {
+          checkedState[parent.id] = { completedAt: Date.now() };
+          updates[parent.id] = { completedAt: Date.now() };
+        } else {
+          delete checkedState[parent.id];
+          updates[parent.id] = null;
+        }
+      });
+
+      saveLocalState();
+      updateUI();
+
+      if (rtdbRef && isFirebaseConnected) {
+        rtdbRef.update(updates);
+        showToast("Category updated in RTDB", "bi-cloud-upload");
+      }
     }
 
     function confirmResetAll() {
-      if (confirm("Reset all checked skills in your roadmap?")) {
-        checkedSkills = {};
-        saveState();
+      if (confirm("Reset all progress across all modules in your roadmap?")) {
+        checkedState = {};
+        saveLocalState();
         updateUI();
+
+        if (rtdbRef && isFirebaseConnected) {
+          rtdbRef.remove();
+          showToast("Database reset", "bi-trash3");
+        }
       }
     }
 
-    // Navigation & Filters
-    function filterByNav(catId) {
-      selectedCategory = catId;
-      document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
-      const navTarget = document.getElementById("nav-" + catId);
-      if (navTarget) navTarget.classList.add("active");
+    // Update Global Badge Counts
+    function updateUI() {
+      let grandTotal = 0;
+      let grandCompleted = 0;
 
-      document.querySelectorAll(".chip-btn").forEach(el => el.classList.remove("active"));
-      const chipTarget = document.getElementById("chip-" + catId);
-      if (chipTarget) chipTarget.classList.add("active");
+      HIERARCHY_DATA.forEach(cat => {
+        let catCompleted = 0;
+        cat.skills.forEach(parent => {
+          grandTotal++;
+          if (isParentDone(parent)) {
+            grandCompleted++;
+            catCompleted++;
+          }
+        });
 
-      renderCategories();
+        const badge = document.getElementById("badge-" + cat.id);
+        const nav = document.getElementById("nav-" + cat.id);
+        if (badge) badge.textContent = `${catCompleted}/${cat.skills.length}`;
+        if (nav) nav.classList.toggle("completed-all", catCompleted === cat.skills.length);
+      });
+
+      const totalBadge = document.getElementById("badge-total");
+      if (totalBadge) totalBadge.textContent = `${grandCompleted}/${grandTotal}`;
+
+      renderContent();
     }
 
-    function setViewMode(mode) {
-      viewMode = mode;
-      toggleModelDropdown(false);
-      renderCategories();
-    }
-
-    function handleSearch(val) {
-      searchQuery = val.toLowerCase().trim();
-      renderCategories();
+    // Search
+    function handleSearch(q) {
+      searchQuery = q.trim();
+      renderContent();
     }
 
     function clearSearch() {
       document.getElementById("promptSearchInput").value = "";
       searchQuery = "";
-      renderCategories();
+      renderContent();
     }
 
-    // Render Categories
-    function renderCategories() {
-      const container = document.getElementById("categoriesContainer");
-      container.innerHTML = "";
-
-      const catsToRender = selectedCategory === "all" 
-        ? SKILLS_DATA 
-        : SKILLS_DATA.filter(c => c.id === selectedCategory);
-
-      let totalVisible = 0;
-
-      catsToRender.forEach(cat => {
-        const filteredSkills = cat.skills.filter(s => {
-          const isDone = !!checkedSkills[s.id];
-          if (viewMode === "completed" && !isDone) return false;
-          if (viewMode === "pending" && isDone) return false;
-          if (searchQuery && !s.name.toLowerCase().includes(searchQuery)) return false;
-          return true;
-        });
-
-        if (filteredSkills.length === 0 && (searchQuery || viewMode !== "all")) {
-          return;
-        }
-
-        totalVisible += filteredSkills.length;
-        const catDone = cat.skills.filter(s => !!checkedSkills[s.id]).length;
-        const catTotal = cat.skills.length;
-        const catPct = Math.round((catDone / catTotal) * 100);
-
-        const card = document.createElement("div");
-        card.className = "category-turn";
-        card.innerHTML = `
-          <div class="category-turn-header">
-            <div class="category-title-group">
-              <div class="cat-avatar">
-                <i class="bi ${cat.icon}"></i>
-              </div>
-              <div>
-                <span class="cat-name">${cat.title}</span>
-                <span class="cat-badge ms-2">${catDone}/${catTotal} (${catPct}%)</span>
-              </div>
-            </div>
-            <div class="cat-actions">
-              <button class="btn-text" onclick="toggleCategoryAll('${cat.id}', true)">
-                <i class="bi bi-check2-all me-1"></i>All Done
-              </button>
-              <button class="btn-text" onclick="toggleCategoryAll('${cat.id}', false)">
-                <i class="bi bi-x me-1"></i>Clear
-              </button>
-            </div>
-          </div>
-
-          <div class="skills-grid">
-            ${filteredSkills.map(s => {
-              const isChecked = !!checkedSkills[s.id];
-              return `
-                <div class="skill-row ${isChecked ? 'checked' : ''}" onclick="toggleSkill('${s.id}')">
-                  <div class="custom-checkbox">
-                    <i class="bi bi-check-lg"></i>
-                  </div>
-                  <span class="skill-title">${escapeHTML(s.name)}</span>
-                </div>
-              `;
-            }).join("")}
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-
-      if (totalVisible === 0) {
-        container.innerHTML = `
-          <div style="text-align: center; padding: 48px 20px; color: var(--text-muted);">
-            <i class="bi bi-search" style="font-size: 28px; margin-bottom: 12px; display: inline-block;"></i>
-            <div style="font-size: 15px; color: var(--text-secondary); margin-bottom: 4px;">No capabilities match your query</div>
-            <div style="font-size: 13px;">Try typing a different keyword or reset active filter.</div>
-          </div>
-        `;
-      }
-    }
-
-    // Update Global UI Metrics
-    function updateUI() {
-      let total = 0;
-      let completed = 0;
-
-      SKILLS_DATA.forEach(cat => {
-        let catCompleted = 0;
-        cat.skills.forEach(s => {
-          total++;
-          if (checkedSkills[s.id]) {
-            completed++;
-            catCompleted++;
-          }
-        });
-
-        // Update sidebar badges
-        const badgeEl = document.getElementById("badge-" + cat.id);
-        const navEl = document.getElementById("nav-" + cat.id);
-        if (badgeEl) {
-          badgeEl.textContent = `${catCompleted}/${cat.skills.length}`;
-        }
-        if (navEl) {
-          navEl.classList.toggle("completed-all", catCompleted === cat.skills.length);
-        }
-      });
-
-      const remaining = total - completed;
-      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-      document.getElementById("badge-all").textContent = `${completed}/${total}`;
-      document.getElementById("globalPctText").textContent = `${pct}% (${completed} / ${total})`;
-      document.getElementById("globalProgressBar").style.width = `${pct}%`;
-      document.getElementById("statCompletedText").textContent = `${completed} completed`;
-      document.getElementById("statRemainingText").textContent = `${remaining} remaining`;
-      document.getElementById("sidebarProgressText").textContent = `${pct}% Completed`;
-
-      renderCategories();
-    }
-
-    // Sidebar Toggle
+    // Sidebar
     function toggleSidebar() {
       const sidebar = document.getElementById("sidebar");
-      const openBtn = document.getElementById("openSidebarBtn");
+      const btn = document.getElementById("openSidebarBtn");
       sidebar.classList.toggle("collapsed");
-      if (sidebar.classList.contains("collapsed")) {
-        openBtn.style.display = "flex";
-      } else {
-        openBtn.style.display = "none";
-      }
+      btn.style.display = sidebar.classList.contains("collapsed") ? "flex" : "none";
     }
 
-    // Model Selector Dropdown
-    function toggleModelDropdown(force) {
-      const dd = document.getElementById("modelDropdown");
-      if (typeof force === 'boolean') {
-        dd.classList.toggle("show", force);
-      } else {
-        dd.classList.toggle("show");
-      }
-    }
-
-    document.addEventListener("click", (e) => {
-      const dd = document.getElementById("modelDropdown");
-      const sel = document.querySelector(".model-selector");
-      if (dd && !dd.contains(e.target) && !sel.contains(e.target)) {
-        dd.classList.remove("show");
-      }
-    });
-
-    // Copy Prompt for ChatGPT
+    // Copy for ChatGPT Prompt
     function copyRoadmapPrompt() {
-      let text = `# TOP 1% ANDROID & AI ROADMAP STATUS\n\n`;
-      SKILLS_DATA.forEach(cat => {
-        text += `## ${cat.title}\n`;
-        cat.skills.forEach(s => {
-          const isDone = !!checkedSkills[s.id];
-          text += `- [${isDone ? 'x' : ' '}] ${s.name}\n`;
+      let md = `# TOP 1% ANDROID & AI ROADMAP STATUS\n\n`;
+      HIERARCHY_DATA.forEach(cat => {
+        md += `## ${cat.title}\n`;
+        cat.skills.forEach(parent => {
+          const parentDone = isParentDone(parent);
+          md += `### [${parentDone ? 'x' : ' '}] ${parent.name}\n`;
+          parent.subskills.forEach(sub => {
+            const subDone = !!checkedState[sub.id];
+            md += `  - [${subDone ? 'x' : ' '}] ${sub.name}\n`;
+          });
         });
-        text += `\n`;
+        md += `\n`;
       });
 
-      navigator.clipboard.writeText(text).then(() => {
-        showToast("Copied Markdown roadmap to clipboard!");
+      navigator.clipboard.writeText(md).then(() => {
+        showToast("Full roadmap prompt copied to clipboard!", "bi-clipboard-check");
       }).catch(() => {
-        showToast("Error copying to clipboard");
+        showToast("Error copying to clipboard", "bi-exclamation-triangle");
       });
     }
 
     // Export / Import
     function exportData() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(checkedSkills, null, 2));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(checkedState, null, 2));
       const a = document.createElement("a");
       a.href = dataStr;
-      a.download = `chatgpt_android_roadmap_${new Date().toISOString().slice(0,10)}.json`;
+      a.download = `android_mastery_rtdb_backup_${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       a.remove();
-      showToast("Progress exported successfully");
+      showToast("Progress exported as JSON", "bi-download");
     }
 
     function importData(e) {
@@ -1361,14 +2771,17 @@
       reader.onload = function(evt) {
         try {
           const data = JSON.parse(evt.target.result);
-          if (typeof data === 'object') {
-            checkedSkills = data;
-            saveState();
+          if (typeof data === 'object' && data !== null) {
+            checkedState = data;
+            saveLocalState();
             updateUI();
-            showToast("Progress restored from backup");
+            if (rtdbRef && isFirebaseConnected) {
+              rtdbRef.set(data);
+            }
+            showToast("Backup imported successfully!", "bi-cloud-check");
           }
-        } catch(err) {
-          alert("Invalid backup JSON file");
+        } catch (err) {
+          alert("Invalid JSON backup file: " + err.message);
         }
       };
       reader.readAsText(file);
@@ -1377,14 +2790,15 @@
 
     // Toast
     let toastTimeout;
-    function showToast(msg) {
+    function showToast(msg, icon = "bi-check-circle-fill") {
       const toast = document.getElementById("chatgpt-toast");
       document.getElementById("toastMessage").textContent = msg;
+      toast.querySelector("i").className = `bi ${icon}`;
       toast.classList.add("show");
       clearTimeout(toastTimeout);
       toastTimeout = setTimeout(() => {
         toast.classList.remove("show");
-      }, 2400);
+      }, 2500);
     }
 
     function escapeHTML(str) {
@@ -1399,9 +2813,12 @@
       );
     }
 
-    // Init
+    // =========================================================================
+    // STARTUP
+    // =========================================================================
     window.addEventListener("DOMContentLoaded", () => {
-      loadSavedState();
+      loadLocalState();
+      initFirebase();
       updateUI();
     });
   </script>
