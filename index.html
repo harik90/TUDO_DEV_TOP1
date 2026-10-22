@@ -1,457 +1,938 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top 1% Android & KMP & AI Dev Tracker</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%2232%22 height=%2232%22><text y=%2224%22 font-size=%2224%22>🚀</text></svg>">
-  
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <!-- Google Fonts Inter -->
+  <title>ChatGPT - Top 1% Android & AI Roadmap</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%2232%22 height=%2232%22><circle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22%2310a37f%22/><path d=%22M16 8a4 4 0 0 1 4 4v8a4 4 0 0 1-8 0v-8a4 4 0 0 1 4-4z%22 fill=%22white%22/></svg>">
+
+  <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
   <style>
+    /* ==========================================================================
+       ChatGPT Official Design Tokens & Aesthetics
+       ========================================================================== */
     :root {
-      --bg-dark: #07090e;
-      --card-bg: rgba(18, 23, 38, 0.65);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover-border: rgba(99, 102, 241, 0.4);
-      --accent-cyan: #06b6d4;
-      --accent-indigo: #6366f1;
-      --accent-emerald: #10b981;
-      --accent-purple: #a855f7;
-      --glass-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      --neu-inset: inset 2px 2px 5px rgba(0, 0, 0, 0.6), inset -2px -2px 5px rgba(255, 255, 255, 0.04);
+      --bg-sidebar: #171717;
+      --bg-main: #212121;
+      --bg-surface: #2f2f2f;
+      --bg-surface-hover: #383838;
+      --bg-input: #2f2f2f;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-medium: rgba(255, 255, 255, 0.15);
+      --text-primary: #ececec;
+      --text-secondary: #b4b4b4;
+      --text-muted: #737373;
+      --openai-green: #10a37f;
+      --openai-green-hover: #1a7f64;
+      --openai-green-subtle: rgba(16, 163, 127, 0.15);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      background-color: var(--bg-dark);
-      color: #e2e8f0;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      min-height: 100vh;
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 85% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 50% 85%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
-      background-attachment: fixed;
-      overflow-x: hidden;
-      padding-bottom: 5rem;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
     }
 
-    /* Scrollbar */
+    /* Scrollbars */
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #07090e;
+      background: transparent;
     }
     ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius-full);
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.3);
     }
 
-    /* Glassmorphic Navbar */
-    .glass-nav {
-      background: rgba(11, 15, 25, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--card-border);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    /* Glass Cards */
-    .glass-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      box-shadow: var(--glass-shadow);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .glass-card:hover {
-      border-color: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    }
-
-    /* Neumorphic Inset / Search Bar */
-    .neu-input {
-      background: rgba(10, 14, 23, 0.8) !important;
-      border: 1px solid rgba(255, 255, 255, 0.08) !important;
-      color: #fff !important;
-      box-shadow: var(--neu-inset);
-      border-radius: 12px;
-      transition: all 0.2s ease;
-    }
-    .neu-input:focus {
-      border-color: var(--accent-cyan) !important;
-      box-shadow: var(--neu-inset), 0 0 15px rgba(6, 182, 212, 0.25) !important;
-    }
-    .neu-input::placeholder {
-      color: #64748b;
-    }
-
-    /* Skill Item Card */
-    .skill-item {
-      position: relative;
-      background: rgba(21, 28, 48, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 0.85rem 1rem;
-      cursor: pointer;
+    /* ==========================================================================
+       Sidebar Layout (ChatGPT Style)
+       ========================================================================== */
+    #sidebar {
+      width: 260px;
+      min-width: 260px;
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+      z-index: 50;
       user-select: none;
-      transition: all 0.2s ease;
+    }
+
+    #sidebar.collapsed {
+      margin-left: -260px;
+    }
+
+    .sidebar-header {
+      padding: 12px 14px;
       display: flex;
       align-items: center;
-      gap: 0.85rem;
+      justify-content: space-between;
     }
 
-    .skill-item:hover {
-      background: rgba(30, 41, 69, 0.6);
-      border-color: rgba(255, 255, 255, 0.12);
-      transform: translateY(-2px);
-    }
-
-    .skill-item.completed {
-      background: rgba(16, 185, 129, 0.08);
-      border-color: rgba(16, 185, 129, 0.35);
-    }
-
-    .skill-item.completed .skill-name {
-      color: #94a3b8;
-      text-decoration: line-through;
-      text-decoration-color: rgba(16, 185, 129, 0.5);
-    }
-
-    .skill-checkbox {
-      width: 22px;
-      height: 22px;
-      min-width: 22px;
-      border-radius: 6px;
-      border: 2px solid rgba(255, 255, 255, 0.25);
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-      background: rgba(0, 0, 0, 0.2);
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s;
+    }
+    .btn-icon:hover {
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
     }
 
-    .skill-item:hover .skill-checkbox {
-      border-color: var(--accent-cyan);
-    }
-
-    .skill-item.completed .skill-checkbox {
-      background: linear-gradient(135deg, #10b981, #06b6d4);
-      border-color: #10b981;
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-    }
-
-    .skill-checkbox i {
-      color: #fff;
+    .btn-new-chat {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
       font-size: 13px;
-      opacity: 0;
-      transform: scale(0.5);
-      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-new-chat:hover {
+      background-color: var(--bg-surface);
     }
 
-    .skill-item.completed .skill-checkbox i {
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 10px;
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 10px 12px 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      position: relative;
+      margin-bottom: 2px;
+    }
+    .nav-item:hover {
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+    }
+    .nav-item.active {
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .nav-item .badge-count {
+      margin-left: auto;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1px 6px;
+      border-radius: var(--radius-full);
+    }
+    .nav-item.completed-all .badge-count {
+      color: var(--openai-green);
+      background: var(--openai-green-subtle);
+    }
+
+    /* Sidebar Footer / User Profile */
+    .sidebar-footer {
+      padding: 12px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .profile-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .profile-pill:hover {
+      background: var(--bg-surface);
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #10a37f, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 13px;
+      color: white;
+    }
+
+    /* ==========================================================================
+       Main Container Layout
+       ========================================================================== */
+    #main-content {
+      flex: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background-color: var(--bg-main);
+      overflow: hidden;
+    }
+
+    /* Header Bar */
+    .chat-header {
+      height: 56px;
+      min-height: 56px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid transparent;
+      z-index: 20;
+    }
+
+    .model-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .model-selector:hover {
+      background-color: var(--bg-surface);
+    }
+    .model-badge {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--openai-green);
+      background: var(--openai-green-subtle);
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      margin-left: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Messages / Stream Container */
+    .stream-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .content-wrapper {
+      width: 100%;
+      max-width: 860px;
+    }
+
+    /* Hero Welcome Header */
+    .welcome-hero {
+      text-align: center;
+      margin: 28px 0 36px;
+    }
+    .openai-logo-bubble {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--openai-green);
+      font-size: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+    .welcome-title {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.4px;
+    }
+    .welcome-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin: 0 auto 20px;
+    }
+
+    /* Filter Chips (ChatGPT Prompt Suggestion style) */
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .chip-btn {
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-sidebar);
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .chip-btn:hover {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border-color: var(--border-medium);
+    }
+    .chip-btn.active {
+      background: var(--openai-green-subtle);
+      border-color: var(--openai-green);
+      color: #34d399;
+      font-weight: 500;
+    }
+
+    /* Overall Progress Bar */
+    .overall-progress-card {
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+    .progress-bar-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin: 10px 0 6px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10a37f, #34d399);
+      border-radius: var(--radius-full);
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Category Cards (Assistant message bubble style) */
+    .category-turn {
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+    .category-turn:hover {
+      border-color: var(--border-medium);
+    }
+
+    .category-turn-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .category-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cat-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--openai-green);
+      font-size: 14px;
+    }
+    .cat-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .cat-badge {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      background: var(--bg-surface);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    .cat-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-text {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-text:hover {
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+    }
+
+    /* Checklist Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 8px;
+    }
+
+    .skill-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid transparent;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .skill-row:hover {
+      background: var(--bg-surface);
+      border-color: var(--border-subtle);
+    }
+    .skill-row.checked {
+      background: rgba(16, 163, 127, 0.06);
+      border-color: rgba(16, 163, 127, 0.25);
+    }
+
+    .custom-checkbox {
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      margin-top: 2px;
+      border-radius: 4px;
+      border: 1.5px solid var(--border-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      transition: all 0.15s;
+    }
+    .skill-row:hover .custom-checkbox {
+      border-color: var(--openai-green);
+    }
+    .skill-row.checked .custom-checkbox {
+      background: var(--openai-green);
+      border-color: var(--openai-green);
+    }
+    .custom-checkbox i {
+      font-size: 11px;
+      color: white;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all 0.15s;
+    }
+    .skill-row.checked .custom-checkbox i {
       opacity: 1;
       transform: scale(1);
     }
 
-    .skill-name {
-      font-size: 0.92rem;
-      font-weight: 500;
-      color: #e2e8f0;
+    .skill-title {
+      font-size: 13px;
+      color: var(--text-primary);
       line-height: 1.4;
-      flex-grow: 1;
-      transition: color 0.2s ease;
+      flex: 1;
+      transition: color 0.15s;
+    }
+    .skill-row.checked .skill-title {
+      color: var(--text-muted);
+      text-decoration: line-through;
     }
 
-    .category-header {
+    /* ==========================================================================
+       ChatGPT Bottom Prompt Composer / Search Bar (Sticky)
+       ========================================================================== */
+    .prompt-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0 24px 20px;
+      background: linear-gradient(180deg, rgba(33, 33, 33, 0) 0%, rgba(33, 33, 33, 0.95) 40%, #212121 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+      z-index: 30;
+    }
+
+    .prompt-box {
+      width: 100%;
+      max-width: 860px;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-medium);
+      border-radius: 26px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      padding-bottom: 0.75rem;
-      margin-bottom: 1rem;
+      gap: 10px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+      pointer-events: auto;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .prompt-box:focus-within {
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
     }
 
-    .category-icon {
-      width: 38px;
-      height: 38px;
-      display: inline-flex;
+    .prompt-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .prompt-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .prompt-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: var(--text-primary);
+      color: var(--bg-main);
+      display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
-      font-size: 1.15rem;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2));
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #38bdf8;
-    }
-
-    /* Progress bar custom styling */
-    .custom-progress {
-      height: 8px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
-    }
-
-    .custom-progress-bar {
-      height: 100%;
-      border-radius: 20px;
-      background: linear-gradient(90deg, #6366f1, #06b6d4, #10b981);
-      background-size: 200% 100%;
-      transition: width 0.4s ease;
-      box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
-    }
-
-    /* Tag badges */
-    .badge-filter {
-      padding: 0.45rem 0.9rem;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
       cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.03);
-      color: #94a3b8;
-      transition: all 0.2s ease;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .prompt-action-btn:hover {
+      opacity: 0.9;
+    }
+    .prompt-action-btn:active {
+      transform: scale(0.95);
     }
 
-    .badge-filter:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
+    .prompt-disclaimer {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      text-align: center;
+      pointer-events: auto;
     }
 
-    .badge-filter.active {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(6, 182, 212, 0.25));
-      border-color: rgba(6, 182, 212, 0.5);
-      color: #38bdf8;
-      box-shadow: 0 0 12px rgba(6, 182, 212, 0.25);
+    /* Modal / Popups */
+    .dropdown-menu-chatgpt {
+      position: absolute;
+      top: 48px;
+      left: 18px;
+      background: #2b2b2b;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 6px;
+      min-width: 220px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      display: none;
     }
-
-    /* Quick jump buttons */
-    .category-chip {
-      font-size: 0.78rem;
-      padding: 0.35rem 0.75rem;
-      border-radius: 8px;
-      background: rgba(18, 23, 38, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: #cbd5e1;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      display: inline-flex;
+    .dropdown-menu-chatgpt.show {
+      display: block;
+    }
+    .dropdown-item-chatgpt {
+      display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .dropdown-item-chatgpt:hover {
+      background: var(--bg-surface-hover);
     }
 
-    .category-chip:hover {
-      background: rgba(99, 102, 241, 0.2);
-      border-color: rgba(99, 102, 241, 0.4);
-      color: #fff;
-    }
-
-    /* Action buttons */
-    .btn-glass {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #cbd5e1;
-      border-radius: 10px;
-      font-weight: 500;
-      padding: 0.4rem 0.85rem;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
-    }
-    .btn-glass:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .metric-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-    }
-
-    /* Floating Toast */
-    .toast-container {
+    /* Toast Notification */
+    #chatgpt-toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 1090;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #2f2f2f;
+      border: 1px solid var(--border-medium);
+      color: var(--text-primary);
+      padding: 10px 18px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+    }
+    #chatgpt-toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation Bar -->
-  <nav class="navbar glass-nav py-3">
-    <div class="container-xl d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center gap-3">
-        <div class="category-icon" style="background: linear-gradient(135deg, #6366f1, #06b6d4);">
-          <i class="bi bi-rocket-takeoff-fill text-white"></i>
+  <!-- ========================================================================
+       Left Sidebar (ChatGPT Navigation)
+       ======================================================================== -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <button class="btn-new-chat" onclick="filterByNav('all')">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <i class="bi bi-compass" style="color: var(--openai-green); font-size: 15px;"></i>
+          <span>Full Roadmap</span>
         </div>
-        <div>
-          <h1 class="h6 mb-0 fw-bold text-white tracking-wide">TOP 1% ANDROID & KMP & AI</h1>
-          <p class="small text-secondary mb-0" style="font-size: 0.76rem;">Mastery Roadmap & Persistent Progress Tracker</p>
-        </div>
+        <i class="bi bi-arrow-clockwise" style="color: var(--text-muted); font-size: 13px;" title="Reset Filters"></i>
+      </button>
+      <button class="btn-icon" onclick="toggleSidebar()" title="Close sidebar">
+        <i class="bi bi-layout-sidebar" style="font-size: 16px;"></i>
+      </button>
+    </div>
+
+    <!-- Pinned / Categories Navigation List -->
+    <div class="sidebar-nav">
+      <div class="sidebar-section-title">Track Modules</div>
+      
+      <div class="nav-item active" id="nav-all" onclick="filterByNav('all')">
+        <i class="bi bi-grid-1x2"></i>
+        <span>All Capabilities</span>
+        <span class="badge-count" id="badge-all">106</span>
       </div>
 
-      <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-glass" onclick="exportData()" title="Backup your progress as JSON">
-          <i class="bi bi-download me-1"></i> Export
-        </button>
-        <button class="btn btn-glass" onclick="document.getElementById('importFile').click()" title="Restore saved progress">
-          <i class="bi bi-upload me-1"></i> Import
-        </button>
-        <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(event)">
-        <button class="btn btn-glass text-danger-emphasis border-danger-subtle" onclick="confirmResetAll()" title="Reset all checkboxes">
-          <i class="bi bi-arrow-counterclockwise"></i> Reset
-        </button>
+      <div class="nav-item" id="nav-cat-languages" onclick="filterByNav('cat-languages')">
+        <i class="bi bi-terminal"></i>
+        <span>Languages & Compilers</span>
+        <span class="badge-count" id="badge-cat-languages">0/17</span>
+      </div>
+
+      <div class="nav-item" id="nav-cat-kmp" onclick="filterByNav('cat-kmp')">
+        <i class="bi bi-phone"></i>
+        <span>KMP Stack</span>
+        <span class="badge-count" id="badge-cat-kmp">0/24</span>
+      </div>
+
+      <div class="nav-item" id="nav-cat-ai" onclick="filterByNav('cat-ai')">
+        <i class="bi bi-cpu"></i>
+        <span>Mobile AI & Edge</span>
+        <span class="badge-count" id="badge-cat-ai">0/26</span>
+      </div>
+
+      <div class="nav-item" id="nav-cat-backend" onclick="filterByNav('cat-backend')">
+        <i class="bi bi-server"></i>
+        <span>Backend & Infra</span>
+        <span class="badge-count" id="badge-cat-backend">0/16</span>
+      </div>
+
+      <div class="nav-item" id="nav-cat-apis" onclick="filterByNav('cat-apis')">
+        <i class="bi bi-diagram-3"></i>
+        <span>APIs & Protocols</span>
+        <span class="badge-count" id="badge-cat-apis">0/6</span>
+      </div>
+
+      <div class="nav-item" id="nav-cat-sysdesign" onclick="filterByNav('cat-sysdesign')">
+        <i class="bi bi-boxes"></i>
+        <span>Mobile System Design</span>
+        <span class="badge-count" id="badge-cat-sysdesign">0/10</span>
+      </div>
+
+      <div class="nav-item" id="nav-cat-career" onclick="filterByNav('cat-career')">
+        <i class="bi bi-award"></i>
+        <span>Career Leverage</span>
+        <span class="badge-count" id="badge-cat-career">0/7</span>
+      </div>
+
+      <div class="sidebar-section-title" style="margin-top: 14px;">Actions</div>
+      
+      <div class="nav-item" onclick="exportData()">
+        <i class="bi bi-download"></i>
+        <span>Export Progress</span>
+      </div>
+
+      <div class="nav-item" onclick="document.getElementById('importFile').click()">
+        <i class="bi bi-upload"></i>
+        <span>Import Backup</span>
+      </div>
+      <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+
+      <div class="nav-item" onclick="copyRoadmapPrompt()">
+        <i class="bi bi-copy"></i>
+        <span>Copy for ChatGPT</span>
+      </div>
+
+      <div class="nav-item" onclick="confirmResetAll()" style="color: #f87171;">
+        <i class="bi bi-trash3"></i>
+        <span>Reset Checklist</span>
       </div>
     </div>
-  </nav>
 
-  <div class="container-xl pt-4">
-
-    <!-- Hero Stats & Progress Banner -->
-    <div class="glass-card p-4 mb-4">
-      <div class="row align-items-center g-4">
-        <div class="col-lg-6">
-          <div class="d-flex align-items-center gap-3 mb-2">
-            <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 fw-bold">
-              <i class="bi bi-stars me-1"></i> 100+ ELITE CAPABILITIES
-            </span>
-            <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-1" id="saveBadge">
-              <i class="bi bi-check-circle me-1"></i> Auto-saved locally
-            </span>
+    <!-- User Profile Footer -->
+    <div class="sidebar-footer">
+      <div class="profile-pill">
+        <div class="avatar">
+          <i class="bi bi-person-fill"></i>
+        </div>
+        <div style="flex:1; overflow:hidden;">
+          <div style="font-size:13px; font-weight:600; color:var(--text-primary); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">
+            Top 1% Senior Dev
           </div>
-          <h2 class="h3 fw-bold text-white mb-2">Engineering Roadmap Checklist</h2>
-          <p class="text-secondary mb-3 small">
-            Click any skill to check it off. Your checked items are automatically saved to your browser's persistent storage so you can track your journey to completion.
+          <div style="font-size:11px; color:var(--openai-green); font-family:'JetBrains Mono', monospace;" id="sidebarProgressText">
+            0% Complete
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       Main Content Container
+       ======================================================================== -->
+  <main id="main-content">
+
+    <!-- Top Header -->
+    <header class="chat-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <button class="btn-icon" id="openSidebarBtn" onclick="toggleSidebar()" title="Toggle sidebar" style="display:none;">
+          <i class="bi bi-layout-sidebar"></i>
+        </button>
+
+        <div class="model-selector" onclick="toggleModelDropdown()">
+          <span>Top 1% Mobile AI Master</span>
+          <span class="model-badge">v4.0</span>
+          <i class="bi bi-chevron-down" style="font-size: 11px; color: var(--text-muted);"></i>
+        </div>
+
+        <!-- Model dropdown -->
+        <div class="dropdown-menu-chatgpt" id="modelDropdown">
+          <div class="dropdown-item-chatgpt" onclick="setViewMode('all')">
+            <i class="bi bi-check2 text-emerald-400" id="dd-check-all"></i>
+            <div>
+              <div style="font-weight: 500;">Show All Skills</div>
+              <div style="font-size: 11px; color: var(--text-muted);">View all 106 checklist items</div>
+            </div>
+          </div>
+          <div class="dropdown-item-chatgpt" onclick="setViewMode('pending')">
+            <i class="bi bi-clock" style="opacity: 0.6;" id="dd-check-pending"></i>
+            <div>
+              <div style="font-weight: 500;">Pending Skills Only</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Focus on unfinished items</div>
+            </div>
+          </div>
+          <div class="dropdown-item-chatgpt" onclick="setViewMode('completed')">
+            <i class="bi bi-check-circle" style="opacity: 0.6;" id="dd-check-completed"></i>
+            <div>
+              <div style="font-weight: 500;">Completed Skills Only</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Review what you mastered</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-icon" onclick="copyRoadmapPrompt()" title="Copy prompt for ChatGPT">
+          <i class="bi bi-share"></i>
+        </button>
+        <button class="btn-icon" onclick="exportData()" title="Backup JSON">
+          <i class="bi bi-download"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Chat Stream / Roadmap Items -->
+    <div class="stream-container" id="streamContainer">
+      <div class="content-wrapper">
+
+        <!-- Welcome Banner -->
+        <div class="welcome-hero">
+          <div class="openai-logo-bubble">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1683a.071.071 0 0 1 .038.052v5.5826a4.5045 4.5045 0 0 1-4.4945 4.4947zm-9.66-4.7654a4.47 4.47 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1401-2.2864zM2.345 8.9416a4.475 4.475 0 0 1 2.3655-1.9728V12.6a.7665.7665 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1683a.0757.0757 0 0 1-.071 0l-4.8303-2.7866A4.504 4.504 0 0 1 2.345 8.9416zm16.597 3.8558L13.1038 9.429l2.0199-1.1683a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.4066-.6816zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 10.276V7.9434a.08.08 0 0 1 .0332-.0615l4.9304-2.8435a4.4987 4.4987 0 0 1 6.6001 4.7438zm-10.518-4.2155a4.4755 4.4755 0 0 1 2.8764 1.0408l-.1419.0805-4.7783 2.7582a.7948.7948 0 0 0-.3927.6813v6.7369l-2.02-1.1683a.071.071 0 0 1-.038-.052V8.0583a4.504 4.504 0 0 1 4.4945-4.4947zm1.1058 7.0283l2.6282-1.5147 2.6282 1.5147v3.0294l-2.6282 1.5147-2.6282-1.5147z" />
+            </svg>
+          </div>
+          <h1 class="welcome-title">Top 1% Android & AI Engineering</h1>
+          <p class="welcome-subtitle">
+            What skill are you mastering today? Check off capabilities as you complete them — your progress is permanently auto-saved.
           </p>
 
-          <!-- Overall Progress Bar -->
-          <div class="mb-2 d-flex justify-content-between align-items-center">
-            <span class="small fw-semibold text-light">Global Progress</span>
-            <span class="metric-value small text-info" id="globalPercentText">0%</span>
-          </div>
-          <div class="custom-progress mb-3">
-            <div class="custom-progress-bar" id="globalProgressBar" style="width: 0%;"></div>
-          </div>
-        </div>
-
-        <div class="col-lg-6">
-          <div class="row g-2 text-center">
-            <div class="col-4">
-              <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);">
-                <div class="small text-secondary mb-1">Total Skills</div>
-                <div class="h4 mb-0 metric-value text-white" id="statTotal">0</div>
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="p-3 rounded-3" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2);">
-                <div class="small text-success mb-1">Completed</div>
-                <div class="h4 mb-0 metric-value text-success" id="statCompleted">0</div>
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="p-3 rounded-3" style="background: rgba(6, 182, 212, 0.06); border: 1px solid rgba(6, 182, 212, 0.2);">
-                <div class="small text-info mb-1">Remaining</div>
-                <div class="h4 mb-0 metric-value text-info" id="statRemaining">0</div>
-              </div>
-            </div>
+          <!-- Quick Filter Chips -->
+          <div class="quick-chips">
+            <button class="chip-btn active" id="chip-all" onclick="filterByNav('all')">
+              <i class="bi bi-layers-half text-emerald-400"></i> All 106 Skills
+            </button>
+            <button class="chip-btn" id="chip-cat-languages" onclick="filterByNav('cat-languages')">
+              <i class="bi bi-terminal text-sky-400"></i> Languages & Compilers
+            </button>
+            <button class="chip-btn" id="chip-cat-kmp" onclick="filterByNav('cat-kmp')">
+              <i class="bi bi-phone text-indigo-400"></i> KMP Stack
+            </button>
+            <button class="chip-btn" id="chip-cat-ai" onclick="filterByNav('cat-ai')">
+              <i class="bi bi-cpu text-purple-400"></i> Mobile AI & Edge
+            </button>
+            <button class="chip-btn" id="chip-cat-backend" onclick="filterByNav('cat-backend')">
+              <i class="bi bi-server text-emerald-400"></i> Backend & Infra
+            </button>
           </div>
         </div>
-      </div>
 
-      <!-- Category Quick Jump Chips -->
-      <hr style="border-color: rgba(255, 255, 255, 0.06); margin: 1.25rem 0 1rem 0;">
-      <div class="d-flex flex-wrap gap-2 align-items-center">
-        <span class="small text-secondary me-2"><i class="bi bi-compass me-1"></i>Jump:</span>
-        <a href="#cat-languages" class="category-chip"><i class="bi bi-code-slash text-primary"></i> Languages & Compilers</a>
-        <a href="#cat-kmp" class="category-chip"><i class="bi bi-layers-half text-info"></i> KMP Stack</a>
-        <a href="#cat-ai" class="category-chip"><i class="bi bi-cpu text-warning"></i> Mobile AI & Edge</a>
-        <a href="#cat-backend" class="category-chip"><i class="bi bi-hdd-network text-success"></i> Backend & Infra</a>
-        <a href="#cat-apis" class="category-chip"><i class="bi bi-diagram-3 text-danger"></i> APIs</a>
-        <a href="#cat-sysdesign" class="category-chip"><i class="bi bi-boxes text-purple"></i> Mobile System Design</a>
-        <a href="#cat-career" class="category-chip"><i class="bi bi-trophy text-warning"></i> Career Leverage</a>
-      </div>
-    </div>
-
-    <!-- Filters & Search Bar -->
-    <div class="glass-card p-3 mb-4">
-      <div class="row g-3 align-items-center">
-        <div class="col-md-6">
-          <div class="input-group">
-            <span class="input-group-text neu-input border-end-0 text-secondary pe-2">
-              <i class="bi bi-search"></i>
+        <!-- Overall Progress Dashboard Card -->
+        <div class="overall-progress-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: 600; font-size: 14px; color: var(--text-primary);">Roadmap Completion</span>
+              <span style="font-size: 11px; color: var(--openai-green); background: var(--openai-green-subtle); padding: 2px 8px; border-radius: var(--radius-full);">
+                Auto-saved
+              </span>
+            </div>
+            <span style="font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--openai-green);" id="globalPctText">
+              0% (0 / 106)
             </span>
-            <input type="text" id="searchInput" class="form-control neu-input border-start-0 ps-1" 
-                   placeholder="Search skills (e.g. K2, LiteRT, Ktor, Swift 6, CRDT)..." 
-                   oninput="handleSearch(this.value)">
+          </div>
+
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="globalProgressBar" style="width: 0%;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+            <span id="statCompletedText">0 completed</span>
+            <span id="statRemainingText">106 remaining</span>
           </div>
         </div>
-        <div class="col-md-6 d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
-          <div class="badge-filter active" data-filter="all" onclick="setFilter('all')">
-            All (<span id="countAll">0</span>)
-          </div>
-          <div class="badge-filter" data-filter="pending" onclick="setFilter('pending')">
-            <i class="bi bi-clock me-1"></i> Pending (<span id="countPending">0</span>)
-          </div>
-          <div class="badge-filter" data-filter="completed" onclick="setFilter('completed')">
-            <i class="bi bi-check2-circle me-1"></i> Completed (<span id="countCompleted">0</span>)
-          </div>
-        </div>
+
+        <!-- Dynamic Category Cards Container -->
+        <div id="categoriesContainer"></div>
+
       </div>
     </div>
 
-    <!-- Categories Grid / List -->
-    <div id="categoriesContainer" class="d-flex flex-column gap-4">
-      <!-- Generated via JavaScript dynamically -->
-    </div>
-
-  </div>
-
-  <!-- Toast for feedback -->
-  <div class="toast-container">
-    <div id="feedbackToast" class="toast align-items-center text-white bg-dark border-0 glass-card" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="d-flex">
-        <div class="toast-body d-flex align-items-center gap-2">
-          <i class="bi bi-check-circle-fill text-success" id="toastIcon"></i>
-          <span id="toastMsg">Progress saved</span>
-        </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    <!-- Bottom ChatGPT Prompt / Search Bar -->
+    <div class="prompt-footer">
+      <div class="prompt-box">
+        <i class="bi bi-search" style="color: var(--text-muted); font-size: 15px; margin-left: 4px;"></i>
+        <input 
+          type="text" 
+          id="promptSearchInput" 
+          class="prompt-input" 
+          placeholder="Search skills (e.g., LiteRT, K2, Swift 6, CRDT, Ktor)..."
+          oninput="handleSearch(this.value)"
+        >
+        <button class="prompt-action-btn" onclick="clearSearch()" title="Clear search">
+          <i class="bi bi-arrow-up" style="font-size: 16px;"></i>
+        </button>
+      </div>
+      <div class="prompt-disclaimer">
+        ChatGPT Roadmap UI • 106 Senior Capabilities • Automatically saved to your browser's LocalStorage
       </div>
     </div>
+
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="chatgpt-toast">
+    <i class="bi bi-check-circle-fill" style="color: var(--openai-green);"></i>
+    <span id="toastMessage">Progress saved</span>
   </div>
 
-  <!-- Bootstrap 5 JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Application Logic -->
   <script>
-    // 1. Skill Categories & Items
+    // =========================================================================
+    // 106 Top 1% Android, KMP, AI & System Design Skills
+    // =========================================================================
     const SKILLS_DATA = [
       {
         id: "cat-languages",
         title: "Languages & Compilers",
-        icon: "bi-code-slash",
-        color: "linear-gradient(135deg, #6366f1, #3b82f6)",
+        icon: "bi-terminal",
         skills: [
           { id: "lang-k2", name: "Kotlin K2 internals (FIR/IR)" },
           { id: "lang-ksp2", name: "KSP2 processor authoring" },
@@ -475,8 +956,7 @@
       {
         id: "cat-kmp",
         title: "KMP Stack",
-        icon: "bi-layers-half",
-        color: "linear-gradient(135deg, #06b6d4, #3b82f6)",
+        icon: "bi-phone",
         skills: [
           { id: "kmp-compose-multiplatform", name: "Compose Multiplatform (iOS)" },
           { id: "kmp-compose-compiler-stability", name: "Compose compiler stability/recomposition debugging" },
@@ -508,7 +988,6 @@
         id: "cat-ai",
         title: "Mobile AI & Edge",
         icon: "bi-cpu",
-        color: "linear-gradient(135deg, #a855f7, #ec4899)",
         skills: [
           { id: "ai-litert", name: "LiteRT" },
           { id: "ai-litert-lm", name: "LiteRT-LM / AI Edge" },
@@ -541,8 +1020,7 @@
       {
         id: "cat-backend",
         title: "Backend & Infra",
-        icon: "bi-hdd-network",
-        color: "linear-gradient(135deg, #10b981, #06b6d4)",
+        icon: "bi-server",
         skills: [
           { id: "infra-spring-boot", name: "Spring Boot (Kotlin)" },
           { id: "infra-ktor-server", name: "Ktor server" },
@@ -564,9 +1042,8 @@
       },
       {
         id: "cat-apis",
-        title: "APIs",
+        title: "APIs & Protocols",
         icon: "bi-diagram-3",
-        color: "linear-gradient(135deg, #f59e0b, #ef4444)",
         skills: [
           { id: "api-rest-openapi", name: "REST + OpenAPI" },
           { id: "api-grpc-protobuf", name: "gRPC/Protobuf + buf" },
@@ -580,7 +1057,6 @@
         id: "cat-sysdesign",
         title: "Mobile System Design",
         icon: "bi-boxes",
-        color: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
         skills: [
           { id: "sys-offline-sync", name: "Offline sync + conflict resolution (LWW/CRDT/server-authoritative)" },
           { id: "sys-pagination-caching", name: "Pagination + multi-layer caching" },
@@ -597,13 +1073,12 @@
       {
         id: "cat-career",
         title: "Career Leverage",
-        icon: "bi-trophy",
-        color: "linear-gradient(135deg, #eab308, #f97316)",
+        icon: "bi-award",
         skills: [
           { id: "career-oss", name: "OSS contributions" },
           { id: "career-talks", name: "Technical writeups/talks" },
           { id: "career-cross-team", name: "Cross-team initiative ownership" },
-          { id: "career-platform-impact", name: "Measurable platform impact (build time, crash rate, startup, AI latency)" },
+          { id: "career-platform-impact", name: "Measurable platform impact" },
           { id: "career-mentoring", name: "Mentoring" },
           { id: "career-tier1-prep", name: "Tier-1 interview loop prep" },
           { id: "career-tier-targeting", name: "Level/company-tier targeting" }
@@ -612,31 +1087,27 @@
     ];
 
     const STORAGE_KEY = "top1_android_dev_skills_v1";
-
-    // State
     let checkedSkills = {};
-    let currentFilter = "all";
+    let selectedCategory = "all";
+    let viewMode = "all"; // all | pending | completed
     let searchQuery = "";
 
-    // Load from LocalStorage
+    // Load LocalStorage
     function loadSavedState() {
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          checkedSkills = JSON.parse(stored);
-        }
-      } catch (err) {
-        console.error("Failed to load saved state:", err);
+        if (stored) checkedSkills = JSON.parse(stored);
+      } catch (e) {
+        console.error(e);
       }
     }
 
-    // Save to LocalStorage
     function saveState() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(checkedSkills));
-        showToast("Progress saved automatically", "bi-check2-circle");
-      } catch (err) {
-        console.error("Failed to save state:", err);
+        showToast("Auto-saved to LocalStorage");
+      } catch (e) {
+        console.error(e);
       }
     }
 
@@ -645,233 +1116,275 @@
       if (checkedSkills[skillId]) {
         delete checkedSkills[skillId];
       } else {
-        checkedSkills[skillId] = {
-          completedAt: new Date().toISOString()
-        };
+        checkedSkills[skillId] = { completedAt: new Date().toISOString() };
       }
       saveState();
       updateUI();
     }
 
-    // Bulk toggle category
-    function toggleAllInCategory(catId, markComplete) {
-      const category = SKILLS_DATA.find(c => c.id === catId);
-      if (!category) return;
-
-      category.skills.forEach(s => {
-        if (markComplete) {
-          checkedSkills[s.id] = { completedAt: new Date().toISOString() };
-        } else {
-          delete checkedSkills[s.id];
-        }
+    // Category Batch Toggle
+    function toggleCategoryAll(catId, markDone) {
+      const cat = SKILLS_DATA.find(c => c.id === catId);
+      if (!cat) return;
+      cat.skills.forEach(s => {
+        if (markDone) checkedSkills[s.id] = { completedAt: new Date().toISOString() };
+        else delete checkedSkills[s.id];
       });
       saveState();
       updateUI();
     }
 
     function confirmResetAll() {
-      if (confirm("Are you sure you want to reset all checked skills? This cannot be undone unless you have an exported backup.")) {
+      if (confirm("Reset all checked skills in your roadmap?")) {
         checkedSkills = {};
         saveState();
         updateUI();
       }
     }
 
-    // Filter and search
-    function setFilter(filterType) {
-      currentFilter = filterType;
-      document.querySelectorAll(".badge-filter").forEach(el => {
-        el.classList.toggle("active", el.getAttribute("data-filter") === filterType);
-      });
-      renderSkills();
+    // Navigation & Filters
+    function filterByNav(catId) {
+      selectedCategory = catId;
+      document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+      const navTarget = document.getElementById("nav-" + catId);
+      if (navTarget) navTarget.classList.add("active");
+
+      document.querySelectorAll(".chip-btn").forEach(el => el.classList.remove("active"));
+      const chipTarget = document.getElementById("chip-" + catId);
+      if (chipTarget) chipTarget.classList.add("active");
+
+      renderCategories();
     }
 
-    function handleSearch(query) {
-      searchQuery = query.toLowerCase().trim();
-      renderSkills();
+    function setViewMode(mode) {
+      viewMode = mode;
+      toggleModelDropdown(false);
+      renderCategories();
     }
 
-    // Render Container
-    function renderSkills() {
+    function handleSearch(val) {
+      searchQuery = val.toLowerCase().trim();
+      renderCategories();
+    }
+
+    function clearSearch() {
+      document.getElementById("promptSearchInput").value = "";
+      searchQuery = "";
+      renderCategories();
+    }
+
+    // Render Categories
+    function renderCategories() {
       const container = document.getElementById("categoriesContainer");
       container.innerHTML = "";
 
-      let anyVisibleCategory = false;
+      const catsToRender = selectedCategory === "all" 
+        ? SKILLS_DATA 
+        : SKILLS_DATA.filter(c => c.id === selectedCategory);
 
-      SKILLS_DATA.forEach(cat => {
-        // Filter skills
+      let totalVisible = 0;
+
+      catsToRender.forEach(cat => {
         const filteredSkills = cat.skills.filter(s => {
           const isDone = !!checkedSkills[s.id];
-          
-          // Filter check
-          if (currentFilter === "completed" && !isDone) return false;
-          if (currentFilter === "pending" && isDone) return false;
-
-          // Search check
+          if (viewMode === "completed" && !isDone) return false;
+          if (viewMode === "pending" && isDone) return false;
           if (searchQuery && !s.name.toLowerCase().includes(searchQuery)) return false;
-
           return true;
         });
 
-        // Category stats (overall, independent of active filter)
-        const catTotal = cat.skills.length;
-        const catCompleted = cat.skills.filter(s => !!checkedSkills[s.id]).length;
-        const catPercent = Math.round((catCompleted / catTotal) * 100);
-
-        if (filteredSkills.length === 0 && searchQuery) {
-          // If searching and no items match in this category, skip rendering card
+        if (filteredSkills.length === 0 && (searchQuery || viewMode !== "all")) {
           return;
         }
 
-        anyVisibleCategory = true;
+        totalVisible += filteredSkills.length;
+        const catDone = cat.skills.filter(s => !!checkedSkills[s.id]).length;
+        const catTotal = cat.skills.length;
+        const catPct = Math.round((catDone / catTotal) * 100);
 
-        const catCard = document.createElement("div");
-        catCard.className = "glass-card p-4";
-        catCard.id = cat.id;
-
-        catCard.innerHTML = `
-          <div class="category-header flex-wrap gap-2">
-            <div class="d-flex align-items-center gap-3">
-              <div class="category-icon" style="background: ${cat.color};">
-                <i class="bi ${cat.icon} text-white"></i>
+        const card = document.createElement("div");
+        card.className = "category-turn";
+        card.innerHTML = `
+          <div class="category-turn-header">
+            <div class="category-title-group">
+              <div class="cat-avatar">
+                <i class="bi ${cat.icon}"></i>
               </div>
               <div>
-                <h3 class="h5 mb-1 text-white fw-bold">${cat.title}</h3>
-                <div class="d-flex align-items-center gap-2">
-                  <span class="small text-secondary font-monospace">${catCompleted}/${catTotal} completed</span>
-                  <span class="badge rounded-pill ${catPercent === 100 ? 'bg-success' : 'bg-secondary-subtle text-secondary'} font-monospace" style="font-size: 0.72rem;">${catPercent}%</span>
-                </div>
+                <span class="cat-name">${cat.title}</span>
+                <span class="cat-badge ms-2">${catDone}/${catTotal} (${catPct}%)</span>
               </div>
             </div>
-
-            <div class="d-flex align-items-center gap-2">
-              <button class="btn btn-sm btn-glass text-secondary" title="Mark category as complete" onclick="toggleAllInCategory('${cat.id}', true)">
-                <i class="bi bi-check-all me-1"></i>All Done
+            <div class="cat-actions">
+              <button class="btn-text" onclick="toggleCategoryAll('${cat.id}', true)">
+                <i class="bi bi-check2-all me-1"></i>All Done
               </button>
-              <button class="btn btn-sm btn-glass text-secondary" title="Clear category progress" onclick="toggleAllInCategory('${cat.id}', false)">
+              <button class="btn-text" onclick="toggleCategoryAll('${cat.id}', false)">
                 <i class="bi bi-x me-1"></i>Clear
               </button>
             </div>
           </div>
 
-          <!-- Category Progress Bar -->
-          <div class="custom-progress mb-3">
-            <div class="custom-progress-bar" style="width: ${catPercent}%;"></div>
-          </div>
-
-          <!-- Skills Grid -->
-          <div class="row g-2">
+          <div class="skills-grid">
             ${filteredSkills.map(s => {
               const isChecked = !!checkedSkills[s.id];
               return `
-                <div class="col-md-6 col-lg-4">
-                  <div class="skill-item ${isChecked ? 'completed' : ''}" onclick="toggleSkill('${s.id}')">
-                    <div class="skill-checkbox">
-                      <i class="bi bi-check"></i>
-                    </div>
-                    <span class="skill-name">${escapeHTML(s.name)}</span>
+                <div class="skill-row ${isChecked ? 'checked' : ''}" onclick="toggleSkill('${s.id}')">
+                  <div class="custom-checkbox">
+                    <i class="bi bi-check-lg"></i>
                   </div>
+                  <span class="skill-title">${escapeHTML(s.name)}</span>
                 </div>
               `;
             }).join("")}
           </div>
         `;
 
-        container.appendChild(catCard);
+        container.appendChild(card);
       });
 
-      if (!anyVisibleCategory) {
+      if (totalVisible === 0) {
         container.innerHTML = `
-          <div class="glass-card p-5 text-center">
-            <i class="bi bi-search text-secondary display-5 mb-3 d-block"></i>
-            <h4 class="text-white h5">No matching skills found</h4>
-            <p class="text-secondary small">Try adjusting your search query or reset the active filter.</p>
-            <button class="btn btn-glass mt-2" onclick="document.getElementById('searchInput').value=''; searchQuery=''; setFilter('all');">
-              Clear Filters
-            </button>
+          <div style="text-align: center; padding: 48px 20px; color: var(--text-muted);">
+            <i class="bi bi-search" style="font-size: 28px; margin-bottom: 12px; display: inline-block;"></i>
+            <div style="font-size: 15px; color: var(--text-secondary); margin-bottom: 4px;">No capabilities match your query</div>
+            <div style="font-size: 13px;">Try typing a different keyword or reset active filter.</div>
           </div>
         `;
       }
     }
 
-    // Update Stats & Progress Bars
+    // Update Global UI Metrics
     function updateUI() {
-      let totalCount = 0;
-      let completedCount = 0;
+      let total = 0;
+      let completed = 0;
 
       SKILLS_DATA.forEach(cat => {
+        let catCompleted = 0;
         cat.skills.forEach(s => {
-          totalCount++;
+          total++;
           if (checkedSkills[s.id]) {
-            completedCount++;
+            completed++;
+            catCompleted++;
           }
         });
+
+        // Update sidebar badges
+        const badgeEl = document.getElementById("badge-" + cat.id);
+        const navEl = document.getElementById("nav-" + cat.id);
+        if (badgeEl) {
+          badgeEl.textContent = `${catCompleted}/${cat.skills.length}`;
+        }
+        if (navEl) {
+          navEl.classList.toggle("completed-all", catCompleted === cat.skills.length);
+        }
       });
 
-      const remainingCount = totalCount - completedCount;
-      const globalPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+      const remaining = total - completed;
+      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-      document.getElementById("statTotal").textContent = totalCount;
-      document.getElementById("statCompleted").textContent = completedCount;
-      document.getElementById("statRemaining").textContent = remainingCount;
-      document.getElementById("globalPercentText").textContent = `${globalPercent}% (${completedCount}/${totalCount})`;
-      document.getElementById("globalProgressBar").style.width = `${globalPercent}%`;
+      document.getElementById("badge-all").textContent = `${completed}/${total}`;
+      document.getElementById("globalPctText").textContent = `${pct}% (${completed} / ${total})`;
+      document.getElementById("globalProgressBar").style.width = `${pct}%`;
+      document.getElementById("statCompletedText").textContent = `${completed} completed`;
+      document.getElementById("statRemainingText").textContent = `${remaining} remaining`;
+      document.getElementById("sidebarProgressText").textContent = `${pct}% Completed`;
 
-      document.getElementById("countAll").textContent = totalCount;
-      document.getElementById("countPending").textContent = remainingCount;
-      document.getElementById("countCompleted").textContent = completedCount;
+      renderCategories();
+    }
 
-      renderSkills();
+    // Sidebar Toggle
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const openBtn = document.getElementById("openSidebarBtn");
+      sidebar.classList.toggle("collapsed");
+      if (sidebar.classList.contains("collapsed")) {
+        openBtn.style.display = "flex";
+      } else {
+        openBtn.style.display = "none";
+      }
+    }
+
+    // Model Selector Dropdown
+    function toggleModelDropdown(force) {
+      const dd = document.getElementById("modelDropdown");
+      if (typeof force === 'boolean') {
+        dd.classList.toggle("show", force);
+      } else {
+        dd.classList.toggle("show");
+      }
+    }
+
+    document.addEventListener("click", (e) => {
+      const dd = document.getElementById("modelDropdown");
+      const sel = document.querySelector(".model-selector");
+      if (dd && !dd.contains(e.target) && !sel.contains(e.target)) {
+        dd.classList.remove("show");
+      }
+    });
+
+    // Copy Prompt for ChatGPT
+    function copyRoadmapPrompt() {
+      let text = `# TOP 1% ANDROID & AI ROADMAP STATUS\n\n`;
+      SKILLS_DATA.forEach(cat => {
+        text += `## ${cat.title}\n`;
+        cat.skills.forEach(s => {
+          const isDone = !!checkedSkills[s.id];
+          text += `- [${isDone ? 'x' : ' '}] ${s.name}\n`;
+        });
+        text += `\n`;
+      });
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Copied Markdown roadmap to clipboard!");
+      }).catch(() => {
+        showToast("Error copying to clipboard");
+      });
     }
 
     // Export / Import
     function exportData() {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(checkedSkills, null, 2));
-      const downloadAnchor = document.createElement("a");
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `android_mastery_skills_${new Date().toISOString().slice(0, 10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      showToast("Progress successfully exported!", "bi-download");
+      const a = document.createElement("a");
+      a.href = dataStr;
+      a.download = `chatgpt_android_roadmap_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast("Progress exported successfully");
     }
 
-    function importData(event) {
-      const file = event.target.files[0];
+    function importData(e) {
+      const file = e.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function(evt) {
         try {
-          const imported = JSON.parse(e.target.result);
-          if (typeof imported === "object" && imported !== null) {
-            checkedSkills = imported;
+          const data = JSON.parse(evt.target.result);
+          if (typeof data === 'object') {
+            checkedSkills = data;
             saveState();
             updateUI();
-            showToast("Progress successfully imported!", "bi-cloud-check");
-          } else {
-            alert("Invalid JSON file format.");
+            showToast("Progress restored from backup");
           }
-        } catch (err) {
-          alert("Error parsing JSON file: " + err.message);
+        } catch(err) {
+          alert("Invalid backup JSON file");
         }
       };
       reader.readAsText(file);
-      event.target.value = "";
+      e.target.value = "";
     }
 
-    // Feedback Toast
-    let toastInstance = null;
-    function showToast(msg, icon = "bi-check-circle-fill") {
-      const toastEl = document.getElementById("feedbackToast");
-      document.getElementById("toastMsg").textContent = msg;
-      const iconEl = document.getElementById("toastIcon");
-      iconEl.className = `bi ${icon} text-success`;
-
-      if (!toastInstance) {
-        toastInstance = new bootstrap.Toast(toastEl, { delay: 2000 });
-      }
-      toastInstance.show();
+    // Toast
+    let toastTimeout;
+    function showToast(msg) {
+      const toast = document.getElementById("chatgpt-toast");
+      document.getElementById("toastMessage").textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2400);
     }
 
     function escapeHTML(str) {
