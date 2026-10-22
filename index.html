@@ -1280,30 +1280,34 @@
         </button>
       </div>
 
-      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-        Paste your <b>Firebase Web Config JSON</b> or Android <b>google-services.json</b> below. The app automatically detects your <code style="color: var(--openai-green);">databaseURL</code> and syncs all checks and notes in real time.
+      <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px;">
+        Paste your Firebase configuration below. Accepts <b>Web SDK JS/JSON</b>, <b>Firebase Console Code Snippets</b> (with imports & comments), or Android <b>google-services.json</b>.
       </p>
 
       <textarea 
         id="firebaseJsonInput" 
         class="firebase-textarea" 
         placeholder='Paste here, for example:
-{
-  "apiKey": "AIzaSy...",
-  "authDomain": "my-app.firebaseapp.com",
-  "databaseURL": "https://my-app-default-rtdb.firebaseio.com",
-  "projectId": "my-app",
-  "storageBucket": "my-app.appspot.com"
-}'
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "my-app.firebaseapp.com",
+  databaseURL: "https://my-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-app"
+};'
       ></textarea>
 
-      <div style="display: flex; gap: 10px; justify-content: flex-end; align-items: center;">
-        <button class="btn-secondary-gpt" onclick="useLocalMode()">
-          Use Offline / Local Mode
+      <div style="display: flex; gap: 8px; justify-content: space-between; align-items: center;">
+        <button class="btn-secondary-gpt" style="color: #f87171;" id="btnDisconnectFb" onclick="disconnectFirebase()">
+          Disconnect
         </button>
-        <button class="btn-primary-gpt" onclick="saveFirebaseConfig()">
-          Connect & Sync Database
-        </button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-secondary-gpt" onclick="useLocalMode()">
+            Offline Mode
+          </button>
+          <button class="btn-primary-gpt" onclick="saveFirebaseConfig()">
+            Connect & Sync
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -2619,8 +2623,89 @@
     }
 
     // =========================================================================
-    // FIREBASE INITIALIZATION & REALTIME SYNC
+    // MULTI-FORMAT FIREBASE PARSER & REALTIME SYNC
     // =========================================================================
+    function parseFirebaseInput(text) {
+      text = (text || "").trim();
+      if (!text) throw new Error("Input is empty.");
+
+      // Strategy 1: Clean JSON parse (google-services.json or Web JSON)
+      try {
+        const direct = JSON.parse(text);
+        if (direct.project_info && direct.client) {
+          const proj = direct.project_info;
+          const client = direct.client[0] || {};
+          const apiKey = client.api_key && client.api_key[0] ? client.api_key[0].current_key : "";
+          const appId = client.client_info ? client.client_info.mobilesdk_app_id : "";
+          return {
+            apiKey: apiKey,
+            authDomain: `${proj.project_id}.firebaseapp.com`,
+            databaseURL: proj.firebase_url || `https://${proj.project_id}-default-rtdb.firebaseio.com`,
+            projectId: proj.project_id,
+            storageBucket: proj.storage_bucket || `${proj.project_id}.appspot.com`,
+            appId: appId
+          };
+        } else if (direct.apiKey || direct.databaseURL || direct.projectId) {
+          return {
+            apiKey: direct.apiKey || "",
+            authDomain: direct.authDomain || (direct.projectId ? `${direct.projectId}.firebaseapp.com` : ""),
+            databaseURL: direct.databaseURL || (direct.projectId ? `https://${direct.projectId}-default-rtdb.firebaseio.com` : ""),
+            projectId: direct.projectId || "",
+            storageBucket: direct.storageBucket || "",
+            messagingSenderId: direct.messagingSenderId || "",
+            appId: direct.appId || ""
+          };
+        }
+      } catch (e) {}
+
+      // Strategy 2: Extract JavaScript Object literal block e.g. { apiKey: "...", ... }
+      const objMatch = text.match(/\{[\s\S]*?apiKey[\s\S]*?\}/);
+      if (objMatch) {
+        try {
+          const parsed = new Function("return (" + objMatch[0] + ")")();
+          if (parsed && (parsed.apiKey || parsed.projectId || parsed.databaseURL)) {
+            return {
+              apiKey: parsed.apiKey || "",
+              authDomain: parsed.authDomain || (parsed.projectId ? `${parsed.projectId}.firebaseapp.com` : ""),
+              databaseURL: parsed.databaseURL || (parsed.projectId ? `https://${parsed.projectId}-default-rtdb.firebaseio.com` : ""),
+              projectId: parsed.projectId || "",
+              storageBucket: parsed.storageBucket || "",
+              messagingSenderId: parsed.messagingSenderId || "",
+              appId: parsed.appId || ""
+            };
+          }
+        } catch (e) {}
+      }
+
+      // Strategy 3: Regex Field Extraction (handles any code comments, imports, exports)
+      const getField = (regex) => {
+        const m = text.match(regex);
+        return m ? m[1].trim() : "";
+      };
+
+      const apiKey = getField(/(?:apiKey|current_key)["']?\s*[:=]\s*["']([^"']+)["']/i);
+      const projectId = getField(/(?:projectId|project_id)["']?\s*[:=]\s*["']([^"']+)["']/i);
+      const databaseURL = getField(/(?:databaseURL|firebase_url)["']?\s*[:=]\s*["']([^"']+)["']/i) || (projectId ? `https://${projectId}-default-rtdb.firebaseio.com` : "");
+      const authDomain = getField(/(?:authDomain)["']?\s*[:=]\s*["']([^"']+)["']/i) || (projectId ? `${projectId}.firebaseapp.com` : "");
+      const storageBucket = getField(/(?:storageBucket|storage_bucket)["']?\s*[:=]\s*["']([^"']+)["']/i);
+      const messagingSenderId = getField(/(?:messagingSenderId|project_number)["']?\s*[:=]\s*["']([^"']+)["']/i);
+      const appId = getField(/(?:appId|mobilesdk_app_id)["']?\s*[:=]\s*["']([^"']+)["']/i);
+
+      if (apiKey || databaseURL || projectId) {
+        return {
+          apiKey,
+          authDomain,
+          databaseURL,
+          projectId,
+          storageBucket,
+          messagingSenderId,
+          appId
+        };
+      }
+
+      throw new Error("Could not detect apiKey or databaseURL in the provided input.");
+    }
+
     function initFirebase() {
       const configStr = localStorage.getItem(FIREBASE_CONFIG_KEY);
       if (!configStr) {
@@ -2634,9 +2719,13 @@
 
       try {
         const config = JSON.parse(configStr);
-        if (!firebase.apps.length) {
-          firebase.initializeApp(config);
+
+        // Delete any existing app to avoid [DEFAULT] already exists
+        if (firebase.apps.length) {
+          firebase.app().delete().catch(() => {});
         }
+
+        firebase.initializeApp(config);
         firebaseDb = firebase.database();
         rtdbRef = firebaseDb.ref("roadmap_progress");
         notesRef = firebaseDb.ref("roadmap_notes");
@@ -2688,60 +2777,44 @@
     function saveFirebaseConfig() {
       const rawText = document.getElementById("firebaseJsonInput").value.trim();
       if (!rawText) {
-        alert("Please paste your Firebase JSON configuration.");
+        alert("Please paste your Firebase configuration.");
         return;
       }
 
       try {
-        let cleanText = rawText.replace(/^(const|let|var)\s+\w+\s*=\s*/, "").replace(/;$/, "").trim();
-        const parsed = JSON.parse(cleanText);
+        const finalConfig = parseFirebaseInput(rawText);
 
-        let finalConfig = {};
-
-        // Android `google-services.json`
-        if (parsed.project_info && parsed.client) {
-          const proj = parsed.project_info;
-          const client = parsed.client[0] || {};
-          const apiKey = client.api_key && client.api_key[0] ? client.api_key[0].current_key : "";
-          const appId = client.client_info ? client.client_info.mobilesdk_app_id : "";
-
-          finalConfig = {
-            apiKey: apiKey,
-            authDomain: `${proj.project_id}.firebaseapp.com`,
-            databaseURL: proj.firebase_url || `https://${proj.project_id}-default-rtdb.firebaseio.com`,
-            projectId: proj.project_id,
-            storageBucket: proj.storage_bucket || `${proj.project_id}.appspot.com`,
-            appId: appId
-          };
-        } 
-        // Web SDK Config
-        else if (parsed.apiKey || parsed.databaseURL || parsed.projectId) {
-          finalConfig = {
-            apiKey: parsed.apiKey || "",
-            authDomain: parsed.authDomain || (parsed.projectId ? `${parsed.projectId}.firebaseapp.com` : ""),
-            databaseURL: parsed.databaseURL || (parsed.projectId ? `https://${parsed.projectId}-default-rtdb.firebaseio.com` : ""),
-            projectId: parsed.projectId || "",
-            storageBucket: parsed.storageBucket || "",
-            appId: parsed.appId || ""
-          };
-        } else {
-          throw new Error("Could not detect databaseURL or apiKey in the pasted JSON.");
+        if (!finalConfig.apiKey) {
+          throw new Error("apiKey not found in the input.");
         }
-
         if (!finalConfig.databaseURL) {
-          throw new Error("databaseURL is missing. Please ensure your Firebase Realtime Database is enabled.");
+          throw new Error("databaseURL could not be determined. Please ensure your Firebase Realtime Database is created.");
         }
 
         localStorage.setItem(FIREBASE_CONFIG_KEY, JSON.stringify(finalConfig));
         showToast("Firebase Config saved! Connecting...", "bi-cloud-check");
         closeFirebaseModal();
 
-        setTimeout(() => {
-          location.reload();
-        }, 500);
-
+        initFirebase();
       } catch (err) {
-        alert("Failed to parse JSON: " + err.message);
+        alert("Connection Error: " + err.message);
+      }
+    }
+
+    function disconnectFirebase() {
+      if (confirm("Disconnect Firebase? Your data will remain safely in Local Mode.")) {
+        localStorage.removeItem(FIREBASE_CONFIG_KEY);
+        if (firebase.apps.length) {
+          firebase.app().delete().catch(() => {});
+        }
+        firebaseDb = null;
+        rtdbRef = null;
+        notesRef = null;
+        profileRef = null;
+        isFirebaseConnected = false;
+        updateDbStatus(false, "Local Mode", "Click to connect Firebase");
+        closeFirebaseModal();
+        showToast("Disconnected from Firebase. Using Local Mode.", "bi-hdd");
       }
     }
 
@@ -2756,6 +2829,11 @@
       const text = document.getElementById("footerStatusText");
       const sub = document.getElementById("footerSubText");
       const badge = document.getElementById("headerStatusBadge");
+      const discBtn = document.getElementById("btnDisconnectFb");
+
+      if (discBtn) {
+        discBtn.style.display = connected ? "block" : "none";
+      }
 
       if (connected) {
         dot.className = "status-dot connected";
@@ -2779,6 +2857,10 @@
       const existing = localStorage.getItem(FIREBASE_CONFIG_KEY);
       if (existing) {
         document.getElementById("firebaseJsonInput").value = JSON.stringify(JSON.parse(existing), null, 2);
+      }
+      const discBtn = document.getElementById("btnDisconnectFb");
+      if (discBtn) {
+        discBtn.style.display = isFirebaseConnected ? "block" : "none";
       }
       document.getElementById("firebaseModal").classList.add("show");
     }
