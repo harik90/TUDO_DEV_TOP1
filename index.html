@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top 1% Android & KMP & AI Dev Tracker</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%2232%22 height=%2232%22><text y=%2224%22 font-size=%2224%22>🚀</text></svg>">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --card-bg: rgba(18, 23, 38, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover-border: rgba(99, 102, 241, 0.4);
+      --accent-cyan: #06b6d4;
+      --accent-indigo: #6366f1;
+      --accent-emerald: #10b981;
+      --accent-purple: #a855f7;
+      --glass-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      --neu-inset: inset 2px 2px 5px rgba(0, 0, 0, 0.6), inset -2px -2px 5px rgba(255, 255, 255, 0.04);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+      padding-bottom: 5rem;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07090e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Glassmorphic Navbar */
+    .glass-nav {
+      background: rgba(11, 15, 25, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    /* Glass Cards */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      box-shadow: var(--glass-shadow);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    /* Neumorphic Inset / Search Bar */
+    .neu-input {
+      background: rgba(10, 14, 23, 0.8) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      color: #fff !important;
+      box-shadow: var(--neu-inset);
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+    .neu-input:focus {
+      border-color: var(--accent-cyan) !important;
+      box-shadow: var(--neu-inset), 0 0 15px rgba(6, 182, 212, 0.25) !important;
+    }
+    .neu-input::placeholder {
+      color: #64748b;
+    }
+
+    /* Skill Item Card */
+    .skill-item {
+      position: relative;
+      background: rgba(21, 28, 48, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .skill-item:hover {
+      background: rgba(30, 41, 69, 0.6);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .skill-item.completed {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .skill-item.completed .skill-name {
+      color: #94a3b8;
+      text-decoration: line-through;
+      text-decoration-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .skill-checkbox {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      border-radius: 6px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .skill-item:hover .skill-checkbox {
+      border-color: var(--accent-cyan);
+    }
+
+    .skill-item.completed .skill-checkbox {
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      border-color: #10b981;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    }
+
+    .skill-checkbox i {
+      color: #fff;
+      font-size: 13px;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .skill-item.completed .skill-checkbox i {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .skill-name {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: #e2e8f0;
+      line-height: 1.4;
+      flex-grow: 1;
+      transition: color 0.2s ease;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .category-icon {
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 1.15rem;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #38bdf8;
+    }
+
+    /* Progress bar custom styling */
+    .custom-progress {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .custom-progress-bar {
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, #6366f1, #06b6d4, #10b981);
+      background-size: 200% 100%;
+      transition: width 0.4s ease;
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+    }
+
+    /* Tag badges */
+    .badge-filter {
+      padding: 0.45rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: #94a3b8;
+      transition: all 0.2s ease;
+    }
+
+    .badge-filter:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .badge-filter.active {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(6, 182, 212, 0.25));
+      border-color: rgba(6, 182, 212, 0.5);
+      color: #38bdf8;
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.25);
+    }
+
+    /* Quick jump buttons */
+    .category-chip {
+      font-size: 0.78rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      background: rgba(18, 23, 38, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .category-chip:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(99, 102, 241, 0.4);
+      color: #fff;
+    }
+
+    /* Action buttons */
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      border-radius: 10px;
+      font-weight: 500;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    /* Floating Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1090;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar glass-nav py-3">
+    <div class="container-xl d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <div class="category-icon" style="background: linear-gradient(135deg, #6366f1, #06b6d4);">
+          <i class="bi bi-rocket-takeoff-fill text-white"></i>
+        </div>
+        <div>
+          <h1 class="h6 mb-0 fw-bold text-white tracking-wide">TOP 1% ANDROID & KMP & AI</h1>
+          <p class="small text-secondary mb-0" style="font-size: 0.76rem;">Mastery Roadmap & Persistent Progress Tracker</p>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-glass" onclick="exportData()" title="Backup your progress as JSON">
+          <i class="bi bi-download me-1"></i> Export
+        </button>
+        <button class="btn btn-glass" onclick="document.getElementById('importFile').click()" title="Restore saved progress">
+          <i class="bi bi-upload me-1"></i> Import
+        </button>
+        <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(event)">
+        <button class="btn btn-glass text-danger-emphasis border-danger-subtle" onclick="confirmResetAll()" title="Reset all checkboxes">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-xl pt-4">
+
+    <!-- Hero Stats & Progress Banner -->
+    <div class="glass-card p-4 mb-4">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 fw-bold">
+              <i class="bi bi-stars me-1"></i> 100+ ELITE CAPABILITIES
+            </span>
+            <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-1" id="saveBadge">
+              <i class="bi bi-check-circle me-1"></i> Auto-saved locally
+            </span>
+          </div>
+          <h2 class="h3 fw-bold text-white mb-2">Engineering Roadmap Checklist</h2>
+          <p class="text-secondary mb-3 small">
+            Click any skill to check it off. Your checked items are automatically saved to your browser's persistent storage so you can track your journey to completion.
+          </p>
+
+          <!-- Overall Progress Bar -->
+          <div class="mb-2 d-flex justify-content-between align-items-center">
+            <span class="small fw-semibold text-light">Global Progress</span>
+            <span class="metric-value small text-info" id="globalPercentText">0%</span>
+          </div>
+          <div class="custom-progress mb-3">
+            <div class="custom-progress-bar" id="globalProgressBar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="row g-2 text-center">
+            <div class="col-4">
+              <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);">
+                <div class="small text-secondary mb-1">Total Skills</div>
+                <div class="h4 mb-0 metric-value text-white" id="statTotal">0</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 rounded-3" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2);">
+                <div class="small text-success mb-1">Completed</div>
+                <div class="h4 mb-0 metric-value text-success" id="statCompleted">0</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 rounded-3" style="background: rgba(6, 182, 212, 0.06); border: 1px solid rgba(6, 182, 212, 0.2);">
+                <div class="small text-info mb-1">Remaining</div>
+                <div class="h4 mb-0 metric-value text-info" id="statRemaining">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Quick Jump Chips -->
+      <hr style="border-color: rgba(255, 255, 255, 0.06); margin: 1.25rem 0 1rem 0;">
+      <div class="d-flex flex-wrap gap-2 align-items-center">
+        <span class="small text-secondary me-2"><i class="bi bi-compass me-1"></i>Jump:</span>
+        <a href="#cat-languages" class="category-chip"><i class="bi bi-code-slash text-primary"></i> Languages & Compilers</a>
+        <a href="#cat-kmp" class="category-chip"><i class="bi bi-layers-half text-info"></i> KMP Stack</a>
+        <a href="#cat-ai" class="category-chip"><i class="bi bi-cpu text-warning"></i> Mobile AI & Edge</a>
+        <a href="#cat-backend" class="category-chip"><i class="bi bi-hdd-network text-success"></i> Backend & Infra</a>
+        <a href="#cat-apis" class="category-chip"><i class="bi bi-diagram-3 text-danger"></i> APIs</a>
+        <a href="#cat-sysdesign" class="category-chip"><i class="bi bi-boxes text-purple"></i> Mobile System Design</a>
+        <a href="#cat-career" class="category-chip"><i class="bi bi-trophy text-warning"></i> Career Leverage</a>
+      </div>
+    </div>
+
+    <!-- Filters & Search Bar -->
+    <div class="glass-card p-3 mb-4">
+      <div class="row g-3 align-items-center">
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text neu-input border-end-0 text-secondary pe-2">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" id="searchInput" class="form-control neu-input border-start-0 ps-1" 
+                   placeholder="Search skills (e.g. K2, LiteRT, Ktor, Swift 6, CRDT)..." 
+                   oninput="handleSearch(this.value)">
+          </div>
+        </div>
+        <div class="col-md-6 d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
+          <div class="badge-filter active" data-filter="all" onclick="setFilter('all')">
+            All (<span id="countAll">0</span>)
+          </div>
+          <div class="badge-filter" data-filter="pending" onclick="setFilter('pending')">
+            <i class="bi bi-clock me-1"></i> Pending (<span id="countPending">0</span>)
+          </div>
+          <div class="badge-filter" data-filter="completed" onclick="setFilter('completed')">
+            <i class="bi bi-check2-circle me-1"></i> Completed (<span id="countCompleted">0</span>)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categories Grid / List -->
+    <div id="categoriesContainer" class="d-flex flex-column gap-4">
+      <!-- Generated via JavaScript dynamically -->
+    </div>
+
+  </div>
+
+  <!-- Toast for feedback -->
+  <div class="toast-container">
+    <div id="feedbackToast" class="toast align-items-center text-white bg-dark border-0 glass-card" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2">
+          <i class="bi bi-check-circle-fill text-success" id="toastIcon"></i>
+          <span id="toastMsg">Progress saved</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Application Logic -->
+  <script>
+    // 1. Skill Categories & Items
+    const SKILLS_DATA = [
+      {
+        id: "cat-languages",
+        title: "Languages & Compilers",
+        icon: "bi-code-slash",
+        color: "linear-gradient(135deg, #6366f1, #3b82f6)",
+        skills: [
+          { id: "lang-k2", name: "Kotlin K2 internals (FIR/IR)" },
+          { id: "lang-ksp2", name: "KSP2 processor authoring" },
+          { id: "lang-compiler-plugin", name: "Kotlin compiler plugin (FIR checker / IR transform)" },
+          { id: "lang-kn-memory", name: "Kotlin/Native memory model, GC, cinterop" },
+          { id: "lang-explicit-api", name: "Explicit API mode + binary-compatibility-validator" },
+          { id: "lang-coroutines-flow", name: "Coroutines/Flow internals (cancellation, dispatchers, backpressure)" },
+          { id: "lang-gradle-convention", name: "Gradle convention plugins (build-logic)" },
+          { id: "lang-gradle-cache", name: "Gradle configuration cache + remote build cache" },
+          { id: "lang-multimodule-graph", name: "Multi-module graph design (100+ modules)" },
+          { id: "lang-swift6-concurrency", name: "Swift 6 strict concurrency" },
+          { id: "lang-swiftui-spm", name: "SwiftUI + SPM + Instruments" },
+          { id: "lang-swift-export", name: "Kotlin→ObjC export, Swift Export, SKIE" },
+          { id: "lang-xcframework", name: "XCFramework/SPM distribution" },
+          { id: "lang-cpp-cmake", name: "C++17/20 + CMake" },
+          { id: "lang-jni", name: "JNI lifetime/threading" },
+          { id: "lang-16kb-pagesize", name: "16 KB page-size native lib compliance" },
+          { id: "lang-cinterop-shim", name: "cinterop via C shim" }
+        ]
+      },
+      {
+        id: "cat-kmp",
+        title: "KMP Stack",
+        icon: "bi-layers-half",
+        color: "linear-gradient(135deg, #06b6d4, #3b82f6)",
+        skills: [
+          { id: "kmp-compose-multiplatform", name: "Compose Multiplatform (iOS)" },
+          { id: "kmp-compose-compiler-stability", name: "Compose compiler stability/recomposition debugging" },
+          { id: "kmp-androidx-lifecycle", name: "androidx Lifecycle/ViewModel KMP" },
+          { id: "kmp-nav3", name: "Navigation (multiplatform/Nav3)" },
+          { id: "kmp-decompose-circuit", name: "Decompose or Circuit" },
+          { id: "kmp-mvi-molecule", name: "MVI via Molecule" },
+          { id: "kmp-ktor-client", name: "Ktor client" },
+          { id: "kmp-kotlinx-serialization", name: "kotlinx.serialization" },
+          { id: "kmp-apollo-graphql", name: "Apollo Kotlin (GraphQL)" },
+          { id: "kmp-wire-connect", name: "Wire/Connect (gRPC/protobuf)" },
+          { id: "kmp-room-kmp", name: "Room KMP" },
+          { id: "kmp-sqldelight", name: "SQLDelight" },
+          { id: "kmp-datastore-kmp", name: "DataStore KMP" },
+          { id: "kmp-koin", name: "Koin" },
+          { id: "kmp-kotlin-inject", name: "kotlin-inject / Metro" },
+          { id: "kmp-coil-okio", name: "Coil 3, Okio, kotlinx-datetime" },
+          { id: "kmp-testing-kotest", name: "Turbine, Kotest, kotlin.test" },
+          { id: "kmp-maestro", name: "Maestro E2E" },
+          { id: "kmp-screenshot-testing", name: "Screenshot testing" },
+          { id: "kmp-baseline-profiles", name: "Baseline Profiles + Macrobenchmark" },
+          { id: "kmp-ci-macos", name: "GitHub Actions/Bitrise macOS CI" },
+          { id: "kmp-fastlane", name: "Fastlane + staged rollouts" },
+          { id: "kmp-offline-first", name: "Offline-first architecture" },
+          { id: "kmp-token-refresh", name: "Token refresh/auth in Ktor" }
+        ]
+      },
+      {
+        id: "cat-ai",
+        title: "Mobile AI & Edge",
+        icon: "bi-cpu",
+        color: "linear-gradient(135deg, #a855f7, #ec4899)",
+        skills: [
+          { id: "ai-litert", name: "LiteRT" },
+          { id: "ai-litert-lm", name: "LiteRT-LM / AI Edge" },
+          { id: "ai-mediapipe", name: "MediaPipe tasks" },
+          { id: "ai-gemini-nano", name: "Gemini Nano (ML Kit GenAI/AICore)" },
+          { id: "ai-executorch", name: "ExecuTorch" },
+          { id: "ai-coreml-foundation", name: "Core ML + Foundation Models + MLX Swift" },
+          { id: "ai-onnx-mobile", name: "ONNX Runtime Mobile" },
+          { id: "ai-llamacpp", name: "llama.cpp integration" },
+          { id: "ai-qualcomm-qnn", name: "Qualcomm QNN / NPU stacks" },
+          { id: "ai-torch-export", name: "torch.export → ExecuTorch" },
+          { id: "ai-edge-torch", name: "ai-edge-torch → LiteRT" },
+          { id: "ai-quantization", name: "INT8/INT4 quantization (PTQ/QAT)" },
+          { id: "ai-accuracy-regression", name: "Accuracy regression testing" },
+          { id: "ai-hardware-delegation", name: "Hardware delegation (XNNPACK/GPU/NPU/ANE)" },
+          { id: "ai-op-fallback", name: "Op fallback profiling" },
+          { id: "ai-mmap-weights", name: "Memory-mapped weights" },
+          { id: "ai-kvcache", name: "KV-cache sizing" },
+          { id: "ai-thermal-battery", name: "Thermal/battery profiling" },
+          { id: "ai-model-delivery", name: "Model delivery (asset packs, on-demand, versioning, integrity)" },
+          { id: "ai-hybrid-routing", name: "Hybrid on-device/cloud routing" },
+          { id: "ai-ondevice-rag", name: "On-device RAG (embeddings, chunking, sqlite-vec + FTS5, reranking)" },
+          { id: "ai-context-window", name: "Context-window budgeting" },
+          { id: "ai-structured-output", name: "Structured output + tool calling" },
+          { id: "ai-koog-agents", name: "Koog / Kotlin agent frameworks" },
+          { id: "ai-offline-eval", name: "Offline eval harness" },
+          { id: "ai-privacy-telemetry", name: "Privacy-safe on-device telemetry" }
+        ]
+      },
+      {
+        id: "cat-backend",
+        title: "Backend & Infra",
+        icon: "bi-hdd-network",
+        color: "linear-gradient(135deg, #10b981, #06b6d4)",
+        skills: [
+          { id: "infra-spring-boot", name: "Spring Boot (Kotlin)" },
+          { id: "infra-ktor-server", name: "Ktor server" },
+          { id: "infra-virtual-threads", name: "Virtual threads + coroutines" },
+          { id: "infra-postgres", name: "Postgres (indexing, EXPLAIN, isolation, migrations)" },
+          { id: "infra-transactional-outbox", name: "Transactional outbox" },
+          { id: "infra-redis", name: "Redis" },
+          { id: "infra-kafka", name: "Kafka" },
+          { id: "infra-docker", name: "Docker" },
+          { id: "infra-kubernetes", name: "Kubernetes" },
+          { id: "infra-terraform", name: "Terraform" },
+          { id: "infra-aws-gcp", name: "AWS or GCP (one, deep)" },
+          { id: "infra-opentelemetry", name: "OpenTelemetry" },
+          { id: "infra-oauth2-pkce", name: "OAuth2/OIDC + PKCE" },
+          { id: "infra-passkeys", name: "Passkeys" },
+          { id: "infra-refresh-rotation", name: "Refresh-token rotation" },
+          { id: "infra-play-integrity", name: "Play Integrity / App Attest" }
+        ]
+      },
+      {
+        id: "cat-apis",
+        title: "APIs",
+        icon: "bi-diagram-3",
+        color: "linear-gradient(135deg, #f59e0b, #ef4444)",
+        skills: [
+          { id: "api-rest-openapi", name: "REST + OpenAPI" },
+          { id: "api-grpc-protobuf", name: "gRPC/Protobuf + buf" },
+          { id: "api-graphql-federation", name: "GraphQL + federation" },
+          { id: "api-sse-websockets", name: "SSE/WebSockets" },
+          { id: "api-resumable-streaming", name: "Resumable streaming" },
+          { id: "api-llm-gateway", name: "LLM gateway (eval, cost controls)" }
+        ]
+      },
+      {
+        id: "cat-sysdesign",
+        title: "Mobile System Design",
+        icon: "bi-boxes",
+        color: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+        skills: [
+          { id: "sys-offline-sync", name: "Offline sync + conflict resolution (LWW/CRDT/server-authoritative)" },
+          { id: "sys-pagination-caching", name: "Pagination + multi-layer caching" },
+          { id: "sys-fcm-apns", name: "FCM/APNs + real-time channels" },
+          { id: "sys-feature-flags", name: "Feature flags + experimentation + kill switches" },
+          { id: "sys-staged-rollout", name: "Staged rollout strategy" },
+          { id: "sys-startup-perf", name: "Startup/performance engineering" },
+          { id: "sys-modularization", name: "Large-scale modularization" },
+          { id: "sys-threat-modeling", name: "Security threat modeling" },
+          { id: "sys-analytics-observability", name: "Analytics/observability pipelines" },
+          { id: "sys-design-docs", name: "Design docs + peer review" }
+        ]
+      },
+      {
+        id: "cat-career",
+        title: "Career Leverage",
+        icon: "bi-trophy",
+        color: "linear-gradient(135deg, #eab308, #f97316)",
+        skills: [
+          { id: "career-oss", name: "OSS contributions" },
+          { id: "career-talks", name: "Technical writeups/talks" },
+          { id: "career-cross-team", name: "Cross-team initiative ownership" },
+          { id: "career-platform-impact", name: "Measurable platform impact (build time, crash rate, startup, AI latency)" },
+          { id: "career-mentoring", name: "Mentoring" },
+          { id: "career-tier1-prep", name: "Tier-1 interview loop prep" },
+          { id: "career-tier-targeting", name: "Level/company-tier targeting" }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "top1_android_dev_skills_v1";
+
+    // State
+    let checkedSkills = {};
+    let currentFilter = "all";
+    let searchQuery = "";
+
+    // Load from LocalStorage
+    function loadSavedState() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          checkedSkills = JSON.parse(stored);
+        }
+      } catch (err) {
+        console.error("Failed to load saved state:", err);
+      }
+    }
+
+    // Save to LocalStorage
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(checkedSkills));
+        showToast("Progress saved automatically", "bi-check2-circle");
+      } catch (err) {
+        console.error("Failed to save state:", err);
+      }
+    }
+
+    // Toggle Item
+    function toggleSkill(skillId) {
+      if (checkedSkills[skillId]) {
+        delete checkedSkills[skillId];
+      } else {
+        checkedSkills[skillId] = {
+          completedAt: new Date().toISOString()
+        };
+      }
+      saveState();
+      updateUI();
+    }
+
+    // Bulk toggle category
+    function toggleAllInCategory(catId, markComplete) {
+      const category = SKILLS_DATA.find(c => c.id === catId);
+      if (!category) return;
+
+      category.skills.forEach(s => {
+        if (markComplete) {
+          checkedSkills[s.id] = { completedAt: new Date().toISOString() };
+        } else {
+          delete checkedSkills[s.id];
+        }
+      });
+      saveState();
+      updateUI();
+    }
+
+    function confirmResetAll() {
+      if (confirm("Are you sure you want to reset all checked skills? This cannot be undone unless you have an exported backup.")) {
+        checkedSkills = {};
+        saveState();
+        updateUI();
+      }
+    }
+
+    // Filter and search
+    function setFilter(filterType) {
+      currentFilter = filterType;
+      document.querySelectorAll(".badge-filter").forEach(el => {
+        el.classList.toggle("active", el.getAttribute("data-filter") === filterType);
+      });
+      renderSkills();
+    }
+
+    function handleSearch(query) {
+      searchQuery = query.toLowerCase().trim();
+      renderSkills();
+    }
+
+    // Render Container
+    function renderSkills() {
+      const container = document.getElementById("categoriesContainer");
+      container.innerHTML = "";
+
+      let anyVisibleCategory = false;
+
+      SKILLS_DATA.forEach(cat => {
+        // Filter skills
+        const filteredSkills = cat.skills.filter(s => {
+          const isDone = !!checkedSkills[s.id];
+          
+          // Filter check
+          if (currentFilter === "completed" && !isDone) return false;
+          if (currentFilter === "pending" && isDone) return false;
+
+          // Search check
+          if (searchQuery && !s.name.toLowerCase().includes(searchQuery)) return false;
+
+          return true;
+        });
+
+        // Category stats (overall, independent of active filter)
+        const catTotal = cat.skills.length;
+        const catCompleted = cat.skills.filter(s => !!checkedSkills[s.id]).length;
+        const catPercent = Math.round((catCompleted / catTotal) * 100);
+
+        if (filteredSkills.length === 0 && searchQuery) {
+          // If searching and no items match in this category, skip rendering card
+          return;
+        }
+
+        anyVisibleCategory = true;
+
+        const catCard = document.createElement("div");
+        catCard.className = "glass-card p-4";
+        catCard.id = cat.id;
+
+        catCard.innerHTML = `
+          <div class="category-header flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-3">
+              <div class="category-icon" style="background: ${cat.color};">
+                <i class="bi ${cat.icon} text-white"></i>
+              </div>
+              <div>
+                <h3 class="h5 mb-1 text-white fw-bold">${cat.title}</h3>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="small text-secondary font-monospace">${catCompleted}/${catTotal} completed</span>
+                  <span class="badge rounded-pill ${catPercent === 100 ? 'bg-success' : 'bg-secondary-subtle text-secondary'} font-monospace" style="font-size: 0.72rem;">${catPercent}%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-sm btn-glass text-secondary" title="Mark category as complete" onclick="toggleAllInCategory('${cat.id}', true)">
+                <i class="bi bi-check-all me-1"></i>All Done
+              </button>
+              <button class="btn btn-sm btn-glass text-secondary" title="Clear category progress" onclick="toggleAllInCategory('${cat.id}', false)">
+                <i class="bi bi-x me-1"></i>Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Category Progress Bar -->
+          <div class="custom-progress mb-3">
+            <div class="custom-progress-bar" style="width: ${catPercent}%;"></div>
+          </div>
+
+          <!-- Skills Grid -->
+          <div class="row g-2">
+            ${filteredSkills.map(s => {
+              const isChecked = !!checkedSkills[s.id];
+              return `
+                <div class="col-md-6 col-lg-4">
+                  <div class="skill-item ${isChecked ? 'completed' : ''}" onclick="toggleSkill('${s.id}')">
+                    <div class="skill-checkbox">
+                      <i class="bi bi-check"></i>
+                    </div>
+                    <span class="skill-name">${escapeHTML(s.name)}</span>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
+
+        container.appendChild(catCard);
+      });
+
+      if (!anyVisibleCategory) {
+        container.innerHTML = `
+          <div class="glass-card p-5 text-center">
+            <i class="bi bi-search text-secondary display-5 mb-3 d-block"></i>
+            <h4 class="text-white h5">No matching skills found</h4>
+            <p class="text-secondary small">Try adjusting your search query or reset the active filter.</p>
+            <button class="btn btn-glass mt-2" onclick="document.getElementById('searchInput').value=''; searchQuery=''; setFilter('all');">
+              Clear Filters
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Update Stats & Progress Bars
+    function updateUI() {
+      let totalCount = 0;
+      let completedCount = 0;
+
+      SKILLS_DATA.forEach(cat => {
+        cat.skills.forEach(s => {
+          totalCount++;
+          if (checkedSkills[s.id]) {
+            completedCount++;
+          }
+        });
+      });
+
+      const remainingCount = totalCount - completedCount;
+      const globalPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+      document.getElementById("statTotal").textContent = totalCount;
+      document.getElementById("statCompleted").textContent = completedCount;
+      document.getElementById("statRemaining").textContent = remainingCount;
+      document.getElementById("globalPercentText").textContent = `${globalPercent}% (${completedCount}/${totalCount})`;
+      document.getElementById("globalProgressBar").style.width = `${globalPercent}%`;
+
+      document.getElementById("countAll").textContent = totalCount;
+      document.getElementById("countPending").textContent = remainingCount;
+      document.getElementById("countCompleted").textContent = completedCount;
+
+      renderSkills();
+    }
+
+    // Export / Import
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(checkedSkills, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `android_mastery_skills_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Progress successfully exported!", "bi-download");
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (typeof imported === "object" && imported !== null) {
+            checkedSkills = imported;
+            saveState();
+            updateUI();
+            showToast("Progress successfully imported!", "bi-cloud-check");
+          } else {
+            alert("Invalid JSON file format.");
+          }
+        } catch (err) {
+          alert("Error parsing JSON file: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    // Feedback Toast
+    let toastInstance = null;
+    function showToast(msg, icon = "bi-check-circle-fill") {
+      const toastEl = document.getElementById("feedbackToast");
+      document.getElementById("toastMsg").textContent = msg;
+      const iconEl = document.getElementById("toastIcon");
+      iconEl.className = `bi ${icon} text-success`;
+
+      if (!toastInstance) {
+        toastInstance = new bootstrap.Toast(toastEl, { delay: 2000 });
+      }
+      toastInstance.show();
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+      );
+    }
+
+    // Init
+    window.addEventListener("DOMContentLoaded", () => {
+      loadSavedState();
+      updateUI();
+    });
+  </script>
+</body>
+</html>
