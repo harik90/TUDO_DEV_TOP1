@@ -2845,14 +2845,61 @@ const firebaseConfig = {
     }
 
     // =========================================================================
-    // SKILL NOTES & DOUBTS SYSTEM
+    // SKILL DETAILS & NOTES SYSTEM
     // =========================================================================
+    function getSkillDetails(skillId) {
+      for (const cat of HIERARCHY_DATA) {
+        const parent = cat.skills.find(s => s.id === skillId);
+        if (parent) {
+          return {
+            id: parent.id,
+            name: parent.name,
+            type: "capability",
+            categoryId: cat.id,
+            categoryTitle: cat.title,
+            icon: cat.icon
+          };
+        }
+        for (const p of cat.skills) {
+          const sub = p.subskills.find(s => s.id === skillId);
+          if (sub) {
+            return {
+              id: sub.id,
+              name: sub.name,
+              type: "subskill",
+              parentId: p.id,
+              parentName: p.name,
+              categoryId: cat.id,
+              categoryTitle: cat.title,
+              icon: cat.icon
+            };
+          }
+        }
+      }
+      return {
+        id: skillId,
+        name: skillId,
+        type: "custom",
+        categoryId: "general",
+        categoryTitle: "General",
+        icon: "bi-journal-text"
+      };
+    }
+
+    function getNoteText(skillId) {
+      const val = notesState[skillId];
+      if (!val) return "";
+      if (typeof val === "object" && typeof val.note === "string") return val.note;
+      if (typeof val === "string") return val;
+      return String(val);
+    }
+
     function openNoteModal(skillId, optionalTitle) {
       editingSkillId = skillId;
-      const parent = findParentSkill(skillId);
-      const title = optionalTitle || (parent ? parent.name : "Skill Notes & Doubts");
+      const details = getSkillDetails(skillId);
+      const title = optionalTitle || details.name || "Skill Notes & Doubts";
       document.getElementById("noteModalSkillTitle").textContent = title;
-      document.getElementById("skillNoteTextarea").value = notesState[skillId] || "";
+      document.getElementById("skillNoteTextarea").value = getNoteText(skillId);
       document.getElementById("noteModal").classList.add("show");
       setTimeout(() => {
         const ta = document.getElementById("skillNoteTextarea");
@@ -2868,6 +2915,8 @@ const firebaseConfig = {
     function saveCurrentNote() {
       if (!editingSkillId) return;
       const text = document.getElementById("skillNoteTextarea").value.trim();
+      const details = getSkillDetails(editingSkillId);
+
       if (text) {
         notesState[editingSkillId] = text;
       } else {
@@ -2879,16 +2928,30 @@ const firebaseConfig = {
 
       if (notesRef && isFirebaseConnected) {
         if (text) {
-          notesRef.child(editingSkillId).set({ note: text, updatedAt: Date.now() }).catch(err => {
+          const notePayload = {
+            skillId: editingSkillId,
+            skillName: details.name,
+            categoryId: details.categoryId,
+            categoryTitle: details.categoryTitle,
+            type: details.type,
+            note: text,
+            updatedAt: Date.now(),
+            updatedAtIso: new Date().toISOString()
+          };
+          notesRef.child(editingSkillId).set(notePayload).catch(err => {
             console.warn("RTDB save note error:", err);
+            showToast("RTDB sync error. Note saved locally.", "bi-cloud-slash");
           });
+          showToast("Note & doubt saved to RTDB!", "bi-journal-check");
         } else {
           notesRef.child(editingSkillId).remove().catch(err => {
             console.warn("RTDB delete note error:", err);
           });
+          showToast("Note removed from RTDB", "bi-trash3");
         }
+      } else {
+        showToast(text ? "Note saved locally" : "Note removed", text ? "bi-journal-check" : "bi-trash3");
       }
-      showToast("Note & doubt saved!", "bi-journal-check");
     }
 
     function deleteCurrentNote() {
@@ -2902,8 +2965,10 @@ const firebaseConfig = {
         notesRef.child(editingSkillId).remove().catch(err => {
           console.warn("RTDB delete note error:", err);
         });
+        showToast("Note removed from RTDB", "bi-trash3");
+      } else {
+        showToast("Note removed", "bi-trash3");
       }
-      showToast("Note removed", "bi-trash3");
     }
 
     function toggleNotesFilter() {
@@ -3054,6 +3119,10 @@ const firebaseConfig = {
             });
             saveLocalState();
             updateUI();
+          } else if (val === null) {
+            if (Object.keys(checkedState).length > 0) {
+              rtdbRef.set(checkedState).catch(err => console.warn(err));
+            }
           }
         }, err => {
           console.warn("RTDB Checklist error:", err);
@@ -3069,11 +3138,34 @@ const firebaseConfig = {
           if (val && typeof val === "object") {
             const mapped = {};
             for (let k in val) {
-              mapped[k] = val[k].note || val[k];
+              const item = val[k];
+              if (item && typeof item === "object" && typeof item.note === "string") {
+                mapped[k] = item.note;
+              } else if (typeof item === "string") {
+                mapped[k] = item;
+              }
             }
             notesState = mapped;
             saveLocalState();
             updateUI();
+          } else if (val === null) {
+            if (Object.keys(notesState).length > 0) {
+              const initialPayload = {};
+              for (let k in notesState) {
+                const det = getSkillDetails(k);
+                initialPayload[k] = {
+                  skillId: k,
+                  skillName: det.name,
+                  categoryId: det.categoryId,
+                  categoryTitle: det.categoryTitle,
+                  type: det.type,
+                  note: getNoteText(k),
+                  updatedAt: Date.now(),
+                  updatedAtIso: new Date().toISOString()
+                };
+              }
+              notesRef.set(initialPayload).catch(err => console.warn(err));
+            }
           }
         }, err => {
           console.warn("RTDB Notes error:", err);
@@ -3087,6 +3179,13 @@ const firebaseConfig = {
             profileState.role = val.role || profileState.role;
             saveLocalState();
             updateProfileUI();
+          } else if (val === null) {
+            profileRef.set({
+              name: profileState.name,
+              role: profileState.role,
+              updatedAt: Date.now(),
+              updatedAtIso: new Date().toISOString()
+            }).catch(err => console.warn(err));
           }
         }, err => {
           console.warn("RTDB Profile error:", err);
@@ -3202,10 +3301,25 @@ const firebaseConfig = {
     // =========================================================================
     function toggleSubskill(parentSkillId, subskillId) {
       const isChecked = !!checkedState[subskillId];
+      const now = Date.now();
+      const iso = new Date().toISOString();
+      const subDetails = getSkillDetails(subskillId);
+      const parent = findParentSkill(parentSkillId);
+
       if (isChecked) {
         delete checkedState[subskillId];
       } else {
-        checkedState[subskillId] = { completedAt: Date.now() };
+        checkedState[subskillId] = {
+          id: subskillId,
+          name: subDetails.name,
+          parentId: parentSkillId,
+          parentName: parent ? parent.name : "",
+          categoryId: subDetails.categoryId,
+          categoryTitle: subDetails.categoryTitle,
+          completed: true,
+          completedAt: now,
+          completedAtIso: iso
+        };
       }
 
       syncParentStatus(parentSkillId);
@@ -3214,10 +3328,23 @@ const firebaseConfig = {
 
       if (rtdbRef && isFirebaseConnected) {
         const updates = {};
-        updates[subskillId] = !isChecked ? { completedAt: Date.now() } : null;
-        const parent = findParentSkill(parentSkillId);
+        updates[subskillId] = !isChecked ? checkedState[subskillId] : null;
         const parentDone = isParentDone(parent);
-        updates[parentSkillId] = parentDone ? { completedAt: Date.now() } : null;
+        if (parentDone) {
+          updates[parentSkillId] = {
+            id: parentSkillId,
+            name: parent ? parent.name : parentSkillId,
+            categoryId: subDetails.categoryId,
+            categoryTitle: subDetails.categoryTitle,
+            isParent: true,
+            completed: true,
+            completedAt: now,
+            completedAtIso: iso
+          };
+        } else {
+          updates[parentSkillId] = null;
+        }
+
         rtdbRef.update(updates).catch(err => {
           console.warn("RTDB sync error:", err);
         });
@@ -3233,17 +3360,39 @@ const firebaseConfig = {
 
       const currentDone = isParentDone(parent);
       const targetState = typeof forceState === "boolean" ? forceState : !currentDone;
+      const now = Date.now();
+      const iso = new Date().toISOString();
+      const pDetails = getSkillDetails(parentSkillId);
 
       parent.subskills.forEach(sub => {
         if (targetState) {
-          checkedState[sub.id] = { completedAt: Date.now() };
+          checkedState[sub.id] = {
+            id: sub.id,
+            name: sub.name,
+            parentId: parent.id,
+            parentName: parent.name,
+            categoryId: pDetails.categoryId,
+            categoryTitle: pDetails.categoryTitle,
+            completed: true,
+            completedAt: now,
+            completedAtIso: iso
+          };
         } else {
           delete checkedState[sub.id];
         }
       });
 
       if (targetState) {
-        checkedState[parent.id] = { completedAt: Date.now() };
+        checkedState[parent.id] = {
+          id: parent.id,
+          name: parent.name,
+          categoryId: pDetails.categoryId,
+          categoryTitle: pDetails.categoryTitle,
+          isParent: true,
+          completed: true,
+          completedAt: now,
+          completedAtIso: iso
+        };
       } else {
         delete checkedState[parent.id];
       }
@@ -3254,14 +3403,14 @@ const firebaseConfig = {
       if (rtdbRef && isFirebaseConnected) {
         const updates = {};
         parent.subskills.forEach(sub => {
-          updates[sub.id] = targetState ? { completedAt: Date.now() } : null;
+          updates[sub.id] = targetState ? checkedState[sub.id] : null;
         });
-        updates[parent.id] = targetState ? { completedAt: Date.now() } : null;
+        updates[parent.id] = targetState ? checkedState[parent.id] : null;
         rtdbRef.update(updates).catch(err => {
           console.warn("RTDB toggleParentAll error:", err);
         });
       }
-      showToast(targetState ? "Skill mastered" : "Skill cleared", "bi-check2-circle");
+      showToast(targetState ? "Skill mastered in RTDB" : "Skill cleared in RTDB", "bi-check2-circle");
     }
 
     function syncParentStatus(parentSkillId) {
@@ -3498,7 +3647,8 @@ const firebaseConfig = {
       const subDoneCount = subskills.filter(s => !!checkedState[s.id]).length;
       const subTotal = subskills.length;
       const isOpen = autoOpen || expandAllState || openCardIds.has(`card-${parent.id}`);
-      const hasNote = !!notesState[parent.id];
+      const noteText = getNoteText(parent.id);
+      const hasNote = !!noteText;
 
       return `
         <div class="parent-card ${isOpen ? 'open' : ''} ${isDone ? 'has-completed' : ''}" id="card-${parent.id}">
@@ -3527,7 +3677,7 @@ const firebaseConfig = {
             <div style="padding: 0 14px 10px 44px; background: var(--bg-card);">
               <div class="parent-note-preview">
                 <i class="bi bi-sticky-fill" style="color: var(--note-amber); font-size: 13px; margin-top: 1px; flex-shrink: 0;"></i>
-                <div style="flex: 1; word-break: break-word;">${escapeHTML(notesState[parent.id])}</div>
+                <div style="flex: 1; word-break: break-word;">${escapeHTML(noteText)}</div>
               </div>
             </div>
           ` : ''}
@@ -3584,7 +3734,7 @@ const firebaseConfig = {
 
       HIERARCHY_DATA.forEach(cat => {
         cat.skills.forEach(parent => {
-          if (notesState[parent.id]) {
+          if (getNoteText(parent.id)) {
             const div = document.createElement("div");
             div.innerHTML = renderParentSkillCard(parent, true);
             listContainer.appendChild(div.firstElementChild);
@@ -3620,7 +3770,7 @@ const firebaseConfig = {
         cat.skills.forEach(parent => {
           const parentMatch = parent.name.toLowerCase().includes(q);
           const subMatch = parent.subskills.some(s => s.name.toLowerCase().includes(q));
-          const noteMatch = (notesState[parent.id] || "").toLowerCase().includes(q);
+          const noteMatch = (getNoteText(parent.id)).toLowerCase().includes(q);
 
           if (parentMatch || subMatch || noteMatch) {
             matchedCount++;
@@ -3673,19 +3823,41 @@ const firebaseConfig = {
       if (!cat) return;
 
       const updates = {};
+      const now = Date.now();
+      const iso = new Date().toISOString();
+
       cat.skills.forEach(parent => {
         parent.subskills.forEach(sub => {
           if (markDone) {
-            checkedState[sub.id] = { completedAt: Date.now() };
-            updates[sub.id] = { completedAt: Date.now() };
+            checkedState[sub.id] = {
+              id: sub.id,
+              name: sub.name,
+              parentId: parent.id,
+              parentName: parent.name,
+              categoryId: cat.id,
+              categoryTitle: cat.title,
+              completed: true,
+              completedAt: now,
+              completedAtIso: iso
+            };
+            updates[sub.id] = checkedState[sub.id];
           } else {
             delete checkedState[sub.id];
             updates[sub.id] = null;
           }
         });
         if (markDone) {
-          checkedState[parent.id] = { completedAt: Date.now() };
-          updates[parent.id] = { completedAt: Date.now() };
+          checkedState[parent.id] = {
+            id: parent.id,
+            name: parent.name,
+            categoryId: cat.id,
+            categoryTitle: cat.title,
+            isParent: true,
+            completed: true,
+            completedAt: now,
+            completedAtIso: iso
+          };
+          updates[parent.id] = checkedState[parent.id];
         } else {
           delete checkedState[parent.id];
           updates[parent.id] = null;
@@ -3699,7 +3871,7 @@ const firebaseConfig = {
         rtdbRef.update(updates).catch(err => {
           console.warn("RTDB batchCategory error:", err);
         });
-        showToast("Category updated in RTDB", "bi-cloud-upload");
+        showToast(markDone ? "Category mastered in RTDB" : "Category cleared in RTDB", "bi-cloud-upload");
       }
     }
 
@@ -3742,7 +3914,7 @@ const firebaseConfig = {
       const totalBadge = document.getElementById("badge-total");
       if (totalBadge) totalBadge.textContent = `${grandCompleted}/${grandTotal}`;
 
-      const notesCount = Object.keys(notesState).length;
+      const notesCount = Object.keys(notesState).filter(k => !!getNoteText(k)).length;
       document.getElementById("badge-notes-count").textContent = notesCount;
 
       renderContent();
@@ -3778,8 +3950,8 @@ const firebaseConfig = {
         cat.skills.forEach(parent => {
           const parentDone = isParentDone(parent);
           md += `### [${parentDone ? 'x' : ' '}] ${parent.name}\n`;
-          if (notesState[parent.id]) {
-            md += `  > **Note/Doubt**: ${notesState[parent.id]}\n`;
+          if (getNoteText(parent.id)) {
+            md += `  > **Note/Doubt**: ${getNoteText(parent.id)}\n`;
           }
           parent.subskills.forEach(sub => {
             const subDone = !!checkedState[sub.id];
@@ -3854,9 +4026,25 @@ const firebaseConfig = {
             updateUI();
 
             if (isFirebaseConnected) {
-              if (rtdbRef) rtdbRef.set(checkedState);
-              if (notesRef) notesRef.set(notesState);
-              if (profileRef) profileRef.set(profileState);
+              if (rtdbRef) rtdbRef.set(checkedState).catch(err => console.warn(err));
+              if (notesRef) {
+                const organizedNotes = {};
+                for (let k in notesState) {
+                  const det = getSkillDetails(k);
+                  organizedNotes[k] = {
+                    skillId: k,
+                    skillName: det.name,
+                    categoryId: det.categoryId,
+                    categoryTitle: det.categoryTitle,
+                    type: det.type,
+                    note: getNoteText(k),
+                    updatedAt: Date.now(),
+                    updatedAtIso: new Date().toISOString()
+                  };
+                }
+                notesRef.set(organizedNotes).catch(err => console.warn(err));
+              }
+              if (profileRef) profileRef.set(profileState).catch(err => console.warn(err));
             }
             showToast("Backup restored completely!", "bi-cloud-check");
           }
