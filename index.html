@@ -441,16 +441,16 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 14px;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
     .overview-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      padding: 16px 18px;
-      min-height: 146px;
+      padding: 16px;
+      min-height: 154px;
       cursor: pointer;
-      transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -461,7 +461,7 @@
       background: var(--bg-surface);
       border-color: var(--border-medium);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
     }
     .overview-card-header {
       display: flex;
@@ -470,39 +470,82 @@
       margin-bottom: 10px;
       min-width: 0;
     }
-    .overview-card-header > div {
-      flex: 1;
-      min-width: 0;
-    }
-    .overview-card-header h2 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 2px;
-    }
     .overview-card-icon {
-      width: 38px;
-      height: 38px;
-      min-width: 38px;
-      min-height: 38px;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      max-width: 40px;
+      min-height: 40px;
+      max-height: 40px;
+      flex: 0 0 40px;
       border-radius: 8px;
       background: var(--bg-surface);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--openai-green);
-      font-size: 17px;
+      font-size: 18px;
       border: 1px solid var(--border-subtle);
       flex-shrink: 0;
-      transition: all 0.15s;
+      transition: all 0.15s ease;
     }
     .overview-card:hover .overview-card-icon {
       background: var(--openai-green-subtle);
-      border-color: rgba(16, 163, 127, 0.3);
+      border-color: rgba(16, 163, 127, 0.35);
       color: var(--openai-green);
+    }
+    .overview-card-title-group {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .overview-card-title-group h2 {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+    .overview-card-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .overview-card-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 34px;
+    }
+    .overview-card-footer {
+      margin-top: auto;
+    }
+    .overview-progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      white-space: nowrap;
+    }
+    .overview-progress-pct {
+      color: var(--openai-green);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     /* Global Progress Card & Track Summary Card */
@@ -3130,22 +3173,22 @@ const firebaseConfig = {
                     <div class="overview-card-icon">
                       <i class="bi ${cat.icon}"></i>
                     </div>
-                    <div>
+                    <div class="overview-card-title-group">
                       <h2 title="${escapeHTML(cat.title)}">${cat.title}</h2>
-                      <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; white-space: nowrap;">
+                      <span class="overview-card-subtitle">
                         ${catDone} / ${catTotal} capabilities
                       </span>
                     </div>
                   </div>
-                  <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeHTML(cat.description)}">
+                  <p class="overview-card-desc" title="${escapeHTML(cat.description)}">
                     ${cat.description}
                   </p>
                 </div>
 
-                <div>
-                  <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; white-space: nowrap;">
+                <div class="overview-card-footer">
+                  <div class="overview-progress-meta">
                     <span>Progress</span>
-                    <span style="color: var(--openai-green); font-weight: 600;">${catPct}%</span>
+                    <span class="overview-progress-pct">${catPct}%</span>
                   </div>
                   <div class="progress-bar-bg">
                     <div class="progress-bar-fill" style="width: ${catPct}%;"></div>
