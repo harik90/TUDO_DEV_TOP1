@@ -23,25 +23,25 @@
        Dark / Light Theme Tokens (Official ChatGPT Styling)
        ========================================================================== */
     :root[data-theme="dark"] {
-      --bg-sidebar: #171717;
-      --bg-main: #212121;
-      --bg-surface: #2f2f2f;
-      --bg-surface-hover: #383838;
-      --bg-card: #1e1e1e;
-      --bg-subcard: rgba(255, 255, 255, 0.03);
+      --bg-sidebar: #050505;
+      --bg-main: #000000;
+      --bg-surface: #121212;
+      --bg-surface-hover: #1c1c1c;
+      --bg-card: #0a0a0a;
+      --bg-subcard: #050505;
       --border-subtle: rgba(255, 255, 255, 0.08);
       --border-medium: rgba(255, 255, 255, 0.16);
-      --text-primary: #ececec;
-      --text-secondary: #b4b4b4;
-      --text-muted: #737373;
+      --text-primary: #f5f5f5;
+      --text-secondary: #a3a3a3;
+      --text-muted: #666666;
       --openai-green: #10a37f;
-      --openai-green-hover: #1a7f64;
-      --openai-green-subtle: rgba(16, 163, 127, 0.16);
+      --openai-green-hover: #14b88a;
+      --openai-green-subtle: rgba(16, 163, 127, 0.15);
       --note-amber: #f59e0b;
       --note-amber-subtle: rgba(245, 158, 11, 0.15);
-      --modal-bg: #262626;
-      --shadow-elevation: 0 12px 30px rgba(0, 0, 0, 0.6);
-      --prompt-gradient: linear-gradient(180deg, rgba(33, 33, 33, 0) 0%, rgba(33, 33, 33, 0.95) 45%, #212121 100%);
+      --modal-bg: #0a0a0a;
+      --shadow-elevation: 0 12px 30px rgba(0, 0, 0, 0.95);
+      --prompt-gradient: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.95) 45%, #000000 100%);
     }
 
     :root[data-theme="light"] {
@@ -390,15 +390,15 @@
     .stream-container {
       flex: 1;
       overflow-y: auto;
+      overflow-x: hidden;
       padding: 18px 20px 120px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      width: 100%;
     }
 
     .content-wrapper {
       width: 100%;
       max-width: 860px;
+      margin: 0 auto;
       min-width: 0;
     }
 
@@ -423,17 +423,15 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.35;
+      word-break: break-word;
     }
     .view-desc {
       font-size: 12.5px;
       color: var(--text-secondary);
       margin-top: 3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.4;
+      word-break: break-word;
     }
 
     /* Overview Grid */
@@ -553,9 +551,54 @@
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      padding: 18px 20px;
+      padding: 16px 18px;
       margin-bottom: 22px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .global-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .global-progress-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+    .global-progress-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    .global-progress-badge {
+      font-size: 11px;
+      color: var(--openai-green);
+      background: var(--openai-green-subtle);
+      border: 1px solid rgba(16, 163, 127, 0.25);
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .global-progress-stat {
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--openai-green);
+      white-space: nowrap;
+    }
+    .global-progress-substats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
     }
     .track-summary-card {
       background: var(--bg-card);
@@ -1044,18 +1087,78 @@
         top: 0;
         bottom: 0;
         left: 0;
-        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+      }
+      .stream-container {
+        padding: 12px 12px 105px;
+      }
+      .view-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+      }
+      .view-title-group h1 {
+        font-size: 16px;
+      }
+      .view-desc {
+        font-size: 11.5px;
+      }
+      .global-progress-card {
+        padding: 14px 12px;
+        margin-bottom: 16px;
+      }
+      .global-progress-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .global-progress-title {
+        font-size: 13.5px;
+      }
+      .global-progress-stat {
+        font-size: 12px;
+      }
+      .global-progress-substats {
+        font-size: 11px;
       }
       .overview-grid {
         grid-template-columns: 1fr;
         gap: 10px;
       }
-      .subskills-container {
-        padding-left: 20px;
+      .overview-card {
+        min-height: auto;
+        padding: 13px 12px;
       }
-      .view-header {
-        flex-direction: column;
-        gap: 12px;
+      .overview-card-desc {
+        height: auto;
+        -webkit-line-clamp: 3;
+      }
+      .subskills-container {
+        padding-left: 18px;
+        padding-right: 8px;
+      }
+      .parent-header {
+        padding: 9px 10px;
+        gap: 8px;
+      }
+      .parent-title {
+        font-size: 13px;
+      }
+      .prompt-footer {
+        padding: 0 10px 10px;
+      }
+      .prompt-box {
+        padding: 6px 10px;
+        gap: 6px;
+      }
+      .prompt-input {
+        font-size: 12px;
+      }
+      .chatgpt-modal {
+        padding: 16px 14px;
       }
     }
   </style>
@@ -3137,14 +3240,14 @@ const firebaseConfig = {
 
         <!-- Overall Progress Card -->
         <div class="global-progress-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
-              <span style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Global Engineering Readiness</span>
-              <span style="font-size: 11px; color: var(--openai-green); background: var(--openai-green-subtle); border: 1px solid rgba(16, 163, 127, 0.25); padding: 2px 7px; border-radius: 4px; flex-shrink: 0; white-space: nowrap;">
+          <div class="global-progress-header">
+            <div class="global-progress-title-wrap">
+              <span class="global-progress-title">Global Engineering Readiness</span>
+              <span class="global-progress-badge">
                 ${isFirebaseConnected ? 'RTDB Live' : 'Local Storage'}
               </span>
             </div>
-            <span style="font-size: 13px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--openai-green); flex-shrink: 0; white-space: nowrap;">
+            <span class="global-progress-stat">
               ${grandPct}% (${grandCompletedParents} / ${grandTotalParents} Mastered)
             </span>
           </div>
@@ -3153,7 +3256,7 @@ const firebaseConfig = {
             <div class="progress-bar-fill" style="width: ${grandPct}%;"></div>
           </div>
 
-          <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          <div class="global-progress-substats">
             <span>${grandCompletedParents} Capabilities Mastered</span>
             <span>${grandTotalParents - grandCompletedParents} In Progress</span>
           </div>
