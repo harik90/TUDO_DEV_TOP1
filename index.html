@@ -188,6 +188,7 @@
       align-items: center;
       gap: 10px;
       padding: 8px 12px;
+      min-height: 36px;
       border-radius: 6px;
       color: var(--text-secondary);
       font-size: 13px;
@@ -197,6 +198,15 @@
       margin-bottom: 2px;
       border: 1px solid transparent;
       min-width: 0;
+    }
+    .nav-item i {
+      font-size: 15px;
+      width: 18px;
+      min-width: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
     .nav-item:hover {
       background-color: var(--bg-surface);
@@ -247,6 +257,7 @@
       align-items: center;
       gap: 10px;
       padding: 8px 10px;
+      min-height: 48px;
       border-radius: 6px;
       cursor: pointer;
       background: transparent;
@@ -259,8 +270,10 @@
       border-color: var(--border-subtle);
     }
     .user-avatar-circle {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      min-height: 34px;
       border-radius: 6px;
       background: linear-gradient(135deg, #10a37f, #06b6d4);
       color: white;
@@ -276,8 +289,9 @@
     .status-pill {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
+      gap: 10px;
+      padding: 8px 10px;
+      min-height: 42px;
       border-radius: 6px;
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
@@ -293,6 +307,8 @@
     .status-dot {
       width: 8px;
       height: 8px;
+      min-width: 8px;
+      min-height: 8px;
       border-radius: 50%;
       background: #737373;
       flex-shrink: 0;
@@ -423,33 +439,35 @@
     /* Overview Grid */
     .overview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
     }
     .overview-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      padding: 14px;
+      border-radius: 8px;
+      padding: 16px 18px;
+      min-height: 146px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
       min-width: 0;
     }
     .overview-card:hover {
       background: var(--bg-surface);
       border-color: var(--border-medium);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
     .overview-card-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 12px;
+      margin-bottom: 10px;
       min-width: 0;
     }
     .overview-card-header > div {
@@ -457,49 +475,82 @@
       min-width: 0;
     }
     .overview-card-header h2 {
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      margin-bottom: 2px;
     }
     .overview-card-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
+      border-radius: 8px;
       background: var(--bg-surface);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--openai-green);
-      font-size: 15px;
+      font-size: 17px;
       border: 1px solid var(--border-subtle);
       flex-shrink: 0;
+      transition: all 0.15s;
+    }
+    .overview-card:hover .overview-card-icon {
+      background: var(--openai-green-subtle);
+      border-color: rgba(16, 163, 127, 0.3);
+      color: var(--openai-green);
+    }
+
+    /* Global Progress Card & Track Summary Card */
+    .global-progress-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .track-summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 7px;
+      padding: 12px 16px;
+      min-height: 48px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
     }
 
     /* Parent Skill Card (Collapsible) */
     .parent-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 6px;
+      border-radius: 7px;
       margin-bottom: 8px;
       overflow: hidden;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, box-shadow 0.15s;
       min-width: 0;
     }
     .parent-card:hover {
       border-color: var(--border-medium);
     }
     .parent-card.has-completed {
-      border-left: 2px solid var(--openai-green);
+      border-left: 3px solid var(--openai-green);
     }
 
     .parent-header {
-      padding: 10px 12px;
+      padding: 10px 14px;
+      min-height: 46px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       cursor: pointer;
       user-select: none;
       background: var(--bg-card);
@@ -511,7 +562,7 @@
     }
 
     .parent-title {
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 600;
       color: var(--text-primary);
       flex: 1;
@@ -525,15 +576,17 @@
     .parent-meta {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       flex-shrink: 0;
       white-space: nowrap;
     }
 
     .note-btn {
-      width: 26px;
-      height: 26px;
-      border-radius: 4px;
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      min-height: 28px;
+      border-radius: 5px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -542,6 +595,7 @@
       border: 1px solid transparent;
       cursor: pointer;
       flex-shrink: 0;
+      font-size: 13px;
       transition: all 0.15s;
     }
     .note-btn:hover {
@@ -552,7 +606,7 @@
     .note-btn.has-note {
       color: var(--note-amber);
       background: var(--note-amber-subtle);
-      border-color: rgba(245, 158, 11, 0.3);
+      border-color: rgba(245, 158, 11, 0.35);
     }
 
     .parent-badge {
@@ -561,10 +615,13 @@
       color: var(--text-muted);
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
-      padding: 1px 6px;
+      padding: 2px 8px;
       border-radius: 4px;
       flex-shrink: 0;
       white-space: nowrap;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
     }
     .parent-badge.done {
       color: var(--openai-green);
@@ -575,6 +632,11 @@
     .arrow-icon {
       color: var(--text-muted);
       font-size: 12px;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       flex-shrink: 0;
     }
@@ -585,7 +647,7 @@
     /* Sub-skills Accordion */
     .subskills-container {
       display: none;
-      padding: 6px 12px 10px 38px;
+      padding: 8px 14px 12px 44px;
       background: var(--bg-subcard);
       border-top: 1px solid var(--border-subtle);
     }
@@ -596,13 +658,14 @@
     .subskill-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 6px 8px;
-      border-radius: 4px;
+      gap: 12px;
+      padding: 7px 10px;
+      min-height: 34px;
+      border-radius: 5px;
       cursor: pointer;
       user-select: none;
       transition: background 0.15s;
-      margin-top: 2px;
+      margin-top: 3px;
       min-width: 0;
     }
     .subskill-row:hover {
@@ -613,17 +676,18 @@
     }
 
     .custom-check {
-      width: 16px;
-      height: 16px;
-      min-width: 16px;
-      border-radius: 3px;
-      border: 1px solid var(--border-medium);
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      min-height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--border-medium);
       display: flex;
       align-items: center;
       justify-content: center;
       background: transparent;
       flex-shrink: 0;
-      transition: all 0.15s;
+      transition: all 0.15s ease;
     }
     .subskill-row:hover .custom-check,
     .parent-header:hover .custom-check {
@@ -635,11 +699,11 @@
       border-color: var(--openai-green);
     }
     .custom-check i {
-      font-size: 10px;
+      font-size: 11px;
       color: white;
       opacity: 0;
       transform: scale(0.6);
-      transition: all 0.15s;
+      transition: all 0.15s ease;
     }
     .subskill-row.checked .custom-check i,
     .custom-check.checked i {
@@ -664,16 +728,17 @@
 
     /* Embedded Note Display inside Parent Card */
     .parent-note-preview {
-      margin: 6px 0 2px;
-      padding: 8px 10px;
-      border-radius: 4px;
+      margin: 4px 0 2px;
+      padding: 8px 12px;
+      border-radius: 5px;
       background: var(--note-amber-subtle);
       border: 1px solid rgba(245, 158, 11, 0.25);
       font-size: 12px;
+      line-height: 1.45;
       color: var(--text-primary);
       display: flex;
       align-items: flex-start;
-      gap: 6px;
+      gap: 8px;
       word-break: break-word;
     }
 
@@ -709,13 +774,14 @@
     .prompt-box {
       width: 100%;
       max-width: 860px;
+      min-height: 48px;
       background-color: var(--bg-surface);
       border: 1px solid var(--border-medium);
       border-radius: 8px;
       padding: 8px 14px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       pointer-events: auto;
       transition: border-color 0.15s, box-shadow 0.15s;
@@ -742,9 +808,11 @@
     }
 
     .prompt-action-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 4px;
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      min-height: 30px;
+      border-radius: 6px;
       border: none;
       background: var(--text-primary);
       color: var(--bg-main);
@@ -925,53 +993,6 @@
       visibility: visible;
       transform: translateX(-50%) translateY(0);
     }
-      transition: background 0.15s;
-    }
-    .btn-primary-gpt:hover {
-      background: var(--openai-green-hover);
-    }
-
-    .btn-secondary-gpt {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 9px 16px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-secondary-gpt:hover {
-      background: var(--bg-surface);
-      color: var(--text-primary);
-    }
-
-    /* Toast */
-    #chatgpt-toast {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--bg-surface);
-      border: 1px solid var(--border-medium);
-      color: var(--text-primary);
-      padding: 9px 18px;
-      border-radius: 9999px;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: var(--shadow-elevation);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 3000;
-    }
-    #chatgpt-toast.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) translateY(0);
-    }
 
     /* Mobile Responsive */
     @media (max-width: 768px) {
@@ -982,8 +1003,12 @@
         left: 0;
         box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
       }
+      .overview-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
       .subskills-container {
-        padding-left: 16px;
+        padding-left: 20px;
       }
       .view-header {
         flex-direction: column;
@@ -3028,11 +3053,11 @@ const firebaseConfig = {
         </div>
 
         <!-- Overall Progress Card -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 16px; margin-bottom: 20px;">
+        <div class="global-progress-card">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 10px;">
             <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
               <span style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Global Engineering Readiness</span>
-              <span style="font-size: 11px; color: var(--openai-green); background: var(--openai-green-subtle); border: 1px solid rgba(16, 163, 127, 0.25); padding: 1px 6px; border-radius: 4px; flex-shrink: 0; white-space: nowrap;">
+              <span style="font-size: 11px; color: var(--openai-green); background: var(--openai-green-subtle); border: 1px solid rgba(16, 163, 127, 0.25); padding: 2px 7px; border-radius: 4px; flex-shrink: 0; white-space: nowrap;">
                 ${isFirebaseConnected ? 'RTDB Live' : 'Local Storage'}
               </span>
             </div>
@@ -3041,7 +3066,7 @@ const firebaseConfig = {
             </span>
           </div>
 
-          <div class="progress-bar-bg" style="height: 6px; margin: 10px 0 8px;">
+          <div class="progress-bar-bg" style="height: 6px; margin: 12px 0 10px;">
             <div class="progress-bar-fill" style="width: ${grandPct}%;"></div>
           </div>
 
@@ -3118,7 +3143,7 @@ const firebaseConfig = {
           </div>
         </div>
 
-        <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; min-width: 0;">
+        <div class="track-summary-card">
           <div style="font-size: 12.5px; font-weight: 500; white-space: nowrap;">
             Track Mastery: <span style="color: var(--openai-green); font-family: 'JetBrains Mono', monospace;">${catDone} / ${catTotal}</span>
           </div>
@@ -3170,7 +3195,7 @@ const firebaseConfig = {
           ${hasNote ? `
             <div style="padding: 0 14px 10px 44px; background: var(--bg-card);">
               <div class="parent-note-preview">
-                <i class="bi bi-sticky-fill text-warning me-1"></i>
+                <i class="bi bi-sticky-fill" style="color: var(--note-amber); font-size: 13px; margin-top: 1px; flex-shrink: 0;"></i>
                 <div style="flex: 1; word-break: break-word;">${escapeHTML(notesState[parent.id])}</div>
               </div>
             </div>
